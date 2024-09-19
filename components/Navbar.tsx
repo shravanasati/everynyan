@@ -11,11 +11,11 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-zinc-900 shadow-md z-50 fixed w-2/3 mt-8 rounded-full">
+    <nav className="bg-zinc-900 shadow-md z-50 fixed min-w-[50%] mt-8  rounded-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-zinc-200">
+            <Link href="/" className="text-xl font-extrabold text-zinc-200">
               Everynyan
             </Link>
           </div>
@@ -28,16 +28,16 @@ export default function Navbar() {
                 Home
               </Link>
               <Link
-                href="/about"
+                href="/login"
                 className="text-zinc-100 hover:text-zinc-400 px-3 py-2 rounded-md text-sm font-medium"
               >
-                About
+                LogIn
               </Link>
               <Link
-                href="/services"
+                href="/tnc"
                 className="text-zinc-100 hover:text-zinc-400 px-3 py-2 rounded-md text-sm font-medium"
               >
-                Services
+                TnC
               </Link>
               <Link
                 href="/contact"
@@ -50,7 +50,7 @@ export default function Navbar() {
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-zinc-500 hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-zinc-500  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500"
             >
               <span className="sr-only">Open main menu</span>
               {isOpen ? (
@@ -73,16 +73,16 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              href="/about"
+              href="/login"
               className="text-zinc-100 hover:text-zinc-900 block px-3 py-2 rounded-md text-base font-medium"
             >
-              About
+              LogIn
             </Link>
             <Link
-              href="/services"
+              href="/tnc"
               className="text-zinc-100 hover:text-zinc-900 block px-3 py-2 rounded-md text-base font-medium"
             >
-              Services
+              TnC
             </Link>
             <Link
               href="/contact"

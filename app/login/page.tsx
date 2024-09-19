@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from 'next/link'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -20,7 +21,7 @@ export default function Login() {
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-zinc-50">Login</CardTitle>
-          <CardDescription className="text-zinc-400">Enter your email to receive an OTP</CardDescription>
+          <CardDescription className="text-zinc-400">Enter your email to receive an OTP and before proceeding further checkout our <Link href="/tnc" className='text-zinc-200'>Terms and Condition</Link></CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent>
