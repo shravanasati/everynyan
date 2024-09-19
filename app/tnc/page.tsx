@@ -1,72 +1,68 @@
-import Link from "next/link";
+"use client"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function TermsAndConditions() {
+  const router = useRouter();
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
-      <div className="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-bold mb-6">Terms and Conditions</h1>
+    <div className="w-screen h-screen flex items-center justify-center">
+      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-zinc-50">
+            Terms and Conditions
+          </CardTitle>
+          <CardDescription className="text-zinc-400 text-base">
+            With great Freedom, Comes great Responsibilities.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <h1 className="font-extrabold text-2xl text-zinc-50">
+            Platform vs. Publisher
+          </h1>
+          <p className="text-xl text-zinc-400">
+            Please note that Everynyan is a platform for user-generated content.
+            Any posts made on the platform do not represent the views or
+            opinions of Everynyan or SaltNpeppeR(developers behind Everynyan).
+            We encourage you to share your thoughts, but remember that the
+            responsibility for the content lies with the individual users.
+          </p>
 
-        <div className="space-y-4 text-sm">
-          <section>
-            <h2 className="text-xl font-semibold mb-2">
-              1. Acceptance of Terms
-            </h2>
-            <p>
-              By accessing and using this website, you accept and agree to be
-              bound by the terms and provision of this agreement.
-            </p>
-          </section>
+          <h1 className="font-extrabold text-2xl text-zinc-50 mt-4">
+            Anonymity and Data we use
+          </h1>
+          <p className="text-xl text-zinc-400">
+            Your anonymity is our priority. When you post on Everynyan, your
+            identity remains completely hidden. Not even the developers can see
+            your activity or personal information. However, we reserve the right
+            to monitor and manage the content published on the platform to
+            ensure a safe and respectful environment for all users.
+          </p>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-2">
-              2. Use of the Service
-            </h2>
-            <p>
-              You agree to use the service for lawful purposes only and in a way
-              that does not infringe the rights of, restrict or inhibit anyone
-              else's use and enjoyment of the website.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2">
-              3. Intellectual Property
-            </h2>
-            <p>
-              The content, organization, graphics, design, compilation, magnetic
-              translation, digital conversion and other matters related to the
-              Site are protected under applicable copyrights, trademarks and
-              other proprietary rights.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2">
-              4. Disclaimer of Warranties
-            </h2>
-            <p>
-              The service and its content are provided on an "as is" and "as
-              available" basis without any warranties of any kind.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-2">
-              5. Limitation of Liability
-            </h2>
-            <p>
-              In no event shall we be liable for any direct, indirect,
-              incidental, consequential, special or exemplary damages arising
-              from or in connection with your use of the service.
-            </p>
-          </section>
-        </div>
-
-        <Button asChild className="mt-8">
-          <Link href="/">Return Home</Link>
-        </Button>
-      </div>
+          <h1 className="font-extrabold text-2xl text-zinc-50 mt-4">
+            Freedom of Expression
+          </h1>
+          <p className="text-xl text-zinc-400">
+            Everynyan is a space for everyone, and we value your freedom of
+            expression. We encourage you to share your ideas and opinions
+            openly. However, we ask that you be mindful and considerate in your
+            posts, as we strive to maintain a positive and inclusive community.
+          </p>
+          <div className="min-w-full flex justify-center gap-4 mt-4">
+            <Button className="" variant="secondary" onClick={router.back}>
+              Go Back
+            </Button>
+          </div>
+        </CardContent>
+        <CardFooter></CardFooter>
+      </Card>
     </div>
   );
 }

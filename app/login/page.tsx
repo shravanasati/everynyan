@@ -87,9 +87,16 @@ export default function Login() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex flex-wrap gap-2">
               <Button type="submit" className="w-full" variant="secondary">
                 Submit
+              </Button>
+              <Button
+                onClick={() => router.push("/")}
+                className="w-full"
+                variant="default"
+              >
+                Go Back to Home
               </Button>
             </CardFooter>
           </form>
