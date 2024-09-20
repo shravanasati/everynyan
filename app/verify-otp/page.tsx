@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { redirect } from "next/navigation";
+import { isValidEmail, nextLocalStorage } from "@/lib/utils";
 
 export default function OtpPage() {
   const [otp, setOTP] = useState("");
@@ -19,6 +21,14 @@ export default function OtpPage() {
     e.preventDefault();
     console.log("OTP submitted:", otp);
   };
+
+  const email = nextLocalStorage()?.getItem("email");
+  if (!email || email === "") {
+    redirect("/login");
+  }
+  if (!isValidEmail(email)) {
+    redirect("/login");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
