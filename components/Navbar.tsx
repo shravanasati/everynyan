@@ -40,10 +40,10 @@ export default function Navbar() {
                 TnC
               </Link>
               <Link
-                href="/contact"
+                href="https://github.com/shravanasati/everynyan"
                 className="text-zinc-100 hover:text-zinc-400 px-3 py-2 rounded-md text-sm font-medium"
               >
-                Contact
+                GitHub
               </Link>
             </div>
           </div>
