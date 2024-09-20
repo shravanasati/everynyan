@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 export default function OtpPage() {
-  const [otp, setOtp] = useState("");
+  const [otp, setOTP] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ export default function OtpPage() {
                   type="text"
                   placeholder="Enter OTP"
                   value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
+                  onChange={(e) => setOTP(e.target.value)}
                   required
                   maxLength={6}
                   className="text-center text-2xl tracking-widest bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"

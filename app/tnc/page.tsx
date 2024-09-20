@@ -13,7 +13,7 @@ import {
 export default function TermsAndConditions() {
   const router = useRouter();
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
+    <div className="w-screen h-screen flex items-center justify-center mt-40 pt-8">
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-zinc-50">
@@ -53,7 +53,8 @@ export default function TermsAndConditions() {
             Everynyan is a space for everyone, and we value your freedom of
             expression. We encourage you to share your ideas and opinions
             openly. However, we ask that you be mindful and considerate in your
-            posts, as we strive to maintain a positive and inclusive community.
+            posts, as we strive to maintain a positive and inclusive community. 
+            Hatefulness and toxicity will not be tolerated.
           </p>
           <div className="min-w-full flex justify-center gap-4 mt-4">
             <Button className="" variant="secondary" onClick={router.back}>

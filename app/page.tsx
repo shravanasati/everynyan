@@ -12,7 +12,7 @@ export default function Home() {
             Hello, Everynyan!
           </h1>
           <p className="text-xl sm:text-2xl md:text-3xl text-gray-300 max-w-2xl mx-auto">
-            Your go to place for ranting, yapping, memeing, confessing and much more, that too <span className="font-black">ANONYMOUSLY</span>
+            Your go to place for ranting, yapping, memeing, confessing and much more <br /><span className="font-black">ANONYMOUSLY</span>
           </p>
           <Link href="/login">
             <Button
