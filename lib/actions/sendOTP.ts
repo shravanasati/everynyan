@@ -4,7 +4,7 @@ import { z } from "zod"
 import { generateOTP, uniEmailRegex } from "@/lib/utils"
 import { getOTP, saveOTP } from "@/lib/firebase/firestore"
 import { sendOTPEmail } from "@/lib/email"
-import isRateLimited from "../ratelimit"
+import isRateLimited from "@/lib/ratelimit"
 
 const sendOTPSchema = z.object({
 	email: z.string().regex(uniEmailRegex, "Invalid email address"),
