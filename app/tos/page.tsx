@@ -20,9 +20,13 @@ const sections = [
     content:
       "Everynyan is a space for everyone, and we value your freedom of expression. We encourage you to share your ideas and opinions openly. However, we ask that you be mindful and considerate in your posts, as we strive to maintain a positive and inclusive community.",
   },
+  {
+    title: "No University Affiliation",
+    content: "We want to clarify that Everynyan is an independent platform and is not affiliated, endorsed, or associated with any university or educational institution. Any use of the platform is unrelated to university activities, and any opinions or content shared on Everynyan are solely the responsibility of the individual users."
+  }
 ];
 
-export default function TermsAndConditions() {
+export default function TermsOfService() {
   const router = useRouter();
 
   return (
@@ -30,7 +34,7 @@ export default function TermsAndConditions() {
       <Card className="w-full max-w-2xl bg-zinc-900 border-zinc-800 text-zinc-50">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Terms and Conditions
+            Terms of Service
           </CardTitle>
           <p className="text-zinc-400">
             With great Freedom, Comes great Responsibilities.

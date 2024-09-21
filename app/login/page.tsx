@@ -31,7 +31,7 @@ import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
 
 const formSchema = z.object({
   email: z.string().regex(uniEmailRegex, "That email address doesn't look right 😕"),
-  tnc: z.boolean().refine(val => val === true, {
+  tos: z.boolean().refine(val => val === true, {
     message: "You must accept the terms and conditions"
   })
 })
@@ -45,7 +45,7 @@ export default function Login() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      tnc: false,
+      tos: false,
     },
   })
 
@@ -96,7 +96,7 @@ export default function Login() {
                 />
                 <FormField
                   control={form.control}
-                  name="tnc"
+                  name="tos"
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                       <FormControl>
@@ -109,8 +109,8 @@ export default function Login() {
                       <div className="space-y-1 leading-none">
                         <FormLabel className="text-zinc-100 font-bold text-sm">
                           I have read and accept the{" "}
-                          <Link href="/tnc" className="text-blue-500">
-                            Terms and Conditions
+                          <Link href="/tos" className="text-blue-500">
+                            Terms of Service
                           </Link>
                           .
                         </FormLabel>
