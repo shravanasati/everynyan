@@ -1,8 +1,5 @@
-"use client";
-
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 const sections = [
   {
@@ -23,33 +20,32 @@ const sections = [
 ];
 
 export default function TermsAndConditions() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
-      <Card className="w-full max-w-2xl bg-zinc-900 border-zinc-800 text-zinc-50">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">
-            Terms and Conditions
-          </CardTitle>
-          <p className="text-zinc-400">
-            With great Freedom, Comes great Responsibilities.
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {sections.map((section, index) => (
-            <section key={index}>
-              <h2 className="text-xl font-bold mb-2">{section.title}</h2>
-              <p className="text-zinc-400">{section.content}</p>
-            </section>
-          ))}
-          <div className="flex justify-center mt-6">
-            <Button variant="secondary" onClick={() => router.back()}>
-              Go Back
-            </Button>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-950 p-6 text-zinc-50">
+      <header className="text-center mb-8">
+        <h1 className="text-3xl font-bold">Terms and Conditions</h1>
+        <p className="text-zinc-400 mt-2">
+          With great Freedom, Comes great Responsibilities.
+        </p>
+      </header>
+
+      <main className="w-full max-w-3xl space-y-12">
+        {sections.map((section, index) => (
+          <div key={index} className="space-y-4">
+            <h2 className="text-2xl font-bold">{section.title}</h2>
+            <p className="text-zinc-400 leading-relaxed">{section.content}</p>
           </div>
-        </CardContent>
-      </Card>
+        ))}
+
+        <div className="flex justify-center mt-12 gap-6">
+          <Link href="/">
+            <Button variant="secondary">Home</Button>
+          </Link>
+          <Link href="/login">
+            <Button variant="secondary">LogIn</Button>
+          </Link>
+        </div>
+      </main>
     </div>
   );
 }
