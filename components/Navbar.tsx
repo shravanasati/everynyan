@@ -16,13 +16,13 @@ export default function Navbar() {
       href: "/",
     },
     {
-      title: "LogIn",
+      title: "Log In",
       href: "/login",
     },
-    {
-      title: "TnC",
-      href: "/tnc",
-    },
+    // {
+    //   title: "TnC",
+    //   href: "/tnc",
+    // },
     {
       title: "Github",
       href: "https://github.com/shravanasati/everynyan",

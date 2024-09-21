@@ -8,7 +8,7 @@ import isRateLimited from "../ratelimit"
 
 const sendOTPSchema = z.object({
 	email: z.string().regex(uniEmailRegex, "Invalid email address"),
-	tnc: z.boolean().refine(val => val === true, {
+	tos: z.boolean().refine(val => val === true, {
 		message: "You must accept the terms and conditions"
 	})
 })
