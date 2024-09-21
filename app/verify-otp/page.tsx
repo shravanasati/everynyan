@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { redirect } from "next/navigation";
 import { isValidEmail, nextLocalStorage } from "@/lib/utils";
+import { AlertCircle } from "lucide-react";
 
 export default function OtpPage() {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
