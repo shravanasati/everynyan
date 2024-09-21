@@ -17,14 +17,14 @@ import Link from "next/link";
 export default function Login() {
   const [email, setEmail] = useState("");
   const router = useRouter();
-  const emailRegex = /^[a-z]+\.(cse|ict|cie)(2[3-9]|30)@adaniuni\.ac\.in$/;
+  const emailRegex = /^[a-zA-Z]+\.(cse|ict|cie)(2[3-9]|30)@adaniuni\.ac\.in$/;
   const emailInputRef = useRef<HTMLInputElement>(null);
   const [valid, setValid] = useState(true);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (emailRegex.test(email)) {
-      router.push("/otp");
+      router.push("/verify-otp");
     } else {
       setValid(false);
     }
@@ -81,11 +81,10 @@ export default function Login() {
                       id="tnc"
                       required
                     />
-                    I have read{" "}
+                    I have read and accept the {" "}
                     <Link href="/tnc" className="text-blue-500">
                       Terms and Conditions
-                    </Link>{" "}
-                    and I agree to them.
+                    </Link>.
                   </label>
                 </div>
               </div>
