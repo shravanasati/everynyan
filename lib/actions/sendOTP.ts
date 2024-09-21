@@ -2,8 +2,9 @@
 
 import { z } from "zod"
 import { generateOTP, uniEmailRegex } from "@/lib/utils"
-import { saveOTP } from "@/lib/firebase/firestore"
+import { getOTP, saveOTP } from "@/lib/firebase/firestore"
 import { sendOTPEmail } from "@/lib/email"
+import isRateLimited from "../ratelimit"
 
 const sendOTPSchema = z.object({
 	email: z.string().regex(uniEmailRegex, "Invalid email address"),
@@ -21,6 +22,19 @@ export async function sendOTP(values: z.infer<typeof sendOTPSchema>) {
 	}
 
   try {
+    if (await isRateLimited(1, 60000)) {
+      return { success: false, errors: { server: "Rate limit exceeded. Please try again later." } }
+    }
+
+    const otpExists = await getOTP(values.email)
+    if (otpExists) {
+      // rate limit OTPs to 1 per minute
+      const expirationTime = otpExists.timestamp.toMillis() + 60000
+      if (expirationTime > Date.now()) {
+        console.log(`OTP already exists for email: ${values.email}`)
+        return { success: false, errors: { email: "An OTP has already been sent to this email. Please check your email." }, retryAfter: new Date(expirationTime)}
+      }
+    }
 
     const otp = generateOTP().toString()
     console.log(`Generated OTP: ${otp} for email: ${values.email}`)

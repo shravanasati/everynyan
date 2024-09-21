@@ -57,7 +57,9 @@ export default function Login() {
       nextLocalStorage()?.setItem("email", values.email)
       router.push("/verify-otp")
     } else {
-      setServerError("An error occurred. Please try again.")
+      let errors = result.errors as { email?: string; server?: string }
+      const errorMessage = errors?.email || errors?.server || "An error occurred. Please try again."
+      setServerError(errorMessage)
     }
     setLoading(false)
   }

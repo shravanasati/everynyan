@@ -16,6 +16,11 @@ import {
 
 import { db } from "@/lib/firebase/app";
 
+export type OTPEntry = {
+  otp: string;
+  timestamp: Timestamp;
+};
+
 export async function saveOTP(email: string, otp: string) {
 	const otpRef = doc(db, "otp", email);
 
@@ -23,4 +28,15 @@ export async function saveOTP(email: string, otp: string) {
 		otp,
 		timestamp: Timestamp.now(),
 	});
+}
+
+export async function getOTP(email: string) {
+  const otpRef = doc(db, "otp", email);
+  const otpSnap = await getDoc(otpRef);
+
+  if (otpSnap.exists()) {
+    return otpSnap.data() as OTPEntry;
+  }
+
+  return null;
 }
