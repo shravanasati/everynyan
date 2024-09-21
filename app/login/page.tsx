@@ -6,13 +6,12 @@ import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
-import { signin } from "@/lib/actions/signin"
+import { sendOTP } from "@/lib/actions/sendOTP"
 
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,7 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { uniEmailRegex } from "@/lib/utils"
+import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
 
 const formSchema = z.object({
   email: z.string().regex(uniEmailRegex, "That email address doesn't look right 😕"),
@@ -40,6 +39,7 @@ const formSchema = z.object({
 export default function Login() {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,12 +51,15 @@ export default function Login() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setServerError(null)
-    const result = await signin(values)
+    setLoading(true)
+    const result = await sendOTP(values)
     if (result.success) {
+      nextLocalStorage()?.setItem("email", values.email)
       router.push("/verify-otp")
     } else {
       setServerError("An error occurred. Please try again.")
     }
+    setLoading(false)
   }
 
   return (
@@ -116,8 +119,8 @@ export default function Login() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2">
-              <Button type="submit" className="w-full" variant="secondary">
-                Submit
+              <Button type="submit" className="w-full" variant="secondary" disabled={loading}>
+                {loading ? "Loading..." : "Send OTP"}
               </Button>
               <Button
                 onClick={() => router.push("/")}

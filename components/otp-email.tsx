@@ -4,13 +4,13 @@ interface OTPEmailProps {
 }
 
 export function OTPEmailTemplate({ name, otp }: OTPEmailProps) {
-  const logoUrl = 'https://everynyan.tech/logo.png'
+  const logoURL = 'https://everynyan.tech/logo.png'
   return (
     <div style={{ backgroundColor: '#f4f4f4', padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <table cellPadding="0" cellSpacing="0" style={{ maxWidth: '600px', margin: '0 auto', backgroundColor: '#ffffff', borderRadius: '8px', overflow: 'hidden' }}>
         <tr>
           <td style={{ padding: '40px 20px', textAlign: 'center', backgroundColor: '#FFD1DC' }}>
-            <img src={logoUrl} alt="Everynyan Logo" style={{ maxWidth: '200px', height: 'auto' }} />
+            <img src={logoURL} alt="Everynyan Logo" style={{ maxWidth: '200px', height: 'auto' }} />
           </td>
         </tr>
         <tr>
