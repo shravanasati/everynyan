@@ -11,7 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { redirect } from "next/navigation";
+import { isValidEmail, nextLocalStorage } from "@/lib/utils";
 
 export default function OtpPage() {
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
@@ -55,11 +56,16 @@ export default function OtpPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateOTP()) {
-      console.log("otp:", otp.join(""));
-      // !validations maybe here
-    }
+    console.log("OTP submitted:", otp);
   };
+
+  const email = nextLocalStorage()?.getItem("email");
+  if (!email || email === "") {
+    redirect("/login");
+  }
+  if (!isValidEmail(email)) {
+    redirect("/login");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
