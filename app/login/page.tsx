@@ -43,8 +43,11 @@ export default function Login() {
             <CardTitle className="text-2xl font-bold text-zinc-50">
               Login
             </CardTitle>
-            <CardDescription className="text-zinc-400">
-              Enter your email to receive an OTP
+            <CardDescription className="text-yellow-400">
+              NOTE: Email Address is used only for verification from Resend's
+              API.
+              <br />
+              <span className="font-black">WE NEVER STORE YOUR EMAIL</span>(DBMS weak he lol😹)
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -60,7 +63,7 @@ export default function Login() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="khurafati.branchYEAR@youruni.ac.in"
+                    placeholder="bhupendrajogi.branchYEAR@youruni.ac.in"
                     value={email}
                     onChange={handleEmailChange}
                     ref={emailInputRef}
