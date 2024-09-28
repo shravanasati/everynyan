@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,9 +13,47 @@ import {
 } from "@/components/ui/card";
 import { redirect } from "next/navigation";
 import { isValidEmail, nextLocalStorage } from "@/lib/utils";
+import { AlertCircle } from "lucide-react";
 
 export default function OtpPage() {
-  const [otp, setOTP] = useState("");
+  const [otp, setOTP] = useState(["", "", "", "", "", ""]);
+  const [error, setError] = useState<string | null>(null);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleChange = (index: number, value: string) => {
+    if (value.length <= 1) {
+      const newOTP = [...otp];
+      newOTP[index] = value;
+      setOTP(newOTP);
+      setError(null);
+
+      if (value !== "" && index < 5) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const validateOTP = () => {
+    const otpString = otp.join("");
+    if (otpString.length !== 6) {
+      setError("Please enter all 6 digits");
+      return false;
+    }
+    if (!/^\d+$/.test(otpString)) {
+      setError("OTP must contain only numbers");
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +76,7 @@ export default function OtpPage() {
             Verify OTP
           </CardTitle>
           <CardDescription className="text-zinc-400">
-            
+            Enter the 6-digit code sent to your device
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -51,16 +89,30 @@ export default function OtpPage() {
                 >
                   OTP
                 </label>
-                <Input
-                  id="otp"
-                  type="text"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={(e) => setOTP(e.target.value)}
-                  required
-                  maxLength={6}
-                  className="text-center text-2xl tracking-widest bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
-                />
+                <div className="grid grid-cols-6 gap-2">
+                  {otp.map((digit, index) => (
+                    <Input
+                      key={index}
+                      type="text"
+                      inputMode="numeric"
+                      pattern="\d{1}"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleChange(index, e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(index, e)}
+                      ref={(el) => {
+                        inputRefs.current[index] = el;
+                      }}
+                      className="w-full h-12 text-center text-2xl bg-zinc-800 border-zinc-700 text-zinc-100"
+                    />
+                  ))}
+                </div>
+                {error && (
+                  <div className="flex items-center mt-2 text-red-500">
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    <span className="text-sm">{error}</span>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
