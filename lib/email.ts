@@ -3,28 +3,28 @@ import { Resend } from 'resend';
 import { getNameFromEmail } from './utils';
 
 if (!process.env.RESEND_API_KEY) {
-	throw new Error('RESEND_API_KEY is not set');
+  throw new Error('RESEND_API_KEY is not set');
 }
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendOTPEmail(email: string, otp: string) {
-	const name = getNameFromEmail(email);
-	try {
-		const { data, error } = await resend.emails.send({
-			from: 'Everynyan <no-reply@emails.everynyan.tech>',
-			to: [email],
-			subject: 'OTP for logging into Everynyan',
-			react: OTPEmailTemplate({ name, otp }),
-		});
-		console.log("email resp data", data);
+  const name = getNameFromEmail(email);
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Everynyan <no-reply@emails.everynyan.tech>',
+      to: [email],
+      subject: 'OTP for logging into Everynyan',
+      react: OTPEmailTemplate({ name, otp }),
+    });
+    console.log("email resp data", data);
 
-		if (error) {
-			throw new Error(error.toString());
-		}
+    if (error) {
+      throw new Error(error.toString());
+    }
 
-	} catch (error) {
-		console.error(error)
-		throw new Error('An error occurred while sending the email');
-	}
+  } catch (error) {
+    console.error(error)
+    throw new Error('An error occurred while sending the email');
+  }
 }

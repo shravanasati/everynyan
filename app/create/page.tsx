@@ -2,6 +2,8 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import AnimatedLoader from "@/components/AnimatedLoader";
+import { isLoggedIn } from "@/lib/user";
+import { redirect } from "next/navigation";
 
 const EditorComp = dynamic(() => import("@/components/MdEditor"), {
   ssr: false,
@@ -11,7 +13,11 @@ const markdown = `
 Hello **world**!
 `;
 
-export default function Home() {
+export default async function Home() {
+  if (!await isLoggedIn()) {
+    redirect("/login");
+  }
+  
   return (
     <>
       <p>

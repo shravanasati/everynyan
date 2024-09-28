@@ -1,8 +1,20 @@
-"use client";
+'use client'
 
-import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react"
+import { redirect, useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import {
   Card,
   CardContent,
@@ -10,122 +22,143 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { redirect } from "next/navigation";
-import { isValidEmail, nextLocalStorage } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
+} from "@/components/ui/card"
+import { signin } from "@/lib/actions/signin"
+import { isValidEmail } from "@/lib/utils"
+import { isLoggedIn } from "@/lib/user"
 
-export default function OtpPage() {
-  const [otp, setOTP] = useState(["", "", "", "", "", ""]);
-  const [error, setError] = useState<string | null>(null);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+const formSchema = z.object({
+  otp: z.string().length(6).regex(/^\d+$/, "OTP must contain only numbers"),
+})
 
-  const handleChange = (index: number, value: string) => {
-    if (value.length <= 1) {
-      const newOTP = [...otp];
-      newOTP[index] = value;
-      setOTP(newOTP);
-      setError(null);
+export default function OTPPage() {
+  // todo
+  // if (await isLoggedIn()) {
+  //   redirect("/board");
+  // }
+  const router = useRouter()
+  const [email, setEmail] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-      if (value !== "" && index < 5) {
-        inputRefs.current[index + 1]?.focus();
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email")
+    if (!storedEmail || !isValidEmail(storedEmail)) {
+      router.push("/login")
+    } else {
+      setEmail(storedEmail)
+    }
+  }, [router])
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      otp: "",
+    },
+  })
+
+  const { watch, setValue } = form
+
+  const otpValue = watch("otp")
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Backspace" && otpValue.length > 0) {
+        setValue("otp", otpValue.slice(0, -1))
       }
     }
-  };
 
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (e.key === "Backspace" && otp[index] === "" && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [otpValue, setValue])
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    let newValues = values as { email: string; otp: string }
+    newValues.email = email || ""
+    if (!isValidEmail(newValues.email)) {
+      router.push("/login")
     }
-  };
-
-  const validateOTP = () => {
-    const otpString = otp.join("");
-    if (otpString.length !== 6) {
-      setError("Please enter all 6 digits");
-      return false;
+    console.log("Submitting OTP form:", newValues)
+    try {
+      const result = await signin(newValues)
+      if (result.success) {
+        localStorage.removeItem("email")
+        router.push("/board")
+      } else {
+        const error = result.error || "An unexpected error occurred. Please try again."
+        if (error === "OTP expired. Please request a new one.") {
+          localStorage.removeItem("email")
+          setTimeout(() => {
+            router.push("/login")
+          }, 3000)
+        }
+        form.setError("otp", { message: result.error })
+      }
+    } catch (error) {
+      console.error("Error during sign in:", error)
+      form.setError("otp", { message: "An unexpected error occurred. Please try again." })
+    } finally {
+      setLoading(false)
     }
-    if (!/^\d+$/.test(otpString)) {
-      setError("OTP must contain only numbers");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("OTP submitted:", otp);
-  };
-
-  const email = nextLocalStorage()?.getItem("email");
-  if (!email || email === "") {
-    redirect("/login");
   }
-  if (!isValidEmail(email)) {
-    redirect("/login");
+
+  if (!email) {
+    return null // or a loading spinner
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
       <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-zinc-50">
-            Verify OTP
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold text-zinc-50">Verify OTP</CardTitle>
           <CardDescription className="text-zinc-400">
-            Enter the 6-digit code sent to your device
+            Enter the 6-digit code sent to your email
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label
-                  htmlFor="otp"
-                  className="text-sm font-medium text-zinc-200 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  OTP
-                </label>
-                <div className="grid grid-cols-6 gap-2">
-                  {otp.map((digit, index) => (
-                    <Input
-                      key={index}
-                      type="text"
-                      inputMode="numeric"
-                      pattern="\d{1}"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleChange(index, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(index, e)}
-                      ref={(el) => {
-                        inputRefs.current[index] = el;
-                      }}
-                      className="w-full h-12 text-center text-2xl bg-zinc-800 border-zinc-700 text-zinc-100"
-                    />
-                  ))}
-                </div>
-                {error && (
-                  <div className="flex items-center mt-2 text-red-500">
-                    <AlertCircle className="w-4 h-4 mr-2" />
-                    <span className="text-sm">{error}</span>
-                  </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-zinc-200">OTP</FormLabel>
+                    <FormControl>
+                      <div className="grid grid-cols-6 gap-2">
+                        {[0, 1, 2, 3, 4, 5].map((index) => (
+                          <Input
+                            key={index}
+                            type="text"
+                            inputMode="numeric"
+                            pattern="\d{1}"
+                            maxLength={1}
+                            value={field.value[index] || ""}
+                            onChange={(e) => {
+                              const newValue = field.value.slice(0, index) + e.target.value + field.value.slice(index + 1)
+                              field.onChange(newValue.slice(0, 6))
+                              if (e.target.value !== "" && index < 5) {
+                                (e.target.nextElementSibling as HTMLInputElement)?.focus()
+                              }
+                            }}
+                            className="w-full h-12 text-center text-2xl bg-zinc-800 border-zinc-700 text-zinc-100"
+                          />
+                        ))}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button
-              type="submit"
-              className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100"
-            >
-              Verify
-            </Button>
-          </CardFooter>
-        </form>
+              />
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" disabled={loading} className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100">
+                {loading ? "Verifying..." : "Verify"}
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
       </Card>
     </div>
-  );
+  )
 }

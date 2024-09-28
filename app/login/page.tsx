@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -28,6 +28,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
+import { isLoggedIn } from "@/lib/user"
 
 const formSchema = z.object({
   email: z.string().regex(uniEmailRegex, "That email address doesn't look right 😕"),
@@ -37,6 +38,11 @@ const formSchema = z.object({
 })
 
 export default function Login() {
+  // todo
+  // if (await isLoggedIn()) {
+  //   redirect("/board");
+  // }
+
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)

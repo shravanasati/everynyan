@@ -1,24 +1,16 @@
 import {
-	collection,
-	onSnapshot,
-	query,
-	getDocs,
 	doc,
 	getDoc,
 	setDoc,
-	updateDoc,
-	orderBy,
+	deleteDoc,
 	Timestamp,
-	runTransaction,
-	where,
-	addDoc,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
 
 export type OTPEntry = {
-  otp: string;
-  timestamp: Timestamp;
+	otp: string;
+	timestamp: Timestamp;
 };
 
 export async function saveOTP(email: string, otp: string) {
@@ -31,11 +23,41 @@ export async function saveOTP(email: string, otp: string) {
 }
 
 export async function getOTP(email: string) {
-  const otpRef = doc(db, "otp", email);
-  const otpSnap = await getDoc(otpRef);
+	const otpRef = doc(db, "otp", email);
+	const otpSnap = await getDoc(otpRef);
 
-  if (otpSnap.exists()) {
-    return otpSnap.data() as OTPEntry;
+	if (otpSnap.exists()) {
+		return otpSnap.data() as OTPEntry;
+	}
+
+	return null;
+}
+
+export async function deleteOTP(email: string) {
+	const otpRef = doc(db, "otp", email);
+	await deleteDoc(otpRef);
+}
+
+export async function storeToken(token: string) {
+  const tokenRef = doc(db, "tokens", token);
+
+  await setDoc(tokenRef, {
+    token,
+    timestamp: Timestamp.now(),
+  });
+}
+
+export async function deleteToken(token: string) {
+  const tokenRef = doc(db, "tokens", token);
+  await deleteDoc(tokenRef);
+}
+
+export async function getToken(token: string) {
+  const tokenRef = doc(db, "tokens", token);
+  const tokenSnap = await getDoc(tokenRef);
+
+  if (tokenSnap.exists()) {
+    return tokenSnap.data();
   }
 
   return null;
