@@ -12,6 +12,7 @@ import {
 	runTransaction,
 	where,
 	addDoc,
+	DocumentData,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
