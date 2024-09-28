@@ -1,3 +1,6 @@
+import { isLoggedIn } from "@/lib/user";
+import { redirect } from "next/navigation";
+
 interface BoardProps {
   params: {
     boardName: string;
@@ -13,6 +16,10 @@ async function getBoardData(boardName: string) {
 }
 
 export default async function BoardDetailPage({ params }: BoardProps) {
+  if (!await isLoggedIn()) {
+    redirect("/login");
+  }
+
   const { boardName } = params;
   const boardData = await getBoardData(boardName);
 

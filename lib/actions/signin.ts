@@ -1,8 +1,10 @@
 'use server'
 
 import { z } from "zod"
-import { getOTP } from "@/lib/firebase/firestore"
+import { deleteOTP, getOTP, storeToken } from "@/lib/firebase/firestore"
 import { uniEmailRegex } from "@/lib/utils"
+import { encrypt, newToken } from "@/lib//crypt"
+import { cookies } from "next/headers"
 
 const OTPSchema = z.object({
 	otp: z.string().length(6).regex(/^\d+$/, "OTP must contain only numbers"),
@@ -29,7 +31,22 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
   }
   
   console.log(`OTP verified for email: ${values.email}`)
-  // todo generate a session token and store it in a cookie, firebase
+  const token = newToken()
+  const tokenObj = {
+    "token": token,
+  }
 
+  // store token in firebase
+  await storeToken(token)
+
+  // store token in cookie
+  cookies().set("session", encrypt(JSON.stringify(tokenObj)), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24 * 7 * 2, // 2 weeks
+  })
+
+  await deleteOTP(values.email)
 	return { success: true }
 }

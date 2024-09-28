@@ -1,13 +1,16 @@
 import crypto from 'crypto';
-const SECRET_KEY = process.env.SECRET_KEY
+const SECRET_KEY_ENV = process.env.SECRET_KEY
 
-if (!SECRET_KEY) {
+if (!SECRET_KEY_ENV) {
 	throw new Error('SECRET_KEY is not defined in the environment variables');
 }
 
+const SECRET_KEY = crypto.scryptSync(SECRET_KEY_ENV, 'asafawfa', 32)
+
+
 export function encrypt(text: string) {
 	const iv = crypto.randomBytes(12);
-	const cipher = crypto.createCipheriv('aes-256-gcm', SECRET_KEY!, iv);
+	const cipher = crypto.createCipheriv('aes-256-gcm', SECRET_KEY, iv);
 	const encryptedText = Buffer.concat(
 		[
 			Buffer.from('v10'),         // prefix
@@ -38,4 +41,8 @@ export function hash(text: string) {
 	return crypto.createHash('sha256').
 		update(text).
 		digest('hex')
+}
+
+export function newToken() {
+  return crypto.randomBytes(32).toString('hex');
 }

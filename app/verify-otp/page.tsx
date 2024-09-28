@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { redirect, useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -25,14 +25,20 @@ import {
 } from "@/components/ui/card"
 import { signin } from "@/lib/actions/signin"
 import { isValidEmail } from "@/lib/utils"
+import { isLoggedIn } from "@/lib/user"
 
 const formSchema = z.object({
   otp: z.string().length(6).regex(/^\d+$/, "OTP must contain only numbers"),
 })
 
 export default function OTPPage() {
+  // todo
+  // if (await isLoggedIn()) {
+  //   redirect("/board");
+  // }
   const router = useRouter()
   const [email, setEmail] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email")
@@ -66,6 +72,7 @@ export default function OTPPage() {
   }, [otpValue, setValue])
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
     let newValues = values as { email: string; otp: string }
     newValues.email = email || ""
     if (!isValidEmail(newValues.email)) {
@@ -75,6 +82,7 @@ export default function OTPPage() {
     try {
       const result = await signin(newValues)
       if (result.success) {
+        localStorage.removeItem("email")
         router.push("/board")
       } else {
         const error = result.error || "An unexpected error occurred. Please try again."
@@ -89,6 +97,8 @@ export default function OTPPage() {
     } catch (error) {
       console.error("Error during sign in:", error)
       form.setError("otp", { message: "An unexpected error occurred. Please try again." })
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -142,8 +152,8 @@ export default function OTPPage() {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit" className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100">
-                Verify
+              <Button type="submit" disabled={loading} className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100">
+                {loading ? "Verifying..." : "Verify"}
               </Button>
             </CardFooter>
           </form>
