@@ -17,7 +17,6 @@ export async function sendOTPEmail(email: string, otp: string) {
       subject: 'OTP for logging into Everynyan',
       react: OTPEmailTemplate({ name, otp }),
     });
-    console.log("email resp data", data);
 
     if (error) {
       throw new Error(error.toString());
