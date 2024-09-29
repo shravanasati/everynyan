@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const uniEmailRegex = /^[a-zA-Z]+\.(cse|ict|cie)(2[2-9]|30)@adaniuni\.ac\.in$/;
+export const uniEmailRegex = /^[a-zA-Z]+\.(cse|ict|cie)(2[2-3])@adaniuni\.ac\.in$/;
 
 export function isValidEmail(email: string) {
   return uniEmailRegex.test(email);
 }
 
-export function getNameFromEmail(email: string) {
+export function getNameFromEmail(email: string) { 
   return email.split(".")[0];
 }
 
