@@ -1,18 +1,25 @@
 "use client";
 import "@mdxeditor/editor/style.css";
+import "./MdEditor.css";
 import {
   MDXEditor,
   UndoRedo,
   BoldItalicUnderlineToggles,
   toolbarPlugin,
+  headingsPlugin,
+  quotePlugin,
+  listsPlugin,
+  linkPlugin,
+  // thematicBreakPlugin,
+  type MDXEditorMethods,
+  type MDXEditorProps,
+  markdownShortcutPlugin,
 } from "@mdxeditor/editor";
-import { string } from "zod";
+import type {ForwardedRef} from "react";
 
-function MdEditor(props: { markdown: string }) {
-  const { markdown } = props;
+function MdEditor({editorRef, ...props}: MDXEditorProps & { editorRef?: ForwardedRef<MDXEditorMethods> }) {
   return (
     <MDXEditor
-      markdown={markdown}
       plugins={[
         toolbarPlugin({
           toolbarContents: () => (
@@ -23,7 +30,17 @@ function MdEditor(props: { markdown: string }) {
             </>
           ),
         }),
+        headingsPlugin(),
+        listsPlugin(),
+        quotePlugin(),
+        // thematicBreakPlugin(),
+        linkPlugin(),
+        markdownShortcutPlugin(),
       ]}
+      {...props}
+      ref={editorRef}
+      contentEditableClassName="prose"
+      className="markdown-editor"
     />
   );
 }

@@ -1,0 +1,42 @@
+.markdown-editor .prose {
+  /* min-height: 200px; */
+  color: white;
+}
+
+.markdown-editor .prose p {
+  margin-bottom: 1em;
+}
+
+.markdown-editor .prose h1,
+.markdown-editor .prose h2,
+.markdown-editor .prose h3,
+.markdown-editor .prose h4,
+.markdown-editor .prose h5,
+.markdown-editor .prose h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+}
+
+.markdown-editor .prose h1 { font-size: 2em; }
+.markdown-editor .prose h2 { font-size: 1.5em; }
+.markdown-editor .prose h3 { font-size: 1.17em; }
+
+.markdown-editor .prose ul,
+.markdown-editor .prose ol {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+.markdown-editor .prose blockquote {
+  border-left: 3px solid #4a5568;
+  padding-left: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-style: italic;
+}
+
+.markdown-editor .prose a {
+  color: #60a5fa;
+  text-decoration: underline;
+}
