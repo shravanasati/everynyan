@@ -1,18 +1,14 @@
 import { isLoggedIn } from "@/lib/user";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-
-async function getBoard() {
-  const boards = ["confessions", "memes", "yap"];
-  return boards;
-}
+import { boardList } from "@/lib/boards";
 
 export default async function BoardsPage() {
   if (!await isLoggedIn()) {
     redirect("/login");
   }
 
-  const boards = await getBoard();
+  const boards = boardList;
   return (
     <div className="h-screen w-full bg-red-500">
       <h1>hello choose a board</h1>
