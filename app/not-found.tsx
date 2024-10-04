@@ -15,7 +15,7 @@ export default function NotFound() {
           />
         </div>
         <p className="text-gray-600">
-          OH MY GAH! The page you're looking for doesn't exist.
+          OH MY GAH! The page you&apos;re looking for doesn&apos;t exist.
         </p>
         <Button asChild className="mt-4">
           <Link href="/">Return Home</Link>

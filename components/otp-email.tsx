@@ -17,13 +17,13 @@ export function OTPEmailTemplate({ name, otp }: OTPEmailProps) {
           <td style={{ padding: '40px 20px' }}>
             <h1 style={{ color: '#333333', fontSize: '24px', marginBottom: '20px', textAlign: 'center' }}>Hi {name},</h1>
             <p style={{ color: '#666666', fontSize: '16px', lineHeight: '1.5', marginBottom: '20px', textAlign: 'center' }}>
-              Welcome to Everynyan! Here's your one-time password (OTP) to complete your login:
+              Welcome to Everynyan! Here&apos;s your one-time password (OTP) to complete your login:
             </p>
             <div style={{ backgroundColor: '#FFD1DC', padding: '20px', borderRadius: '8px', textAlign: 'center', margin: '0 auto', maxWidth: '200px' }}>
               <span style={{ fontSize: '32px', fontWeight: 'bold', color: '#333333', letterSpacing: '4px' }}>{otp}</span>
             </div>
             <p style={{ color: '#666666', fontSize: '14px', lineHeight: '1.5', marginTop: '20px', textAlign: 'center' }}>
-              This code will expire in 10 minutes. If you didn't request this OTP, please ignore this email.
+              This code will expire in 10 minutes. If you didn&apos;t request this OTP, please ignore this email.
             </p>
           </td>
         </tr>

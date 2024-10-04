@@ -24,7 +24,7 @@ export function encrypt(text: string) {
 
 export function decrypt(text: string) {
 	const data = Buffer.from(text, 'base64');
-	const prefix = data.slice(0, 3); // prefix
+	// const prefix = data.slice(0, 3); // prefix
 	const iv = data.slice(3, 15); // 12 bytes nonce
 	const authTag = data.slice(data.length - 16); // 16 bytes authentication tag
 	const ciphertext = data.slice(15, data.length - 16); // encrypted cookie

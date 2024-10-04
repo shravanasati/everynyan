@@ -18,9 +18,10 @@ const config: FirebaseConfig = {
 
 // When deployed, there are quotes that need to be stripped
 Object.keys(config).forEach((key) => {
-  const configValue = (config as any)[key] + "";
+  const configKey = key as keyof FirebaseConfig;
+  const configValue = config[configKey] + "";
   if (configValue.charAt(0) === '"') {
-    (config as any)[key] = configValue.substring(1, configValue.length - 1);
+    config[configKey] = configValue.substring(1, configValue.length - 1);
   }
 });
 

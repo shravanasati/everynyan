@@ -11,7 +11,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function sendOTPEmail(email: string, otp: string) {
   const name = getNameFromEmail(email);
   try {
-    const { data, error } = await resend.emails.send({
+    // can also extract data from here
+    const { error } = await resend.emails.send({
       from: 'Everynyan <no-reply@emails.everynyan.tech>',
       to: [email],
       subject: 'OTP for logging into Everynyan',
