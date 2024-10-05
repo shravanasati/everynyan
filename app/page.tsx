@@ -1,17 +1,14 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-// import { isLoggedIn } from "@/lib/user";
+import { isLoggedIn } from "@/lib/user";
 import Link from "next/link";
-// import { redirect } from "next/navigation";
 
 export default async function Home() {
-  // if (await isLoggedIn()){
-  //   redirect("/board");
-  // }
+  const loggedIn = await isLoggedIn();
 
   return (
     <div className="overflow-x-hidden h-screen w-screen flex justify-center">
-      <Navbar />
+      <Navbar loggedIn = {loggedIn} />
       <div className="flex flex-col justify-center items-center size-full bg-zinc-950 text-white p-4">
         <div className="text-center space-y-8">
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-center bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-blue-500">
