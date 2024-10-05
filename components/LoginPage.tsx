@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import { redirect, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -28,7 +28,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
-import { isLoggedIn } from "@/lib/user"
 
 const formSchema = z.object({
   email: z.string().regex(uniEmailRegex, "That email address doesn't look right 😕"),
@@ -58,7 +57,7 @@ export function LoginPage() {
       nextLocalStorage()?.setItem("email", values.email)
       router.push("/verify-otp")
     } else {
-      let errors = result.errors as { email?: string; server?: string }
+      const errors = result.errors as { email?: string; server?: string }
       const errorMessage = errors?.email || errors?.server || "An error occurred. Please try again."
       setServerError(errorMessage)
     }

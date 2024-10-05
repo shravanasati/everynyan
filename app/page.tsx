@@ -1,13 +1,13 @@
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
-import { isLoggedIn } from "@/lib/user";
+// import { isLoggedIn } from "@/lib/user";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+// import { redirect } from "next/navigation";
 
 export default async function Home() {
-  if (await isLoggedIn()){
-    redirect("/board");
-  }
+  // if (await isLoggedIn()){
+  //   redirect("/board");
+  // }
 
   return (
     <div className="overflow-x-hidden h-screen w-screen flex justify-center">

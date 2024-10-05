@@ -68,7 +68,7 @@ export function OTPPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true)
-    let newValues = values as { email: string; otp: string }
+    const newValues = values as { email: string; otp: string }
     newValues.email = email || ""
     if (!isValidEmail(newValues.email)) {
       router.push("/login")

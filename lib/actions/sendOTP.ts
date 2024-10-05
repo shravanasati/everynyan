@@ -6,8 +6,8 @@ import { getOTP, saveOTP } from "@/lib/firebase/firestore"
 import { sendOTPEmail } from "@/lib/email"
 import isRateLimited from "@/lib/ratelimit"
 
-const sendOTPSchema = z.object({
-	email: z.string().regex(uniEmailRegex, "Invalid email address"),
+const sendOTPSchema = z.strictObject({
+	email: z.string().toLowerCase().regex(uniEmailRegex, "Invalid email address"),
 	tos: z.boolean().refine(val => val === true, {
 		message: "You must accept the terms and conditions"
 	})
@@ -26,7 +26,7 @@ export async function sendOTP(values: z.infer<typeof sendOTPSchema>) {
       return { success: false, errors: { server: "Rate limit exceeded. Please try again later." } }
     }
 
-    const otpExists = await getOTP(values.email)
+    const otpExists = await getOTP(result.data.email)
     if (otpExists) {
       // rate limit OTPs to 1 per minute
       const expirationTime = otpExists.timestamp.toMillis() + 60000
@@ -36,8 +36,8 @@ export async function sendOTP(values: z.infer<typeof sendOTPSchema>) {
     }
 
     const otp = generateOTP().toString()
-    await saveOTP(values.email, otp)
-    await sendOTPEmail(values.email, otp)
+    await saveOTP(result.data.email, otp)
+    await sendOTPEmail(result.data.email, otp)
   
     return { success: true }
 
