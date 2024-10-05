@@ -7,6 +7,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
+import type { Post } from "@/lib/post";
 
 export type OTPEntry = {
 	otp: string;
@@ -61,4 +62,18 @@ export async function getToken(token: string) {
   }
 
   return null;
+}
+
+export async function savePost(post: Post) {
+  const postRef = doc(db, "posts", post.board);
+
+  await setDoc(postRef, {
+	title: post.title,
+	content: post.content,
+	comments: [],
+	moderation_status: "pending",
+	timestamp: Timestamp.now(),
+  });
+
+  return postRef.id;
 }

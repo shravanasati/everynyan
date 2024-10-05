@@ -28,6 +28,7 @@ export default function Navbar() {
       href: "https://github.com/shravanasati/everynyan",
     },
   ];
+  // todo add create post and boards link if logged in
 
   return (
     <nav className="bg-zinc-900 shadow-md z-50 fixed sm:min-w-[50%] mt-8  rounded-2xl min-w-[80%]">

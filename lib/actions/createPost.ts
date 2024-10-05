@@ -2,12 +2,15 @@
 import { boardList } from "../boards"
 import { z } from "zod"
 import { isLoggedIn } from "@/lib/user"
+import { savePost } from "@/lib/firebase/firestore"
+import type { Post } from "@/lib/post"
 
 const createPostSchema = z.strictObject({
   board: z.string().refine(val => boardList.includes(val), {
     message: "Invalid board"
   }),
-  markdown: z.string(),
+  title: z.string().min(1, "Title cannot be empty").max(100, "Title is too long. It must be within 100 characters"),
+  content: z.string().min(1, "Post cannot be empty").max(4000, "Post is too long. It must be within 4000 characters"),
 })
 
 export async function createPost(values: z.infer<typeof createPostSchema>) {
@@ -21,6 +24,12 @@ export async function createPost(values: z.infer<typeof createPostSchema>) {
   }
 
   console.log(`Creating post on board: ${values.board}`)
+  try {
+    await savePost(result.data as Post)
+  } catch (error) {
+    console.error(error)
+    return { success: false, errors: { server: "An error occurred. Please try again later." } }
+  }
 
-  return { success: true, boards: boardList }
+  return { success: true }
 }
