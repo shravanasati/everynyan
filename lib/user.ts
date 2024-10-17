@@ -12,14 +12,14 @@ export async function isLoggedIn() {
 
 	try {
 		const tokenObj = JSON.parse(decrypt(session.value))
-    if (!tokenObj.token) {
-      return false
-    }
-    const dbToken = await getToken(tokenObj.token)
-    if (!dbToken) {
-      return false
-    }
-    return true
+		if (!tokenObj.token) {
+			return false
+		}
+		const dbToken = await getToken(tokenObj.token)
+		if (!dbToken) {
+			return false
+		}
+		return true
 	}
 	catch (error) {
 		return false

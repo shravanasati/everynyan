@@ -7,7 +7,7 @@ export default async function Home() {
   const loggedIn = await isLoggedIn();
 
   return (
-    <div className="overflow-x-hidden h-screen w-screen flex justify-center">
+    <div className="overflow-x-hidden h-screen w-screen flex flex-col justify-center">
       <Navbar loggedIn = {loggedIn} />
       <div className="flex flex-col justify-center items-center size-full bg-zinc-950 text-white p-4">
         <div className="text-center space-y-8">
