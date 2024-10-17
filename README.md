@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# everynyan
 
-## Getting Started
+everynyan is a social media website which focuses heavily on anonymity and exclusivity.
 
-First, run the development server:
+### Setting up the local development environment
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+everynyan is built using Next.js.
+
+1. Clone the repository.
+
+```
+git clone https://github.com/shravanasati/everynyan.git
+```
+2. Create a `.env.local` file.
+
+```
+SECRET_KEY=
+RESEND_API_KEY=
+
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+NEXT_PUBLIC_FIREBASE_APP_ID=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+python -c "import secrets;print(secrets.token_hex(32))"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
 
-## Learn More
+You also need to create a project on [Firebase](https://console.firebase.google.com) and store those credentials in env file as well.
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Install all the dependencies.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+pnpm i
+```
 
-## Deploy on Vercel
+4. Run the development server.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+pnpm dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Contribution
+
+everynyan is open to contributions. If you wish to contribute, follow the above instructions to setup your development environment, but make sure to clone your forked copy.
