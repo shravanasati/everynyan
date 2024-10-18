@@ -33,7 +33,7 @@ python -c "import secrets;print(secrets.token_hex(32))"
 
 Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
 
-You also need to create a project on [Firebase](https://console.firebase.google.com) and store those credentials in env file as well.
+You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore and store those credentials in env file as well.
 
 
 3. Install all the dependencies.
