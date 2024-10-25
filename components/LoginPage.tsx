@@ -30,7 +30,7 @@ import {
 import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
 
 const formSchema = z.object({
-  email: z.string().regex(uniEmailRegex, "That email address doesn't look right 😕"),
+  email: z.string().toLowerCase().regex(uniEmailRegex, "That email address doesn't look right 😕"),
   tos: z.boolean().refine(val => val === true, {
     message: "You must accept the terms and conditions"
   })

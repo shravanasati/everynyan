@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 
-export default function Navbar() {
+export default function Navbar({loggedIn} : {loggedIn: boolean}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -16,22 +16,29 @@ export default function Navbar() {
       href: "/",
     },
     {
-      title: "Log In",
-      href: "/login",
+      title: loggedIn ? "Log Out" : "Log In",
+      href: loggedIn ? "/logout" : "/login",
     },
-    // {
-    //   title: "TnC",
-    //   href: "/tnc",
-    // },
     {
       title: "Github",
       href: "https://github.com/shravanasati/everynyan",
     },
   ];
-  // todo add create post and boards link if logged in
+
+  if (loggedIn) {
+    navbarLinks.push({
+      title: "Create Post",
+      href: "/create"
+    },
+    {
+      title: "Boards",
+      href: "/board"
+    }
+  )
+  }
 
   return (
-    <nav className="bg-zinc-900 shadow-md z-50 fixed sm:min-w-[50%] mt-8  rounded-2xl min-w-[80%]">
+    <nav className="bg-zinc-900 shadow-md z-50  sm:min-w-[50%] mt-8 rounded-2xl min-w-[80%]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">

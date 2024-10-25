@@ -11,6 +11,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.53.0(react@18.3.1))
+      '@marsidev/react-turnstile':
+        specifier: ^1.0.2
+        version: 1.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@mdxeditor/editor':
         specifier: ^3.11.5
         version: 3.11.5(@codemirror/language@6.10.3)(@lezer/common@1.2.1)(@lezer/highlight@1.2.1)(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(yjs@13.6.19)
@@ -603,6 +606,12 @@ packages:
 
   '@lezer/yaml@1.0.3':
     resolution: {integrity: sha512-GuBLekbw9jDBDhGur82nuwkxKQ+a3W5H0GfaAthDXcAu+XdpS43VlnxA9E9hllkpSP5ellRDKjLLj7Lu9Wr6xA==}
+
+  '@marsidev/react-turnstile@1.0.2':
+    resolution: {integrity: sha512-YkCtJVaCzZ1kcmhPsiFTmTXVughoNzEMRsNHcmTG0K5OdbCQfAG67Q6d5Ze+A72vrHbvVZkvcLgUbldeGcbRjQ==}
+    peerDependencies:
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
 
   '@mdxeditor/editor@3.11.5':
     resolution: {integrity: sha512-OEWe8duzYqSG9BhWsKWOoX+Xqi/B+90E2xtFHsXFXJXciyRUEMnsdAWEx0D/qK4y1Aa7BUnreqcmZ+D5KJn/Bg==}
@@ -4144,6 +4153,11 @@ snapshots:
       '@lezer/common': 1.2.1
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
+
+  '@marsidev/react-turnstile@1.0.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   '@mdxeditor/editor@3.11.5(@codemirror/language@6.10.3)(@lezer/common@1.2.1)(@lezer/highlight@1.2.1)(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(yjs@13.6.19)':
     dependencies:
