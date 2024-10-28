@@ -29,6 +29,7 @@
     "resend": "^4.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-motion": "0.3.0-beta",
     "zod": "^3.23.8"
   },
   "devDependencies": {
