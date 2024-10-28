@@ -111,3 +111,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.ease-ani {
+  @apply transition-all ease-in-out delay-75 duration-300;
+}
