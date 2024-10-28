@@ -1,101 +1,55 @@
-"use client";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import SvgLogo from "@/components/SvgLogo";
 
-export default function Navbar({loggedIn} : {loggedIn: boolean}) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
+export default function Navbar({ loggedIn }: { loggedIn: boolean }) {
   const navbarLinks = [
     {
       title: "Home",
       href: "/",
     },
     {
-      title: loggedIn ? "Log Out" : "Log In",
-      href: loggedIn ? "/logout" : "/login",
-    },
-    {
-      title: "Github",
+      title: "Sauce",
       href: "https://github.com/shravanasati/everynyan",
     },
   ];
 
-  if (loggedIn) {
-    navbarLinks.push({
-      title: "Create Post",
-      href: "/create"
-    },
-    {
-      title: "Boards",
-      href: "/board"
-    }
-  )
-  }
-
   return (
-    <nav className="bg-zinc-900 shadow-md z-50  sm:min-w-[50%] mt-8 rounded-2xl min-w-[80%]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-3xl font-black text-zinc-50">
-              Everynyan
-            </Link>
-          </div>
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              {navbarLinks.map((navbarLink, index) => (
-                <Link
-                  key={index}
-                  href={navbarLink.href}
-                  className="text-zinc-100 hover:text-zinc-400 px-3 py-2 rounded-md text-xl font-medium"
-                >
-                  {navbarLink.title}
-                </Link>
-              ))}
-              {/* <Link
-                href="/"
-                className="text-zinc-100 hover:text-zinc-400 px-3 py-2 rounded-md text-xl font-medium"
-              >
-                Home
-              </Link> */}
-            </div>
-          </div>
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-zinc-400 hover:text-zinc-500  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-500"
-            >
-              <span className="sr-only">Open main menu</span>
-              {isOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
-          </div>
-        </div>
+    <header className="p-4 flex justify-between items-center bg-background text-foreground">
+      {/* logo */}
+      <div className="flex items-center space-x-2">
+        <SvgLogo />
+        <span className="text-2xl font-bold">EveryNyan</span>
       </div>
-
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navbarLinks.map((navbarLink, index) => (
-              <Link
-                key={index}
-                href={navbarLink.href}
-                className="text-zinc-100 hover:text-zinc-900 block px-3 py-2 rounded-md text-xl font-medium"
-              >
-                {navbarLink.title}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-    </nav>
+      {/* logo */}
+      <nav className="hidden md:flex space-x-6">
+        {navbarLinks.map((item, index) => {
+          return (
+            <Link
+              href={item.href}
+              className="hover:text-primary ease-ani"
+              key={index}
+            >
+              {item.title}
+            </Link>
+          );
+        })}
+      </nav>
+      <div className="flex items-center space-x-4">
+        <Link href={loggedIn ? "/logout" : "/login"}>
+          <Button
+            variant="ghost"
+            className="hidden md:inline-flex hover:text-primary ease-ani"
+          >
+            {loggedIn ? "Log Out" : "Log In"}
+          </Button>
+        </Link>
+        <Link href="#">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 ease-ani">
+            Create {/* add create link once done */}
+          </Button>
+        </Link>
+      </div>
+    </header>
   );
 }
