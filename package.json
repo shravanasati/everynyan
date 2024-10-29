@@ -19,6 +19,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "firebase": "^10.13.2",
+    "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.439.0",
     "next": "14.2.10",
@@ -29,6 +30,7 @@
     "resend": "^4.0.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-motion": "0.3.0-beta",
     "zod": "^3.23.8"
   },
   "devDependencies": {

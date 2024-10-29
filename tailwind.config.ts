@@ -10,7 +10,7 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				obv: ['Obv', 'sans-serif'], // Add your custom font here
+				obv: ['Obv', 'sans-serif']
 			},
 			colors: {
 				background: 'hsl(var(--background))',
@@ -58,17 +58,45 @@ const config: Config = {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
-			}, keyframes: {
-				"caret-blink": {
-					"0%,70%,100%": { opacity: "1" },
-					"20%,50%": { opacity: "0" },
+			},
+			keyframes: {
+				'caret-blink': {
+					'0%,70%,100%': {
+						opacity: '1'
+					},
+					'20%,50%': {
+						opacity: '0'
+					}
+				},
+				float: {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-12px)'
+					}
+				},
+				'border-beam': {
+					'100%': {
+						'offset-distance': '100%'
+					}
+				},
+				subtlePulse: {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.7' },
 				},
 			},
 			animation: {
-				"caret-blink": "caret-blink 1.25s ease-out infinite",
-			},
+				'caret-blink': 'caret-blink 1.25s ease-out infinite',
+				'float': 'float 3s ease-in-out infinite',
+				'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+				subtlePulse: 'subtlePulse 1s ease-in-out infinite',
+			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("tailwindcss-motion")
+	],
 };
 export default config;

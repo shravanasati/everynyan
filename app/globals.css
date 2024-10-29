@@ -115,3 +115,29 @@ body {
 .ease-ani {
   @apply transition-all ease-in-out delay-75 duration-300;
 }
+
+body {
+  --sb-track-color: #1c262b00;
+  --sb-thumb-color: #7d692100;
+  --sb-size: 0px;
+}
+
+body::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 10px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
