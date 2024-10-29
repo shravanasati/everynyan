@@ -73,7 +73,7 @@ const config: Config = {
 						transform: 'translateY(0)'
 					},
 					'50%': {
-						transform: 'translateY(-10px)'
+						transform: 'translateY(-12px)'
 					}
 				},
 				'border-beam': {
