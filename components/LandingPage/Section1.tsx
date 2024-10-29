@@ -17,12 +17,12 @@ export default function Section1() {
               That too completely anonymously :)
             </span>
           </p>
-          <Link href="#" className="flex">
+          <Link href="/login" className="flex">
             <Button
               className="md:py-6  py-2 md:px-8 px-2 mt-4 md:ml-9 text-sm md:text-xl flex justify-center items-center opacity-100 md:font-black font-bold hover:motion-preset-confetti hover:motion-duration-1000 hover:md:py-6 hover:py-2 hover:md:px-8 hover:px-2 hover:mt-4 hover:md:ml-9 hover:flex animate-subtlePulse"
               variant="outline"
             >
-              Let&apos;s GO!{" "}
+              Let&apos;s Go!{" "}
             </Button>
           </Link>
         </div>
