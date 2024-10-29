@@ -6,24 +6,24 @@ export default function Navbar({ loggedIn }: { loggedIn: boolean }) {
   return (
     <header className="p-4 flex justify-between items-center bg-background text-foreground">
       {/* logo */}
-      <div className="flex items-center space-x-2">
+      <Link className="flex items-center space-x-2" href="/">
         <SvgLogo />
         <span className="text-2xl font-bold">EveryNyan</span>
-      </div>
+      </Link>
       {/* logo */}
 
       <div className="flex items-center space-x-4">
         <Link href={loggedIn ? "/logout" : "/login"}>
           <Button
             variant="ghost"
-            className="hidden md:inline-flex hover:text-primary ease-ani"
+            className="hidden md:inline-flex hover:text-primary ease-ani font-bold"
           >
             {loggedIn ? "Log Out" : "Log In"}
           </Button>
         </Link>
-        <Link href="#">
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 ease-ani">
-            Create {/* add create link once done */}
+        <Link href="/create">
+          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 ease-ani font-bold">
+            Explore {/* add create link once done */}
           </Button>
         </Link>
       </div>
