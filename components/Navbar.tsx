@@ -4,7 +4,7 @@ import SvgLogo from "@/components/SvgLogo";
 
 export default function Navbar({ loggedIn }: { loggedIn: boolean }) {
   return (
-    <header className="p-4 flex justify-between items-center text-foreground bg-[#090909]">
+    <header className="p-4 flex justify-between items-center text-foreground">
       {/* logo */}
       <Link className="flex items-center space-x-2" href="/">
         <SvgLogo />
