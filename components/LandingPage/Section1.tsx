@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Section1() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#090909] -z-50">
       <div className="grid md:grid-cols-2 grid-cols-1 gap-1 h-full">
         <div className="flex flex-col justify-center md:items-start items-center p-4 md:p-9 h-screen">
           <h1 className="text-5xl md:text-7xl font-black motion-preset-blur-right motion-duration-2000 mb-6 md:text-left text-center tracking-wider">

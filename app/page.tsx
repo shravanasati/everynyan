@@ -5,7 +5,7 @@ import Section2 from "@/components/LandingPage/Section2";
 export default async function Home() {
   return (
     <div className="overflow-x-hidden flex-col justify-center items-center min-h-screen">
-      <BlobGradient className="absolute inset-0 -z-50 md:h-[1000px] md::w-[1000px]" />
+      <BlobGradient className="absolute inset-0 z-0 md:h-[800px] md::w-[800px] -bottom-50" />
       <Section1 />
       <Section2 />
     </div>
