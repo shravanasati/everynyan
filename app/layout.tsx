@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./fonts.css";
+import Navbar from "@/components/Navbar";
+import { isLoggedIn } from "@/lib/user";
 
 export const metadata: Metadata = {
   title: "everynyan",
   description: "it's for everyone",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const loggedIn = await isLoggedIn();
   return (
     <html lang="en">
       <head>
@@ -35,7 +38,11 @@ export default function RootLayout({
         />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="font-obv antialiased">{children}</body>
+      <body className="font-obv antialiased">
+        <Navbar loggedIn={loggedIn} />
+
+        {children}
+      </body>
     </html>
   );
 }
