@@ -3,6 +3,7 @@ import "./globals.css";
 import "./fonts.css";
 import Navbar from "@/components/Navbar";
 import { isLoggedIn } from "@/lib/user";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "everynyan",
@@ -40,8 +41,8 @@ export default async function RootLayout({
       </head>
       <body className="font-obv antialiased">
         <Navbar loggedIn={loggedIn} />
-
         {children}
+        <Footer />
       </body>
     </html>
   );
