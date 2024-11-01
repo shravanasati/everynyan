@@ -1,51 +1,55 @@
-import Link from "next/link"
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Layout, MessageSquare } from "lucide-react"
-import Navbar from "./Navbar"
+import Link from "next/link";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import type { Board } from "@/lib/boards";
 
-function BoardCard({ board }: { board: string }) {
+function BoardCard({ title, description, href, imageSrc, imageAlt }: Board) {
   return (
-    <Link href={`/board/${board}`}>
-      <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer bg-gray-800 border-gray-700 hover:bg-gray-700">
-        <CardHeader>
-          <CardTitle className="flex items-center text-gray-100">
-            <Layout className="w-5 h-5 mr-2 text-indigo-400" />
-            {board}
+    <Card className="w-80 h-72 md:w-96 md:h-72 rounded-lg md:rounded-xl overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 group flex flex-col">
+      <div className="relative h-36 overflow-hidden">
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={384}
+          height={144}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
+        />
+      </div>
+      <div className="flex flex-col flex-grow">
+        <CardHeader className="py-3">
+          <CardTitle className="text-lg text-primary line-clamp-1 cursor-default">
+            {title}
           </CardTitle>
-          <CardDescription className="flex items-center mt-2 text-gray-400">
-            <MessageSquare className="w-4 h-4 mr-1" />
-            <span>Join the discussion</span>
-          </CardDescription>
         </CardHeader>
-      </Card>
-    </Link>
-  )
+        <CardContent className="flex items-center justify-between gap-2 py-2 flex-grow">
+          <p className="text-sm text-muted-foreground flex-grow line-clamp-3 cursor-default">
+            {description}
+          </p>
+          <Link
+            href={`/board/${href}`}
+            className="rounded-full p-2 transition-colors hover:bg-secondary flex-shrink-0"
+          >
+            <ArrowRight className="h-5 w-5 text-primary" />
+          </Link>
+        </CardContent>
+      </div>
+    </Card>
+  );
 }
 
 interface BoardsViewProps {
-  boards: string[]
-  loggedIn: boolean
+  boards: Board[];
 }
 
-export function BoardsView({ boards, loggedIn }: BoardsViewProps) {
+export function BoardsView({ boards }: BoardsViewProps) {
   return (
-    <div className="overflow-x-hidden h-screen w-screen flex flex-col justify-center">
-      <Navbar loggedIn={loggedIn} />
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
-        <header className="bg-gray-800 border-b border-gray-700">
-          <div className="container mx-auto px-4 py-6">
-            <h1 className="text-3xl font-bold text-gray-100">Choose a Board</h1>
-            <p className="mt-2 text-gray-400">Explore our diverse communities and join the conversation</p>
-          </div>
-        </header>
-        <main className="container mx-auto px-4 py-8 w-screen">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {boards.map((board) => (
-              <BoardCard board={board} key={board} />
-            ))}
-          </div>
-        </main>
+    <main className="min-h-[92vh] flex items-center justify-center py-8 md:py-4">
+      <div className="grid grid-cols-1 grid-rows-4 gap-3 md:grid-cols-2 md:grid-rows-2">
+        {boards.map((board) => (
+          <BoardCard key={board.href} {...board} />
+        ))}
       </div>
-    </div>
-  )
+    </main>
+  );
 }

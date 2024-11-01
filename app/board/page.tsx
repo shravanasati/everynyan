@@ -9,6 +9,5 @@ export default async function BoardsPage() {
     redirect("/login");
   }
 
-  const boards = boardList;
-  return <BoardsView boards={boards} loggedIn={loggedIn} />;
+  return <BoardsView boards={boardList} />;
 }
