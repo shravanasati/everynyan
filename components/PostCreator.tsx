@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import dynamic from "next/dynamic";
 import { Suspense, useRef, useState } from "react";
@@ -6,22 +6,34 @@ import AnimatedLoader from "@/components/AnimatedLoader";
 import { boardList } from "@/lib/boards";
 import { createPost } from "@/lib/actions/createPost";
 import { Input } from "@/components/ui/input";
-import * as z from "zod"
+import * as z from "zod";
 
 const EditorComp = dynamic(() => import("@/components/MdEditor"), {
   ssr: false,
 });
-      
+
+const boards = boardList.map((board) => {
+  return board.title;
+});
+
 const formSchema = z.object({
-  board: z.string().refine(val => boardList.includes(val), {
-    message: "Invalid board"
+  board: z.string().refine((val) => boards.includes(val), {
+    message: "Invalid board",
   }),
-  title: z.string().min(1, "Title cannot be empty").max(100, "Title is too long. It must be within 100 characters"),
-  content: z.string().min(1, "Post cannot be empty").max(4000, "Post is too long. It must be within 4000 characters"),
-})
+  title: z
+    .string()
+    .min(1, "Title cannot be empty")
+    .max(100, "Title is too long. It must be within 100 characters"),
+  content: z
+    .string()
+    .min(1, "Post cannot be empty")
+    .max(4000, "Post is too long. It must be within 4000 characters"),
+});
 
 export function PostCreator() {
-  const [markdown, setMarkdown] = useState("*hello* **world**. type away your post, in <u>markdown</u>.");
+  const [markdown, setMarkdown] = useState(
+    "*hello* **world**. type away your post, in <u>markdown</u>."
+  );
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
   const boardRef = useRef<HTMLSelectElement>(null);
@@ -29,15 +41,16 @@ export function PostCreator() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <h1 className="m-4 p-2 font-bold text-4xl">
-        Create a post
-      </h1>
+      <h1 className="m-4 p-2 font-bold text-4xl">Create a post</h1>
 
       {/* dropdown for board */}
       <div className="flex flex-row items-center">
         <p>Choose a board:</p>
-        <select className="m-4 p-2 rounded-xl text-black text-center" ref={boardRef}>
-          {boardList.map((boardName: string) => (
+        <select
+          className="m-4 p-2 rounded-xl text-black text-center"
+          ref={boardRef}
+        >
+          {boards.map((boardName: string) => (
             <option key={boardName} value={boardName}>
               {boardName}
             </option>
@@ -70,7 +83,7 @@ export function PostCreator() {
         </div>
       )}
 
-      {/* publish button */}  
+      {/* publish button */}
       <button
         className="m-4 p-2 bg-blue-500 text-white rounded-md"
         disabled={loading}
@@ -78,17 +91,27 @@ export function PostCreator() {
           try {
             setLoading(true);
             const selectedBoard = boardRef.current?.value;
-            const result = formSchema.safeParse({ board: selectedBoard, title, content: markdown });
+            const result = formSchema.safeParse({
+              board: selectedBoard,
+              title,
+              content: markdown,
+            });
             if (!result.success) {
-              setError(Object.values(result.error.flatten().fieldErrors).join(", "));
+              setError(
+                Object.values(result.error.flatten().fieldErrors).join(", ")
+              );
               return;
             }
             setError("");
 
-            const obj = { board: result.data?.board, title: result.data?.title, content: result.data?.content };
+            const obj = {
+              board: result.data?.board,
+              title: result.data?.title,
+              content: result.data?.content,
+            };
             console.log(obj);
-            const resp = await createPost(obj)
-            console.log(resp)
+            const resp = await createPost(obj);
+            console.log(resp);
           } catch (e) {
             console.error(e);
           } finally {
