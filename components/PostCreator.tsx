@@ -1,20 +1,22 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import { boardList } from "@/lib/boards";
 import { createPost } from "@/lib/actions/createPost";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
 
 const EditorComp = dynamic(() => import("@/components/MdEditor"), {
   ssr: false,
 });
 
-const boards = boardList.map((board) => {
-  return board.title;
-});
+const boards = boardList.map((board) => board.title);
 
 const formSchema = z.object({
   board: z.string().refine((val) => boards.includes(val), {
@@ -23,104 +25,128 @@ const formSchema = z.object({
   title: z
     .string()
     .min(1, "Title cannot be empty")
-    .max(100, "Title is too long. It must be within 100 characters"),
+    .max(100, "Title must be within 100 characters"),
   content: z
     .string()
     .min(1, "Post cannot be empty")
-    .max(4000, "Post is too long. It must be within 4000 characters"),
+    .max(4000, "Post must be within 4000 characters"),
 });
 
+interface FormData {
+  board: string;
+  title: string;
+  content: string;
+}
+
 export function PostCreator() {
-  const [markdown, setMarkdown] = useState(
-    "*hello* **world**. type away your post, in <u>markdown</u>."
-  );
-  const [title, setTitle] = useState("");
+  const [formState, setFormState] = useState<FormData>({
+    board: boards[0],
+    title: "",
+    content: "*hello* **world**. type away your post, in <u>markdown</u>.",
+  });
   const [error, setError] = useState("");
-  const boardRef = useRef<HTMLSelectElement>(null);
   const [loading, setLoading] = useState(false);
 
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = formSchema.safeParse(formState);
+
+      if (!result.success) {
+        setError(Object.values(result.error.flatten().fieldErrors).join(", "));
+        return;
+      }
+
+      const response = await createPost(result.data);
+      console.log("Post created:", response);
+
+      // !!success handling
+    } catch (err) {
+      console.error(err);
+      setError("Failed to create post. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col justify-center items-center">
-      <h1 className="m-4 p-2 font-bold text-4xl">Create a post</h1>
-
-      {/* dropdown for board */}
-      <div className="flex flex-row items-center">
-        <p>Choose a board:</p>
-        <select
-          className="m-4 p-2 rounded-xl text-black text-center"
-          ref={boardRef}
-        >
-          {boards.map((boardName: string) => (
-            <option key={boardName} value={boardName}>
-              {boardName}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* title input */}
-      <div className="w-full max-w-md">
-        <Input
-          type="text"
-          placeholder="Enter post title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="mb-4"
-        />
-      </div>
-
-      {/* markdown editor */}
-      <div className="w-[calc(100vw-4rem)] m-2 p-2">
-        <Suspense fallback={<AnimatedLoader />}>
-          <EditorComp markdown={markdown} onChange={setMarkdown} />
-        </Suspense>
-      </div>
-
-      {/* error */}
-      {error && (
-        <div className="w-[calc(100vw-4rem)] p-4 mb-4 mx-4 text-red-700 bg-red-100 rounded-md">
-          Error: {error}
-        </div>
-      )}
-
-      {/* publish button */}
-      <button
-        className="m-4 p-2 bg-blue-500 text-white rounded-md"
-        disabled={loading}
-        onClick={async () => {
-          try {
-            setLoading(true);
-            const selectedBoard = boardRef.current?.value;
-            const result = formSchema.safeParse({
-              board: selectedBoard,
-              title,
-              content: markdown,
-            });
-            if (!result.success) {
-              setError(
-                Object.values(result.error.flatten().fieldErrors).join(", ")
-              );
-              return;
-            }
-            setError("");
-
-            const obj = {
-              board: result.data?.board,
-              title: result.data?.title,
-              content: result.data?.content,
-            };
-            console.log(obj);
-            const resp = await createPost(obj);
-            console.log(resp);
-          } catch (e) {
-            console.error(e);
-          } finally {
-            setLoading(false);
-          }
-        }}
-      >
-        {loading ? "Publishing..." : "Publish"}
-      </button>
+    <div className="min-h-[92vh] flex items-center justify-center md:p-0 px-4">
+      <Card className="w-full max-w-4xl mx-auto my-8">
+        <CardHeader>
+          <CardTitle className="text-center text-3xl">Create a Post</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <label className="font-medium">Choose a board:</label>
+            <RadioGroup
+              value={formState.board}
+              onValueChange={(value) =>
+                setFormState((prev) => ({ ...prev, board: value }))
+              }
+              className="flex flex-row flex-wrap gap-4"
+            >
+              {boards.map((boardName) => (
+                <div key={boardName} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={boardName}
+                    className="text-foreground"
+                    id={`board-${boardName}`}
+                  />
+                  <label
+                    htmlFor={`board-${boardName}`}
+                    className="text-sm font-medium text-foreground"
+                  >
+                    {boardName}
+                  </label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+          <div className="space-y-2">
+            <label className="font-medium" htmlFor="title-input">
+              Title
+            </label>
+            <Input
+              id="title-input"
+              type="text"
+              placeholder="Enter post title"
+              value={formState.title}
+              onChange={(e) =>
+                setFormState((prev) => ({ ...prev, title: e.target.value }))
+              }
+              className="w-full"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="font-medium">Content</label>
+            <div className="w-full border rounded-lg">
+              <Suspense fallback={<AnimatedLoader />}>
+                <EditorComp
+                  markdown={formState.content}
+                  onChange={(value) =>
+                    setFormState((prev) => ({ ...prev, content: value }))
+                  }
+                />
+              </Suspense>
+            </div>
+          </div>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <Button
+            className="w-full sm:w-auto"
+            size="lg"
+            disabled={loading}
+            onClick={handleSubmit}
+          >
+            {loading ? "Publishing..." : "Publish Post"}
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
