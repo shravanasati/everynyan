@@ -1,0 +1,40 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+
+
+Table otps {
+  email varchar [primary key]
+  otp varchar(6) [primary key]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table tokens {
+  token varchar [primary key]
+  role varchar [not null]
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table boards {
+  id int [primary key]
+  name varchar [not null]
+  description varchar [not null]
+}
+
+Table posts {
+  id varchar [primary key]
+  title varchar
+  body text [note: 'Content of the post']
+  board int [ref: < boards.id]
+  moderation_status varchar
+  created_at timestamptz [not null, default: `now()`]
+}
+
+Table comments {
+  id int [primary key]
+  post_id varchar [not null, ref: < posts.id, note: 'The post this comment belongs to']
+  parent_id int [ref: < comments.id, note: 'Parent comment ID for nested comments']
+  body text [not null, note: 'Content of the comment']
+  created_at timestamptz [not null, default: `now()`]
+}
+
