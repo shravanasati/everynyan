@@ -23,10 +23,12 @@ Table boards {
 
 Table posts {
   id varchar [primary key]
-  title varchar
-  body text [note: 'Content of the post']
-  board int [ref: < boards.id]
-  moderation_status varchar
+  title varchar [not null]
+  upvotes int [not null, default: 0]
+  downvotes int [not null, default: 0]
+  body text [note: 'Content of the post', not null]
+  board int [ref: < boards.id, not null]
+  moderation_status varchar [not null, default: 'pending']
   created_at timestamptz [not null, default: `now()`]
 }
 
@@ -35,6 +37,8 @@ Table comments {
   post_id varchar [not null, ref: < posts.id, note: 'The post this comment belongs to']
   parent_id int [ref: < comments.id, note: 'Parent comment ID for nested comments']
   body text [not null, note: 'Content of the comment']
+  upvotes int [not null, default: 0]
+  downvotes int [not null, default: 0]
   created_at timestamptz [not null, default: `now()`]
 }
 
