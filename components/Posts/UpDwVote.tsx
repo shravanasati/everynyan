@@ -3,8 +3,8 @@
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { useState } from "react";
 
-export function UpDwVote() {
-  const [netVotes, setNetVotes] = useState(18);
+export default function UpDwVote({ netVotesServer }: { netVotesServer: number }) {
+  const [netVotes, setNetVotes] = useState(netVotesServer);
   const [isUpVoted, setUpVoted] = useState(false);
   const [isDownVoted, setDownVoted] = useState(false);
 
@@ -41,7 +41,7 @@ export function UpDwVote() {
   };
 
   return (
-    <div className="h-6 max-w-28 px-2 py-4 rounded-2xl flex gap-2 justify-center items-center bg-primary/20">
+    <div className="h-6 w-28 px-2 py-4 rounded-2xl flex gap-2 justify-center items-center bg-primary/20">
       <ArrowBigUp
         className={`cursor-pointer ${
           !isDownVoted && isUpVoted ? "fill-primary text-primary" : ""
