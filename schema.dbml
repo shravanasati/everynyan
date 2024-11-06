@@ -55,6 +55,7 @@ Table comments {
   body text [not null, note: 'Content of the comment']
   upvotes int [not null, default: 0]
   downvotes int [not null, default: 0]
+  moderation_status varchar [note: 'one of [pending, rejected, approved]', not null, default: 'pending']
   created_at timestamptz [not null, default: `now()`]
 }
 

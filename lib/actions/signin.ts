@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from "zod"
-import { deleteOTP, getOTP, storeToken } from "@/lib/firebase/firestore"
+import { addSecurityLog, deleteOTP, getOTP, storeToken } from "@/lib/firebase/firestore"
 import { uniEmailRegex } from "@/lib/utils"
 import { encrypt, newToken } from "@/lib//crypt"
 import { cookies } from "next/headers"
@@ -47,7 +47,10 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
   await storeToken(token, isAdmin)
 
   if (isAdmin) {
-    // todo add security logging
+    await addSecurityLog({
+      type_: "admin_login",
+      detail: `Admin ${result.data.email} logged in`,
+    })
   }
 
   // store token in cookie
