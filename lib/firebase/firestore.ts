@@ -1,42 +1,43 @@
 import {
-	doc,
-	getDoc,
-	setDoc,
-	deleteDoc,
-	Timestamp,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  Timestamp,
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
 import type { Post } from "@/lib/post";
+import { generatePostID } from "../utils";
 
 export type OTPEntry = {
-	otp: string;
-	timestamp: Timestamp;
+  otp: string;
+  timestamp: Timestamp;
 };
 
 export async function saveOTP(email: string, otp: string) {
-	const otpRef = doc(db, "otp", email);
+  const otpRef = doc(db, "otp", email);
 
-	await setDoc(otpRef, {
-		otp,
-		timestamp: Timestamp.now(),
-	});
+  await setDoc(otpRef, {
+    otp,
+    timestamp: Timestamp.now(),
+  });
 }
 
 export async function getOTP(email: string) {
-	const otpRef = doc(db, "otp", email);
-	const otpSnap = await getDoc(otpRef);
+  const otpRef = doc(db, "otp", email);
+  const otpSnap = await getDoc(otpRef);
 
-	if (otpSnap.exists()) {
-		return otpSnap.data() as OTPEntry;
-	}
+  if (otpSnap.exists()) {
+    return otpSnap.data() as OTPEntry;
+  }
 
-	return null;
+  return null;
 }
 
 export async function deleteOTP(email: string) {
-	const otpRef = doc(db, "otp", email);
-	await deleteDoc(otpRef);
+  const otpRef = doc(db, "otp", email);
+  await deleteDoc(otpRef);
 }
 
 export async function storeToken(token: string, isAdmin: boolean) {
@@ -44,7 +45,7 @@ export async function storeToken(token: string, isAdmin: boolean) {
 
   await setDoc(tokenRef, {
     token,
-	role: isAdmin ? "admin" : "user",
+    role: isAdmin ? "admin" : "user",
     timestamp: Timestamp.now(),
   });
 }
@@ -65,30 +66,35 @@ export async function getToken(token: string) {
   return null;
 }
 
-export async function savePost(post: Post) {
-  const postRef = doc(db, "posts", post.board);
+export async function savePost(title: string, body: string, board: string) {
+  const postRef = doc(db, "posts", board);
+  const postID = generatePostID();
 
   await setDoc(postRef, {
-	title: post.title,
-	content: post.content,
-	comments: [],
-	moderation_status: "pending",
-	timestamp: Timestamp.now(),
+    id: postID,
+    title: title,
+    board: board,
+    upvotes: 0,
+    downvotes: 0,
+    body: body,
+    moderation_status: "pending",
+    comments: [],
+    timestamp: Timestamp.now(),
   });
 
-  return postRef.id;
+  return postID;
 }
 
 interface SecurityLog {
-  type_: "admin_login" | "moderation_action" 
+  type_: "admin_login" | "moderation_action"
   detail: string
 }
 
 export async function addSecurityLog(log: SecurityLog) {
-	const logRef = doc(db, "security_logs", log.type_ + "_" + Date.now());
+  const logRef = doc(db, "security_logs", log.type_ + "_" + Date.now());
 
   await setDoc(logRef, {
-	...log,
-	timestamp: Timestamp.now(),
+    ...log,
+    timestamp: Timestamp.now(),
   });
 }
