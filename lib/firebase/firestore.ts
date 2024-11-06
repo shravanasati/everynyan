@@ -78,3 +78,17 @@ export async function savePost(post: Post) {
 
   return postRef.id;
 }
+
+interface SecurityLog {
+  type_: "admin_login" | "moderation_action" 
+  detail: string
+}
+
+export async function addSecurityLog(log: SecurityLog) {
+	const logRef = doc(db, "security_logs", log.type_ + "_" + Date.now());
+
+  await setDoc(logRef, {
+	...log,
+	timestamp: Timestamp.now(),
+  });
+}
