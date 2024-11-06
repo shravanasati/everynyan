@@ -7,8 +7,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
-import type { Post } from "@/lib/post";
-import { generatePostID } from "../utils";
+import { generatePostID } from "@/lib/utils";
 
 export type OTPEntry = {
   otp: string;
