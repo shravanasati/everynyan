@@ -1,9 +1,9 @@
 import { PostCreator } from "@/components/PostCreator";
-import { isLoggedIn } from "@/lib/user";
+import { getAuthUser } from "@/lib/user";
 import { redirect } from "next/navigation";
 
 export default async function CreatePost() {
-  if (!await isLoggedIn()) {
+  if (!await getAuthUser()) {
     redirect("/login");
   }
 

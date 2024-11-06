@@ -1,12 +1,12 @@
 'use server'
 import { boardList } from "../boards"
 import { z } from "zod"
-import { isLoggedIn } from "@/lib/user"
+import { getAuthUser } from "@/lib/user"
 import { savePost } from "@/lib/firebase/firestore"
 import type { Post } from "@/lib/post"
 
 const createPostSchema = z.strictObject({
-  board: z.string().refine(val => boardList.includes(val), {
+  board: z.string().refine(val => boardList.map(item => item.title).includes(val), {
     message: "Invalid board"
   }),
   title: z.string().min(1, "Title cannot be empty").max(100, "Title is too long. It must be within 100 characters"),
@@ -14,7 +14,7 @@ const createPostSchema = z.strictObject({
 })
 
 export async function createPost(values: z.infer<typeof createPostSchema>) {
-  if (!await isLoggedIn()) {
+  if (!await getAuthUser()) {
     return { success: false, errors: { server: "You must be logged in to create a post" } }
   }
 

@@ -39,11 +39,12 @@ export async function deleteOTP(email: string) {
 	await deleteDoc(otpRef);
 }
 
-export async function storeToken(token: string) {
+export async function storeToken(token: string, isAdmin: boolean) {
   const tokenRef = doc(db, "tokens", token);
 
   await setDoc(tokenRef, {
     token,
+	role: isAdmin ? "admin" : "user",
     timestamp: Timestamp.now(),
   });
 }

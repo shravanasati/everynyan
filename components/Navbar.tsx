@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SvgLogo from "@/components/SvgLogo";
+import { User } from "@/lib/user";
 
-export default function Navbar({ loggedIn }: { loggedIn: boolean }) {
+export default function Navbar({user} : {user: User | null}) {
+  const loggedIn = user !== null
   return (
     <header className="p-4 flex justify-between items-center text-foreground">
       {/* logo */}

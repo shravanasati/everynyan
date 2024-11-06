@@ -1,4 +1,4 @@
-import { isLoggedIn } from "@/lib/user";
+import { getAuthUser } from "@/lib/user";
 import { redirect } from "next/navigation";
 
 interface BoardProps {
@@ -16,7 +16,7 @@ async function getBoardData(boardName: string) {
 }
 
 export default async function BoardDetailPage({ params }: BoardProps) {
-  if (!await isLoggedIn()) {
+  if (!await getAuthUser()) {
     redirect("/login");
   }
 
