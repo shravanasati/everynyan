@@ -23,9 +23,13 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID=
+
+MODERATOR_EMAILS=
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
+
+Moderator emails is a comma-separated list of emails of users who have moderation privileges.
 
 ```sh
 python -c "import secrets;print(secrets.token_hex(32))"
