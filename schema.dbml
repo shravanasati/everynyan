@@ -11,11 +11,17 @@ Table otps {
 
 Table tokens {
   token varchar [primary key]
-  role varchar [not null]
+  role varchar [note: 'one of [admin, user]', not null]
   created_at timestamptz [not null, default: `now()`]
 }
 
 Table boards {
+  id int [primary key]
+  name varchar [not null]
+  description varchar [not null]
+}
+
+Table flags {
   id int [primary key]
   name varchar [not null]
   description varchar [not null]
@@ -28,12 +34,22 @@ Table posts {
   downvotes int [not null, default: 0]
   body text [note: 'Content of the post', not null]
   board int [ref: < boards.id, not null]
-  moderation_status varchar [not null, default: 'pending']
+  moderation_status varchar [note: 'one of [pending, rejected, approved]', not null, default: 'pending']
   created_at timestamptz [not null, default: `now()`]
 }
 
+Table reports {
+  id int [pk, increment]
+  post_id varchar [ref: < posts.id]
+  comment_id uuid [ref: < comments.id]
+  flag_id int [ref: < flags.id]
+  status varchar [note: "one of [pending, resolved]", not null, default: 'pending']
+  created_at timestamptz [not null, default: `now()`]
+  resolved_at timestamptz
+}
+
 Table comments {
-  id int [primary key]
+  id uuid [primary key]
   post_id varchar [not null, ref: < posts.id, note: 'The post this comment belongs to']
   parent_id int [ref: < comments.id, note: 'Parent comment ID for nested comments']
   body text [not null, note: 'Content of the comment']
@@ -42,3 +58,9 @@ Table comments {
   created_at timestamptz [not null, default: `now()`]
 }
 
+Table security_log {
+  id int [pk, increment]
+  type varchar [note: 'one of [admin_login, moderation_action]', not null]
+  detail varchar [not null]
+  at timestamptz [not null, default: `now()`]
+}
