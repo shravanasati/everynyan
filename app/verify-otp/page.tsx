@@ -1,9 +1,9 @@
 import { OTPPage } from "@/components/VerifyOTP";
-import { isLoggedIn } from "@/lib/user";
+import { getAuthUser } from "@/lib/user";
 import { redirect } from "next/navigation";
 
 export default async function VerifyOTP() {
-  if (await isLoggedIn()) {
+  if (await getAuthUser()) {
     redirect("/board");
   }
 
