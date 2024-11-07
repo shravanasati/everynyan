@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+import { sendOTP } from "@/lib/actions/sendOTP"
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,9 +26,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { sendOTP } from "@/lib/actions/sendOTP";
-import { nextLocalStorage, uniEmailRegex } from "@/lib/utils";
+} from "@/components/ui/card"
+import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
+import { Captcha, CaptchaStatus } from "./Captcha"
+import { TurnstileInstance } from "@marsidev/react-turnstile"
 
 const formSchema = z.object({
   email: z
@@ -39,10 +41,13 @@ const formSchema = z.object({
   }),
 });
 
-export default function Component() {
-  const router = useRouter();
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+export function LoginPage() {
+  const router = useRouter()
+  const [serverError, setServerError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure")
+  const captchaRef = useRef<TurnstileInstance>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,26 +58,32 @@ export default function Component() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setServerError(null);
-    setLoading(true);
-    try {
-      const result = await sendOTP(values);
-      if (result.success) {
-        nextLocalStorage()?.setItem("email", values.email);
-        router.push("/verify-otp");
-      } else {
-        const errors = result.errors as { email?: string; server?: string };
-        const errorMessage =
-          errors?.email ||
-          errors?.server ||
-          "An error occurred. Please try again.";
-        setServerError(errorMessage);
-      }
-    } catch (error) {
-      setServerError("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+    if (captchaStatus !== "success") {
+      setServerError("Please complete the captcha")
+      return
     }
+
+    const captchaResult = captchaRef.current?.getResponse()
+    if (!captchaResult) {
+      setServerError("Please complete the captcha")
+      return
+    }
+
+    setServerError(null)
+    setLoading(true)
+
+    const newVals = { ...values, captchaResponse: captchaResult }
+
+    const result = await sendOTP(newVals)
+    if (result.success) {
+      nextLocalStorage()?.setItem("email", values.email)
+      router.push("/verify-otp")
+    } else {
+      const errors = result.errors as { email?: string; server?: string }
+      const errorMessage = errors?.email || errors?.server || "An error occurred. Please try again."
+      setServerError(errorMessage)
+    }
+    setLoading(false)
   }
 
   return (
@@ -114,21 +125,20 @@ export default function Component() {
                           className="mt-1"
                         />
                       </FormControl>
-                      <FormLabel className="text-sm font-medium leading-6">
-                        I have read and accept the{" "}
-                        <Link
-                          href="/tos"
-                          className="text-primary hover:underline"
-                        >
-                          Terms of Service
-                        </Link>
-                        .
-                      </FormLabel>
-                    </div>
-                    <FormMessage className="text-xs" />
-                  </FormItem>
-                )}
-              />
+                      <div className="space-y-1 leading-none">
+                        <FormLabel className="text-zinc-100 font-bold text-sm">
+                          I have read and accept the{" "}
+                          <Link href="/tos" className="text-blue-500">
+                            Terms of Service
+                          </Link>
+                          .
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Captcha setStatus={setCaptchaStatus} captchaRef={captchaRef} className="p-2" />
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
               <Button type="submit" className="w-full" disabled={loading}>
