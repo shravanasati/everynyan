@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,6 +28,8 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
+import { Captcha, CaptchaStatus } from "./Captcha"
+import { TurnstileInstance } from "@marsidev/react-turnstile"
 
 const formSchema = z.object({
   email: z.string().toLowerCase().regex(uniEmailRegex, "That email address doesn't look right 😕"),
@@ -41,6 +43,9 @@ export function LoginPage() {
   const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure")
+  const captchaRef = useRef<TurnstileInstance>(null)
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +55,23 @@ export function LoginPage() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (captchaStatus !== "success") {
+      setServerError("Please complete the captcha")
+      return
+    }
+
+    const captchaResult = captchaRef.current?.getResponse()
+    if (!captchaResult) {
+      setServerError("Please complete the captcha")
+      return
+    }
+
     setServerError(null)
     setLoading(true)
-    const result = await sendOTP(values)
+
+    const newVals = { ...values, captchaResponse: captchaResult }
+
+    const result = await sendOTP(newVals)
     if (result.success) {
       nextLocalStorage()?.setItem("email", values.email)
       router.push("/verify-otp")
@@ -119,6 +138,7 @@ export function LoginPage() {
                   )}
                 />
               </div>
+              <Captcha setStatus={setCaptchaStatus} captchaRef={captchaRef} className="p-2" />
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2">
               <Button type="submit" className="w-full" variant="secondary" disabled={loading}>
