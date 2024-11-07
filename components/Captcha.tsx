@@ -1,25 +1,21 @@
 import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile"
-import { useRef } from "react";
 
-// todo work on captcha
-
-if (!process.env.TURNSTILE_SITE_KEY) {
+if (!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY) {
   throw new Error("TURNSTILE_SITE_KEY is not defined")
 }
 
-if (!process.env.TURNSTILE_SECRET_KEY) {
-  throw new Error("TURNSTILE_SECRET_KEY is not defined")
-}
+export type CaptchaStatus = "success" | "failure" | "expiry"
 
 type CaptchaProps = {
-  setStatus: (status: string) => void;
+  setStatus: (status: CaptchaStatus) => void;
+  captchaRef: React.RefObject<TurnstileInstance>;
+  className?: string;
 }
 
-export function Captcha({setStatus}: CaptchaProps) {
-  const captchaRef = useRef<TurnstileInstance | null>(null);
+export function Captcha({setStatus, captchaRef, className}: CaptchaProps) {
   return <Turnstile
     ref={captchaRef}
-    siteKey={process.env.TURNSTILE_SITE_KEY!}
+    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
     options={{
       action: "login",
       theme: "dark",
@@ -28,9 +24,10 @@ export function Captcha({setStatus}: CaptchaProps) {
     }}
     onExpire={() => { 
       captchaRef.current?.reset() 
-      setStatus("Captcha expired. Please try again.")
+      setStatus("expiry")
     }}
-    onError={() => setStatus("Captcha validation failed. Please try again.")}
-    onSuccess={() => setStatus("Captcha validation successful.")}
+    onError={() => setStatus("failure")}
+    onSuccess={() => setStatus("success")}
+    className={className}
   />
 }
