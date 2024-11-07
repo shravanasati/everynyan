@@ -1,25 +1,35 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import {parseISO} from 'date-fns'
 import { format, toZonedTime } from 'date-fns-tz'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-export type SecurityLog = {
+export type FirestoreTimestamp = {
+  seconds: number
+  nanoseconds: number
+}
+
+export type RawSecurityLog = {
   type_: string
-  timestamp: {
-    seconds: number
-    nanoseconds: number
-  }
+  timestamp: FirestoreTimestamp
   detail: string
 }
 
-export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
+
+export type SecurityLogType = {
+  type_: string
+  timestamp: string
+  detail: string
+}
+
+export function SecurityLogs({ logs = [] }: { logs?: SecurityLogType[] }) {
   const [filterType, setFilterType] = useState<string>('all')
 
-  const formatDate = (timestamp: SecurityLog['timestamp']) => {
-    const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000)
+  const formatDate = (timestamp: SecurityLogType['timestamp']) => {
+    const date = parseISO(timestamp)
     const istDate = toZonedTime(date, 'Asia/Kolkata')
     return format(istDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone: 'Asia/Kolkata' })
   }
@@ -38,7 +48,7 @@ export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle>Security Logs</CardTitle>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-fit">
             <SelectValue placeholder="Filter by type" />
           </SelectTrigger>
           <SelectContent>
@@ -50,7 +60,7 @@ export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
           </SelectContent>
         </Select>
       </CardHeader>
-      
+
       <CardContent>
         <div className="overflow-x-auto">
           <Table>
@@ -63,7 +73,7 @@ export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
             </TableHeader>
             <TableBody>
               {filteredLogs.map((log) => (
-                <TableRow key={log.timestamp.seconds}>
+                <TableRow key={log.timestamp}>
                   <TableCell className="font-mono">{formatDate(log.timestamp)}</TableCell>
                   <TableCell>{log.type_}</TableCell>
                   <TableCell>{log.detail}</TableCell>
