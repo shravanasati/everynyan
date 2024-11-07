@@ -9,15 +9,7 @@ import UpDwVote from "@/components/Posts/UpDwVote";
 import Cmt from "@/components/Posts/Cmt";
 import Share from "@/components/Posts/Share";
 import Link from "next/link";
-
-interface PostData {
-  title: string;
-  content: string;
-  board: string;
-  upVotes: number;
-  downVotes: number;
-  noOfComments: number;
-}
+import { PostData } from "@/lib/utils";
 
 export default function Post({
   title,
