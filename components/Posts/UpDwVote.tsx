@@ -44,7 +44,7 @@ export default function Component({
   };
 
   return (
-    <div className="h-8 px-3 py-1 rounded-2xl flex gap-2 justify-center items-center bg-primary/20">
+    <div className="h-8 px-3 py-1 rounded-2xl flex gap-2 justify-center items-center bg-primary/20 min-w-[14.5rem] md:min-w-40">
       <ArrowBigUp
         className={`cursor-pointer ${
           !isDownVoted && isUpVoted ? "fill-primary text-primary" : ""
