@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns-tz": "^3.2.0",
     "firebase": "^10.13.2",
     "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",

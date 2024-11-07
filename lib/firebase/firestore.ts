@@ -4,6 +4,8 @@ import {
   setDoc,
   deleteDoc,
   Timestamp,
+  collection,
+  getDocs
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
@@ -96,4 +98,12 @@ export async function addSecurityLog(log: SecurityLog) {
     ...log,
     timestamp: Timestamp.now(),
   });
+}
+
+export async function getSecurityLogs() {
+  const logsRef = collection(db, "security_logs");
+  const logsSnap = await getDocs(logsRef);
+
+  const logs = logsSnap.docs.map(doc => doc.data());
+  return logs;
 }
