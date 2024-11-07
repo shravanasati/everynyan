@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import { useState, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { sendOTP } from "@/lib/actions/sendOTP"
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { sendOTP } from "@/lib/actions/sendOTP";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,9 +16,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
@@ -26,25 +26,28 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
-import { Captcha, CaptchaStatus } from "./Captcha"
-import { TurnstileInstance } from "@marsidev/react-turnstile"
+} from "@/components/ui/card";
+import { nextLocalStorage, uniEmailRegex } from "@/lib/utils";
+import { Captcha, CaptchaStatus } from "./Captcha";
+import { TurnstileInstance } from "@marsidev/react-turnstile";
 
 const formSchema = z.object({
-  email: z.string().toLowerCase().regex(uniEmailRegex, "That email address doesn't look right 😕"),
-  tos: z.boolean().refine(val => val === true, {
-    message: "You must accept the terms and conditions"
-  })
-})
+  email: z
+    .string()
+    .toLowerCase()
+    .regex(uniEmailRegex, "That email address doesn't look right 😕"),
+  tos: z.boolean().refine((val) => val === true, {
+    message: "You must accept the Terms of Service to continue",
+  }),
+});
 
 export function LoginPage() {
-  const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure")
-  const captchaRef = useRef<TurnstileInstance>(null)
+  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure");
+  const captchaRef = useRef<TurnstileInstance>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,102 +55,104 @@ export function LoginPage() {
       email: "",
       tos: false,
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (captchaStatus !== "success") {
-      setServerError("Please complete the captcha")
-      return
+      setServerError("Please complete the captcha");
+      return;
     }
 
-    const captchaResult = captchaRef.current?.getResponse()
+    const captchaResult = captchaRef.current?.getResponse();
     if (!captchaResult) {
-      setServerError("Please complete the captcha")
-      return
+      setServerError("Please complete the captcha");
+      return;
     }
 
-    setServerError(null)
-    setLoading(true)
+    setServerError(null);
+    setLoading(true);
 
-    const newVals = { ...values, captchaResponse: captchaResult }
+    const newVals = { ...values, captchaResponse: captchaResult };
 
-    const result = await sendOTP(newVals)
+    const result = await sendOTP(newVals);
     if (result.success) {
-      nextLocalStorage()?.setItem("email", values.email)
-      router.push("/verify-otp")
+      nextLocalStorage()?.setItem("email", values.email);
+      router.push("/verify-otp");
     } else {
-      const errors = result.errors as { email?: string; server?: string }
-      const errorMessage = errors?.email || errors?.server || "An error occurred. Please try again."
-      setServerError(errorMessage)
+      const errors = result.errors as { email?: string; server?: string };
+      const errorMessage =
+        errors?.email ||
+        errors?.server ||
+        "An error occurred. Please try again.";
+      setServerError(errorMessage);
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-zinc-50">Login</CardTitle>
-          <CardDescription className="text-zinc-400">
-            Enter your email to receive an OTP
-          </CardDescription>
+          <CardTitle className="text-2xl font-bold">Login</CardTitle>
+          <CardDescription>Enter your email to receive an OTP</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent>
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-zinc-200">Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="khurafati.branchYEAR@youruni.ac.in"
-                          className="bg-zinc-800 border-zinc-700 text-zinc-100 placeholder-zinc-500"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="tos"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="border-2 border-zinc-600 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500"
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-zinc-100 font-bold text-sm">
-                          I have read and accept the{" "}
-                          <Link href="/tos" className="text-blue-500">
-                            Terms of Service
-                          </Link>
-                          .
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
+            <CardContent className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="khurafati.branchYEAR@youruni.ac.in"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="tos"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-[0.875rem] ml-0.5"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-zinc-100 font-bold text-sm">
+                      I have read and accepted{" "}
+                      <Link href="/tos" className="text-blue-500">
+                        Terms of Service
+                      </Link>
+                      .
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-center items-center">
+                <Captcha
+                  setStatus={setCaptchaStatus}
+                  captchaRef={captchaRef}
+                  className="p-2"
                 />
               </div>
-              <Captcha setStatus={setCaptchaStatus} captchaRef={captchaRef} className="p-2" />
             </CardContent>
-            <CardFooter className="flex flex-wrap gap-2">
-              <Button type="submit" className="w-full" variant="secondary" disabled={loading}>
-                {loading ? "Loading..." : "Send OTP"}
+            <CardFooter className="flex flex-col gap-2">
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Sending OTP..." : "Send OTP"}
               </Button>
               <Button
                 onClick={() => router.push("/")}
                 className="w-full"
-                variant="default"
+                variant="outline"
               >
                 Go Back to Home
               </Button>
@@ -156,10 +161,10 @@ export function LoginPage() {
         </Form>
         {serverError && (
           <CardContent>
-            <p className="text-red-500">{serverError}</p>
+            <p className="text-destructive">{serverError}</p>
           </CardContent>
         )}
       </Card>
     </div>
-  )
+  );
 }

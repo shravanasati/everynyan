@@ -1,0 +1,28 @@
+
+.everynyan-scroll {
+  --sb-track-color: #f1c103;
+  --sb-thumb-color: #f1c10300;
+  --sb-size: 1px;
+}
+
+.everynyan-scroll::-webkit-scrollbar {
+  width: var(--sb-size)
+}
+
+.everynyan-scroll::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+.everynyan-scroll::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+  
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .everynyan-scroll {
+    scrollbar-color: var(--sb-thumb-color)
+                     var(--sb-track-color);
+  }
+}

@@ -7,5 +7,5 @@ export default async function Login() {
     redirect("/board");
   }
 
-  return <LoginPage />
+  return <LoginPage />;
 }
