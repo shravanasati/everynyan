@@ -1,6 +1,7 @@
 import Post from "@/components/Posts/Post";
 import { getAuthUser } from "@/lib/user";
 import { redirect } from "next/navigation";
+import "@/app/scrollbar.css";
 
 interface BoardProps {
   params: {
@@ -66,7 +67,7 @@ export default async function BoardDetailPage({ params }: BoardProps) {
 
   return (
     <div className="min-h-[92vh] px-4 flex items-center justify-center">
-      <div className="md:w-1/2 w-11/12 min-h-fulll px-2">
+      <div className="md:w-1/2 w-11/12 min-h-fulll px-2 everynyan-scroll">
         {boardData.posts.map((post, index) => (
           <Post
             key={index}
