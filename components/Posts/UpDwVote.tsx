@@ -1,10 +1,17 @@
 "use client";
 
-import { ArrowBigDown, ArrowBigUp } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp, Minus } from "lucide-react";
 import { useState } from "react";
 
-export default function UpDwVote({ netVotesServer }: { netVotesServer: number }) {
-  const [netVotes, setNetVotes] = useState(netVotesServer);
+export default function Component({
+  upVotes = 0,
+  downVotes = 0,
+}: {
+  upVotes?: number;
+  downVotes?: number;
+}) {
+  const [currentUpVotes, setCurrentUpVotes] = useState(upVotes);
+  const [currentDownVotes, setCurrentDownVotes] = useState(downVotes);
   const [isUpVoted, setUpVoted] = useState(false);
   const [isDownVoted, setDownVoted] = useState(false);
 
@@ -12,44 +19,46 @@ export default function UpDwVote({ netVotesServer }: { netVotesServer: number })
     if (vote === "up") {
       if (isUpVoted) {
         setUpVoted(false);
-        setNetVotes((prev) => prev - 1);
+        setCurrentUpVotes((prev) => prev - 1);
       } else {
         setUpVoted(true);
-        setDownVoted(false);
-
         if (isDownVoted) {
-          setNetVotes((prev) => prev + 2);
-        } else {
-          setNetVotes((prev) => prev + 1);
+          setDownVoted(false);
+          setCurrentDownVotes((prev) => prev - 1);
         }
+        setCurrentUpVotes((prev) => prev + 1);
       }
     } else if (vote === "down") {
       if (isDownVoted) {
         setDownVoted(false);
-        setNetVotes((prev) => prev + 1);
+        setCurrentDownVotes((prev) => prev - 1);
       } else {
         setDownVoted(true);
-        setUpVoted(false);
-
         if (isUpVoted) {
-          setNetVotes((prev) => prev - 2);
-        } else {
-          setNetVotes((prev) => prev - 1);
+          setUpVoted(false);
+          setCurrentUpVotes((prev) => prev - 1);
         }
+        setCurrentDownVotes((prev) => prev + 1);
       }
     }
   };
 
   return (
-    <div className="h-6 w-28 px-2 py-4 rounded-2xl flex gap-2 justify-center items-center bg-primary/20">
+    <div className="h-8 px-3 py-1 rounded-2xl flex gap-2 justify-center items-center bg-primary/20">
       <ArrowBigUp
         className={`cursor-pointer ${
           !isDownVoted && isUpVoted ? "fill-primary text-primary" : ""
         }`}
         onClick={() => handleVote("up")}
       />
-      <span className="h-full p-1.5 flex justify-center items-center text-base cursor-default">
-        {netVotes}
+      <span className="h-full flex justify-center items-center cursor-default">
+        {currentUpVotes}
+      </span>
+      <span className="flex justify-center items-center cursor-default">
+        <Minus className="w-4 h-4" />
+      </span>
+      <span className="h-full flex justify-center items-center cursor-default">
+        {currentDownVotes}
       </span>
       <ArrowBigDown
         className={`cursor-pointer ${

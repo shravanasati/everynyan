@@ -15,14 +15,16 @@ interface PostData {
   title: string;
   content: string;
   board: string;
-  netVotes: number;
+  upVotes: number;
+  downVotes: number;
   noOfComments: number;
 }
 
 export default function Post({
   title,
   content,
-  netVotes,
+  upVotes,
+  downVotes,
   board,
   noOfComments,
 }: PostData) {
@@ -47,7 +49,7 @@ export default function Post({
       </CardContent>
       <CardFooter className="flex items-center justify-start">
         <div className="flex items-center gap-2">
-          <UpDwVote netVotesServer={netVotes} />
+          <UpDwVote upVotes={upVotes} downVotes={downVotes}/>
           <Cmt noOfComments={noOfComments} />
         </div>
       </CardFooter>
