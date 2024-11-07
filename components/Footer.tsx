@@ -1,4 +1,5 @@
-import { TwitterLogoIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import React from "react";
 
 function Footer() {
@@ -14,6 +15,12 @@ function Footer() {
     //   icon: <TwitterLogoIcon />,
     //   href: "https://x.com/ni3rav",
     // },
+
+    {
+      name: "github",
+      icon: <GitHubLogoIcon />,
+      href: "https://github.com/shravanasati/everynyan"
+    }
 
   ];
 
@@ -34,12 +41,14 @@ function Footer() {
             {/* map */}
             {footerItems.map((item) => {
               return (
-                <div
-                  key={item.name}
-                  className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
-                >
-                  <span className="scale-[2]">{item.icon}</span>
-                </div>
+                <Link href={item.href} target="_blank">
+                  <div
+                    key={item.name}
+                    className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
+                  >
+                    <span className="scale-[2]">{item.icon}</span>
+                  </div>
+                </Link>
               );
             })}
             {/* map */}

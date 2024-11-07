@@ -11,6 +11,8 @@ export type SecurityLog = {
   detail: string
 }
 
+// todo add filter for type, sort by timestamp
+
 export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
   const formatDate = (timestamp: SecurityLog['timestamp']) => {
     const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000)
@@ -19,7 +21,7 @@ export function SecurityLogs({ logs = [] }: { logs?: SecurityLog[] }) {
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-fit">
       <CardHeader>
         <CardTitle>Security Logs</CardTitle>
       </CardHeader>
