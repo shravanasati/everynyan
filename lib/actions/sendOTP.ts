@@ -6,12 +6,15 @@ import { getOTP, saveOTP } from "@/lib/firebase/firestore"
 import { sendOTPEmail } from "@/lib/email"
 import isRateLimited from "@/lib/ratelimit"
 
+const blacklist = ["gauravkaloliya.csed24@adaniuni.ac.in"]
+
 const sendOTPSchema = z.strictObject({
-	email: z.string().toLowerCase().regex(uniEmailRegex, "Invalid email address"),
+	email: z.string().toLowerCase().regex(uniEmailRegex, "Invalid email address").refine(e => !blacklist.includes(e), "nuh uh loser you're blacklisted"),
 	tos: z.boolean().refine(val => val === true, {
 		message: "You must accept the terms and conditions"
 	})
 })
+
 
 // this action is used to generate an OTP, save it to firestore, and send it to the user's email
 export async function sendOTP(values: z.infer<typeof sendOTPSchema>) {
