@@ -28,3 +28,12 @@ export const nextLocalStorage = (): Storage | void => {
 export const generateOTP = (): number => {
   return Math.floor(100000 + Math.random() * 900000);
 }
+
+// generate a random 6 digit alphanumeric string
+export function generatePostID() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
+export function getPostSlug(id: string, title: string) {
+  return `${title.replace(/[^a-zA-Z0-9]/g, "_").substring(0, 20)}_${id}`;
+}

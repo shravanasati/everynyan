@@ -11,7 +11,7 @@ everynyan is built using Next.js.
 ```
 git clone https://github.com/shravanasati/everynyan.git
 ```
-2. Create a `.env.local` file.
+2. Create a `.env.local` file in the project root.
 
 ```
 SECRET_KEY=
@@ -23,6 +23,8 @@ NEXT_PUBLIC_FIREBASE_PROJECT_ID=
 NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID=
+
+MODERATOR_EMAILS=
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
@@ -30,6 +32,8 @@ The secret key is used to encrypt the cookies on user's browser. You can create 
 ```sh
 python -c "import secrets;print(secrets.token_hex(32))"
 ```
+
+Moderator emails is a comma-separated list of emails of users who have moderation privileges.
 
 Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
 

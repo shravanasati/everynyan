@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./fonts.css";
 import Navbar from "@/components/Navbar";
-import { isLoggedIn } from "@/lib/user";
+import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loggedIn = await isLoggedIn();
+  const user = await getAuthUser();
   return (
     <html lang="en">
       <head>
@@ -40,9 +40,9 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-obv antialiased">
-        <Navbar loggedIn={loggedIn} />
-        {children}
-        <Footer />
+          <Navbar user={user}/>
+          {children}
+          <Footer />
       </body>
     </html>
   );

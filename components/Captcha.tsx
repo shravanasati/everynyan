@@ -1,6 +1,8 @@
 import { Turnstile, TurnstileInstance } from "@marsidev/react-turnstile"
 import { useRef } from "react";
 
+// todo work on captcha
+
 if (!process.env.TURNSTILE_SITE_KEY) {
   throw new Error("TURNSTILE_SITE_KEY is not defined")
 }

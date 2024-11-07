@@ -4,24 +4,40 @@ import { cookies } from "next/headers"
 import { decrypt } from "./crypt"
 import { getToken } from "./firebase/firestore"
 
-export async function isLoggedIn() {
+type Role = "admin" | "user"
+
+export type User = {
+	token: string | undefined;
+	role: Role | undefined;
+}
+
+export async function getAuthUser() {
 	const session = cookies().get("session")
 	if (!session) {
-		return false
+		return null
 	}
 
 	try {
-		const tokenObj = JSON.parse(decrypt(session.value))
+		const tokenObj: User = JSON.parse(decrypt(session.value))
 		if (!tokenObj.token) {
-			return false
+			return null
+		}
+		if (!tokenObj.role) {
+			return null
 		}
 		const dbToken = await getToken(tokenObj.token)
 		if (!dbToken) {
-			return false
+			return null
 		}
-		return true
+		
+		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role) {
+			return null
+		}
+
+		return tokenObj
 	}
 	catch (error) {
-		return false
+		console.error("error in getAuthUser", error)
+		return null
 	}
 }

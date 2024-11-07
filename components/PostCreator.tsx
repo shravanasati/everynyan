@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
 
 const EditorComp = dynamic(() => import("@/components/MdEditor"), {
   ssr: false,
@@ -26,7 +27,7 @@ const formSchema = z.object({
     .string()
     .min(1, "Title cannot be empty")
     .max(100, "Title must be within 100 characters"),
-  content: z
+  body: z
     .string()
     .min(1, "Post cannot be empty")
     .max(4000, "Post must be within 4000 characters"),
@@ -35,17 +36,18 @@ const formSchema = z.object({
 interface FormData {
   board: string;
   title: string;
-  content: string;
+  body: string;
 }
 
 export function PostCreator() {
   const [formState, setFormState] = useState<FormData>({
     board: boards[0],
     title: "",
-    content: "*hello* **world**. type away your post, in <u>markdown</u>.",
+    body: "*hello* **world**. type away your post, in <u>markdown</u>.",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const handleSubmit = async () => {
     try {
@@ -60,9 +62,15 @@ export function PostCreator() {
       }
 
       const response = await createPost(result.data);
+      if (!response.success) {
+        // select the first error message
+        setError(Object.values(response.errors!)[0][0]);
+        return;
+      }
       console.log("Post created:", response);
 
-      // !!success handling
+      // Redirect to the newly created post
+      router.push(`/post/${response.slug}`);
     } catch (err) {
       console.error(err);
       setError("Failed to create post. Please try again.");
@@ -120,13 +128,13 @@ export function PostCreator() {
             />
           </div>
           <div className="space-y-2">
-            <label className="font-medium">Content</label>
+            <label className="font-medium">Body</label>
             <div className="w-full border rounded-lg">
               <Suspense fallback={<AnimatedLoader />}>
                 <EditorComp
-                  markdown={formState.content}
+                  markdown={formState.body}
                   onChange={(value) =>
-                    setFormState((prev) => ({ ...prev, content: value }))
+                    setFormState((prev) => ({ ...prev, body: value }))
                   }
                 />
               </Suspense>
