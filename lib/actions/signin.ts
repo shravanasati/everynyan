@@ -61,6 +61,6 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
     maxAge: 60 * 60 * 24 * 7 * 2, // 2 weeks
   })
 
-  await deleteOTP(result.data.email)
+  // await deleteOTP(result.data.email)
 	return { success: true }
 }
