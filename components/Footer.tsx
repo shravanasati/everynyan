@@ -1,4 +1,5 @@
-import { TwitterLogoIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, InstagramLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import React from "react";
 
 function Footer() {
@@ -6,14 +7,18 @@ function Footer() {
     {
       name: "twitter1",
       icon: <TwitterLogoIcon />,
-      href: "https://x.com/ni3rav",
+      href: "https://x.com/everynyan",
     },
-    // follow this syntax to add more icons
-    // {
-    //   name: "twitter2", //must keep this name unique
-    //   icon: <TwitterLogoIcon />,
-    //   href: "https://x.com/ni3rav",
-    // },
+    {
+      name: "instagram",
+      icon: <InstagramLogoIcon />,
+      href: "https://instagram.com/everynyan_"
+    },
+    {
+      name: "github",
+      icon: <GitHubLogoIcon />,
+      href: "https://github.com/shravanasati/everynyan"
+    },
 
   ];
 
@@ -31,15 +36,15 @@ function Footer() {
             Connect With Us
           </h4>
           <div className="flex flex-wrap gap-4 relative">
-            {/* map */}
             {footerItems.map((item) => {
               return (
-                <div
-                  key={item.name}
-                  className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
-                >
-                  <span className="scale-[2]">{item.icon}</span>
-                </div>
+                <Link href={item.href} target="_blank" key={item.name}>
+                  <div
+                    className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
+                  >
+                    <span className="scale-[2]">{item.icon}</span>
+                  </div>
+                </Link>
               );
             })}
             {/* map */}
