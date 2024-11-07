@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { sendOTP } from "@/lib/actions/sendOTP"
+import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { sendOTP } from "@/lib/actions/sendOTP";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -26,10 +26,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { nextLocalStorage, uniEmailRegex } from "@/lib/utils"
-import { Captcha, CaptchaStatus } from "./Captcha"
-import { TurnstileInstance } from "@marsidev/react-turnstile"
+} from "@/components/ui/card";
+import { nextLocalStorage, uniEmailRegex } from "@/lib/utils";
+import { Captcha, CaptchaStatus } from "./Captcha";
+import { TurnstileInstance } from "@marsidev/react-turnstile";
 
 const formSchema = z.object({
   email: z
@@ -42,12 +42,12 @@ const formSchema = z.object({
 });
 
 export function LoginPage() {
-  const router = useRouter()
-  const [serverError, setServerError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure")
-  const captchaRef = useRef<TurnstileInstance>(null)
+  const [captchaStatus, setCaptchaStatus] = useState<CaptchaStatus>("failure");
+  const captchaRef = useRef<TurnstileInstance>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,31 +59,34 @@ export function LoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (captchaStatus !== "success") {
-      setServerError("Please complete the captcha")
-      return
+      setServerError("Please complete the captcha");
+      return;
     }
 
-    const captchaResult = captchaRef.current?.getResponse()
+    const captchaResult = captchaRef.current?.getResponse();
     if (!captchaResult) {
-      setServerError("Please complete the captcha")
-      return
+      setServerError("Please complete the captcha");
+      return;
     }
 
-    setServerError(null)
-    setLoading(true)
+    setServerError(null);
+    setLoading(true);
 
-    const newVals = { ...values, captchaResponse: captchaResult }
+    const newVals = { ...values, captchaResponse: captchaResult };
 
-    const result = await sendOTP(newVals)
+    const result = await sendOTP(newVals);
     if (result.success) {
-      nextLocalStorage()?.setItem("email", values.email)
-      router.push("/verify-otp")
+      nextLocalStorage()?.setItem("email", values.email);
+      router.push("/verify-otp");
     } else {
-      const errors = result.errors as { email?: string; server?: string }
-      const errorMessage = errors?.email || errors?.server || "An error occurred. Please try again."
-      setServerError(errorMessage)
+      const errors = result.errors as { email?: string; server?: string };
+      const errorMessage =
+        errors?.email ||
+        errors?.server ||
+        "An error occurred. Please try again.";
+      setServerError(errorMessage);
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -116,29 +119,31 @@ export function LoginPage() {
                 control={form.control}
                 name="tos"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col space-y-2">
-                    <div className="flex flex-row items-start space-x-3">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="mt-1"
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-zinc-100 font-bold text-sm">
-                          I have read and accept the{" "}
-                          <Link href="/tos" className="text-blue-500">
-                            Terms of Service
-                          </Link>
-                          .
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        className="mt-[0.875rem] ml-0.5"
+                      />
+                    </FormControl>
+                    <FormLabel className="text-zinc-100 font-bold text-sm">
+                      I have read and accepted{" "}
+                      <Link href="/tos" className="text-blue-500">
+                        Terms of Service
+                      </Link>
+                      .
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-center items-center">
+                <Captcha
+                  setStatus={setCaptchaStatus}
+                  captchaRef={captchaRef}
+                  className="p-2"
                 />
               </div>
-              <Captcha setStatus={setCaptchaStatus} captchaRef={captchaRef} className="p-2" />
             </CardContent>
             <CardFooter className="flex flex-col gap-2">
               <Button type="submit" className="w-full" disabled={loading}>
