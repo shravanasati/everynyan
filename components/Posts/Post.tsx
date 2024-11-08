@@ -8,6 +8,7 @@ import {
 import UpDwVote from "@/components/Posts/UpDwVote";
 import Cmt from "@/components/Posts/Cmt";
 import Share from "@/components/Posts/Share";
+import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
 import { PostData } from "@/lib/utils";
 
@@ -44,6 +45,7 @@ export default function Post({
         <UpDwVote upVotes={upVotes} downVotes={downVotes} />
         <Cmt noOfComments={noOfComments} />
         <Share />
+        <ReportContent />
       </CardFooter>
     </Card>
   );
