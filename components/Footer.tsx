@@ -9,13 +9,13 @@ function Footer() {
       href: "https://github.com/shravanasati/everynyan",
     },
     {
-      name: "instagram", //must keep this name unique
+      name: "instagram", 
       icon: <InstagramLogoIcon />,
       href: "https://instagram.com/everynyan.support",
     },
     // follow this syntax to add more icons
     // {
-    //   name: "twitter2", //must keep this name unique
+    //   name: "twitter2", 
     //   icon: <TwitterLogoIcon />,
     //   href: "https://x.com/ni3rav",
     // },
@@ -37,10 +37,10 @@ function Footer() {
           </h4>
           <div className="flex flex-wrap gap-4 relative">
             {/* map */}
-            {footerItems.map((item) => {
+            {footerItems.map((item,index) => {
               return (
                 <div
-                  key={item.name}
+                  key={index}
                   className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
                 >
                   <span className="scale-[2]">{item.icon}</span>
