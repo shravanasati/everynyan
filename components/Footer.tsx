@@ -1,12 +1,17 @@
-import { TwitterLogoIcon } from "@radix-ui/react-icons";
+import { GitHubLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
 import React from "react";
 
 function Footer() {
   const footerItems = [
     {
-      name: "twitter1",
-      icon: <TwitterLogoIcon />,
-      href: "https://x.com/ni3rav",
+      name: "github",
+      icon: <GitHubLogoIcon />,
+      href: "https://github.com/shravanasati/everynyan",
+    },
+    {
+      name: "instagram", //must keep this name unique
+      icon: <InstagramLogoIcon />,
+      href: "https://instagram.com/everynyan.support",
     },
     // follow this syntax to add more icons
     // {
