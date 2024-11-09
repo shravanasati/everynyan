@@ -3,7 +3,7 @@ import Image from "next/image"
 
 import { Button } from '@/components/ui/button'
 
-export function NotAuthorized() {
+export function Unauthorized() {
   return (
     <div className="flex items-center justify-center min-h-[90vh] bg-background">
       <div className="text-center space-y-6">
@@ -11,6 +11,7 @@ export function NotAuthorized() {
           <Image className="mx-auto text-muted-foreground" src="/frown.png" width={128} height={128} alt='sad' />
           <h1 className="text-4xl font-bold tracking-tighter">403 - Not Authorized</h1>
           <p className="text-muted-foreground">Sorry, you don&apos;t have permission to access this page.</p>
+          <p className="text-muted-foreground">Join the fun:</p>
         </div>
         <div className="space-x-4">
           <Button asChild>
