@@ -69,7 +69,7 @@ export function PostCreator() {
       }
       console.log("Post created:", response);
 
-      // Redirect to the newly created post
+      // redirect to the newly created post
       router.push(`/post/${response.slug}`);
     } catch (err) {
       console.error(err);

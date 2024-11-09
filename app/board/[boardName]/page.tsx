@@ -1,7 +1,7 @@
 import Post from "@/components/Posts/Post";
 import { getAuthUser } from "@/lib/user";
-import { redirect } from "next/navigation";
 import "@/app/scrollbar.css";
+import { Unauthorized } from "@/components/Unauthorized";
 
 interface BoardProps {
   params: {
@@ -42,7 +42,7 @@ In here, you can find the following markdown elements:
 
 export default async function BoardDetailPage({ params }: BoardProps) {
   if (!(await getAuthUser())) {
-    redirect("/login");
+    return <Unauthorized />;
   }
 
   const { boardName } = params;

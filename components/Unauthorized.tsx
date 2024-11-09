@@ -11,7 +11,7 @@ export function Unauthorized() {
           <Image className="mx-auto text-muted-foreground" src="/frown.png" width={128} height={128} alt='sad' />
           <h1 className="text-4xl font-bold tracking-tighter">403 - Not Authorized</h1>
           <p className="text-muted-foreground">Sorry, you don&apos;t have permission to access this page.</p>
-          <p className="text-muted-foreground">Join the fun:</p>
+          <p className="text-muted-foreground">Join the fun.</p>
         </div>
         <div className="space-x-4">
           <Button asChild>

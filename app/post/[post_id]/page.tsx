@@ -1,13 +1,13 @@
 import { getAuthUser } from "@/lib/user";
-import { redirect } from "next/navigation";
 import PostView from "@/components/Posts/PostView/PostView";
+import { Unauthorized } from "@/components/Unauthorized";
 
 export default async function PostPage() {
-  const isLoggedin = await getAuthUser();
+  const user = await getAuthUser();
 
-  if (isLoggedin) {
+  if (user) {
     return <PostView />;
   } else {
-    redirect("/login");
+    return <Unauthorized />;
   }
 }
