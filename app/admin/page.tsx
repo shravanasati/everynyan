@@ -1,6 +1,6 @@
 import { RawSecurityLog, SecurityLogType, SecurityLogs, FirestoreTimestamp } from "@/components/SecurityLogs"
-import NotAuthorized from "@/components/Unauthorized"
-import { getSecurityLogs } from "@/lib/firebase/firestore"
+import { Unauthorized } from "@/components/Unauthorized"
+import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 
 export function convertTimestamp(timestamp: FirestoreTimestamp): string {
@@ -9,9 +9,8 @@ export function convertTimestamp(timestamp: FirestoreTimestamp): string {
 
 export default async function AdminPage() {
   const user = await getAuthUser()
-  console.log(user)
   if (!user || user.role !== "admin") {
-    return <NotAuthorized />
+    return <Unauthorized />
   }
 
   const securityLogs = await getSecurityLogs()

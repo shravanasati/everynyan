@@ -37,12 +37,3 @@ export function generatePostID() {
 export function getPostSlug(id: string, title: string) {
   return `${title.replace(/[^a-zA-Z0-9]/g, "_").substring(0, 20)}_${id}`;
 }
-
-export interface PostData {
-  title: string;
-  content: string;
-  board: string;
-  upVotes: number;
-  downVotes: number;
-  noOfComments: number;
-}

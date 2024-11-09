@@ -2,8 +2,8 @@
 import { boardList } from "../boards"
 import { z } from "zod"
 import { getAuthUser } from "@/lib/user"
-import { savePost } from "@/lib/firebase/firestore"
-import { getPostSlug } from "../utils"
+import { savePost } from "@/lib/firebase/posts"
+import { getPostSlug } from "@/lib/utils"
 
 const createPostSchema = z.strictObject({
   board: z.string().toLowerCase().refine(val => boardList.map(item => item.title.toLowerCase()).includes(val), {
