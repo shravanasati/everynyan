@@ -11,6 +11,7 @@ import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
 import { PostData } from "@/lib/utils";
+import ReactMarkdown from "react-markdown";
 
 export default function Post({
   title,
@@ -39,7 +40,14 @@ export default function Post({
         </div>
       </CardHeader>
       <CardContent className="p-4 text-sm sm:text-base">
-        <p className="line-clamp-3 sm:line-clamp-4">{content}</p>
+        <ReactMarkdown
+          className="line-clamp-3 sm:line-clamp-4"
+          components={{
+            a: (props) => <a className="text-primary" {...props} />,
+          }}
+        >
+          {content}
+        </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
         <UpDwVote upVotes={upVotes} downVotes={downVotes} />

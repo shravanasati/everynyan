@@ -14,40 +14,23 @@ async function getBoardData(boardName: string) {
     posts: [
       {
         board: boardName,
-        title: `Post 1 for ${boardName}`,
-        content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque vitae incidunt earum ab ullam aliquid dicta quas blanditiis quod aspernatur necessitatibus quo est provident impedit, quos facere quia suscipit! Iusto.`,
-        upVotes: 31,
-        downVotes: 3,
-        noOfComments: 10,
-      },
-      {
-        board: boardName,
         title: `Post 2 for ${boardName}`,
-        content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque vitae incidunt earum ab ullam aliquid dicta quas blanditiis quod aspernatur necessitatibus quo est provident impedit, quos facere quia suscipit! Iusto.`,
-        upVotes: 12,
-        downVotes: 2,
-        noOfComments: 10,
-      },
-      {
-        board: boardName,
-        title: `Post 2 for ${boardName}`,
-        content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque vitae incidunt earum ab ullam aliquid dicta quas blanditiis quod aspernatur necessitatibus quo est provident impedit, quos facere quia suscipit! Iusto.`,
-        upVotes: 12,
-        downVotes: 2,
-        noOfComments: 10,
-      },
-      {
-        board: boardName,
-        title: `Post 2 for ${boardName}`,
-        content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque vitae incidunt earum ab ullam aliquid dicta quas blanditiis quod aspernatur necessitatibus quo est provident impedit, quos facere quia suscipit! Iusto.`,
-        upVotes: 12,
-        downVotes: 2,
-        noOfComments: 10,
-      },
-      {
-        board: boardName,
-        title: `Post 2 for ${boardName}`,
-        content: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque vitae incidunt earum ab ullam aliquid dicta quas blanditiis quod aspernatur necessitatibus quo est provident impedit, quos facere quia suscipit! Iusto.`,
+        content: `
+[Daring Fireball](https://daringfireball.net/projects/markdown/).
+
+In here, you can find the following markdown elements:
+
+* Headings
+* Lists
+  * Unordered
+  * Ordered
+  * Check lists
+  * And nested ;)
+* Links
+* Bold/Italic/Underline formatting
+* Tables
+* Code block editors
+* And much more.`,
         upVotes: 12,
         downVotes: 2,
         noOfComments: 10,
