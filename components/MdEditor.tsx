@@ -8,16 +8,19 @@ import {
   toolbarPlugin,
   headingsPlugin,
   quotePlugin,
-  listsPlugin,
   linkPlugin,
-  // thematicBreakPlugin,
   type MDXEditorMethods,
   type MDXEditorProps,
   markdownShortcutPlugin,
+  linkDialogPlugin,
+  CreateLink,
 } from "@mdxeditor/editor";
-import type {ForwardedRef} from "react";
+import type { ForwardedRef } from "react";
 
-function MdEditor({editorRef, ...props}: MDXEditorProps & { editorRef?: ForwardedRef<MDXEditorMethods> }) {
+function MdEditor({
+  editorRef,
+  ...props
+}: MDXEditorProps & { editorRef?: ForwardedRef<MDXEditorMethods> }) {
   return (
     <MDXEditor
       plugins={[
@@ -27,14 +30,14 @@ function MdEditor({editorRef, ...props}: MDXEditorProps & { editorRef?: Forwarde
               {" "}
               <UndoRedo />
               <BoldItalicUnderlineToggles />
+              <CreateLink />
             </>
           ),
         }),
         headingsPlugin(),
-        listsPlugin(),
         quotePlugin(),
-        // thematicBreakPlugin(),
         linkPlugin(),
+        linkDialogPlugin(),
         markdownShortcutPlugin(),
       ]}
       {...props}
