@@ -11,8 +11,8 @@ function BoardCard({ title, description, href, imageSrc, imageAlt }: Board) {
         <Image
           src={imageSrc}
           alt={imageAlt}
-          width={384}
-          height={144}
+          width={150}
+          height={200}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 rounded-xl"
         />
       </div>

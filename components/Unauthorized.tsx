@@ -1,14 +1,14 @@
 import Link from 'next/link'
-import { Frown } from 'lucide-react'
+import Image from "next/image"
 
 import { Button } from '@/components/ui/button'
 
-export default function NotAuthorized() {
+export function NotAuthorized() {
   return (
     <div className="flex items-center justify-center min-h-[90vh] bg-background">
       <div className="text-center space-y-6">
         <div className="space-y-2">
-          <Frown className="mx-auto h-16 w-16 text-muted-foreground" />
+          <Image className="mx-auto text-muted-foreground" src="/frown.png" width={128} height={128} alt='sad' />
           <h1 className="text-4xl font-bold tracking-tighter">403 - Not Authorized</h1>
           <p className="text-muted-foreground">Sorry, you don&apos;t have permission to access this page.</p>
         </div>
