@@ -1,7 +1,8 @@
 'use server'
 
 import { z } from "zod"
-import { addSecurityLog, getOTP, storeToken } from "@/lib/firebase/firestore"
+import { getOTP, storeToken } from "@/lib/firebase/firestore"
+import {addSecurityLog} from "@/lib/firebase/security_log"
 // import {deleteOTP} from "@/lib/firebase/firestore"
 import { uniEmailRegex } from "@/lib/utils"
 import { encrypt, newToken } from "@/lib//crypt"

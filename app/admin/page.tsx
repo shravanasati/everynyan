@@ -1,6 +1,6 @@
 import { RawSecurityLog, SecurityLogType, SecurityLogs, FirestoreTimestamp } from "@/components/SecurityLogs"
 import { Unauthorized } from "@/components/Unauthorized"
-import { getSecurityLogs } from "@/lib/firebase/firestore"
+import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 
 export function convertTimestamp(timestamp: FirestoreTimestamp): string {
