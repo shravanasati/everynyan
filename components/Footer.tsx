@@ -1,4 +1,5 @@
 import { GitHubLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 import React from "react";
 
 function Footer() {
@@ -9,7 +10,7 @@ function Footer() {
       href: "https://github.com/shravanasati/everynyan",
     },
     {
-      name: "instagram", 
+      name: "instagram",
       icon: <InstagramLogoIcon />,
       href: "https://instagram.com/everynyan.support",
     },
@@ -37,14 +38,14 @@ function Footer() {
           </h4>
           <div className="flex flex-wrap gap-4 relative">
             {/* map */}
-            {footerItems.map((item,index) => {
+            {footerItems.map((item, index) => {
               return (
-                <div
-                  key={index}
-                  className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
-                >
-                  <span className="scale-[2]">{item.icon}</span>
-                </div>
+                <Link target="_blank" href={item.href} key={index}>
+                  <div
+                    className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
+                  >
+                    <span className="scale-[2]">{item.icon}</span>
+                  </div></Link>
               );
             })}
             {/* map */}
