@@ -6,24 +6,26 @@ import ReportContent from "@/components/Posts/ReportContent";
 import UpDwVote from "@/components/Posts/UpDwVote";
 import "@/app/scrollbar.css";
 import ReactMarkdown from "react-markdown";
+import { getPostSlug } from "@/lib/utils";
 
 interface PostProps {
+  id: string;
   title: string;
   content: string;
   boardName: string;
-  createdAt: Date;
   upVotes?: number;
   downVotes?: number;
 }
 
 export default function PerPost({
+  id,
   title,
   content,
   boardName,
-  //   createdAt,
   upVotes,
   downVotes,
 }: PostProps) {
+  const postSlug = getPostSlug(id, title);
   return (
     <Card className="w-full h-full flex flex-col">
       <CardHeader className="space-y-1 p-3 sm:p-6">
@@ -51,7 +53,7 @@ export default function PerPost({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 mt-3 sm:mt-0">
           <UpDwVote upVotes={upVotes} downVotes={downVotes} />
           <div className="flex gap-2 justify-between sm:justify-end">
-            <Share />
+            <Share postLink={postSlug} />
             <ReportContent />
           </div>
         </div>

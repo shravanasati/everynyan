@@ -6,16 +6,10 @@ import {
   Timestamp,
   collection,
   getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  startAt
 } from "firebase/firestore";
 
 import { db } from "@/lib/firebase/app";
 import { generatePostID } from "@/lib/utils";
-import { Post } from "../post";
 
 export type OTPEntry = {
   otp: string;
@@ -112,20 +106,4 @@ export async function getSecurityLogs() {
 
   const logs = logsSnap.docs.map(doc => doc.data());
   return logs;
-}
-
-// get all posts from a board whose moderation status is not rejected
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", limitTo: number = 10, offset: number = 0) {
-  const postsRef = collection(db, "posts");
-  const postsSnap = await getDocs(
-    query(postsRef,
-      where("board", "==", board),
-      where("moderation_status", "!=", "rejected"),
-      orderBy(orderByField),
-      limit(limitTo),
-      startAt(offset)
-    )
-  );
-
-  return postsSnap.docs.map(doc => doc.data()) as Post[];
 }
