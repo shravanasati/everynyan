@@ -12,6 +12,8 @@ import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
 import { Post as PostType} from "@/lib/post";
 import ReactMarkdown from "react-markdown";
+import DOMPurify from "isomorphic-dompurify";
+import rehypeRaw from "rehype-raw";
 import { getPostSlug } from "@/lib/utils";
 
 function trimBodyContent(content: string) {
@@ -54,8 +56,9 @@ export default function Post({
           components={{
             a: (props) => <a className="text-primary" {...props} />,
           }}
+          rehypePlugins={[rehypeRaw]}
         >
-          {trimBodyContent(body)}
+          {DOMPurify.sanitize(trimBodyContent(body))}
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">

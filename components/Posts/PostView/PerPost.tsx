@@ -7,6 +7,9 @@ import UpDwVote from "@/components/Posts/UpDwVote";
 import "@/app/scrollbar.css";
 import ReactMarkdown from "react-markdown";
 import { getPostSlug } from "@/lib/utils";
+import Link from "next/link";
+import DOMPurify from "isomorphic-dompurify";
+import rehypeRaw from "rehype-raw";
 
 interface PostProps {
   id: string;
@@ -33,9 +36,13 @@ export default function PerPost({
           <CardTitle className="text-xl sm:text-2xl font-bold break-words">
             {title}
           </CardTitle>
-          <span className="text-xs sm:text-sm text-muted-foreground">
-            {boardName}
-          </span>
+
+          <Link href={`/board/${boardName}`}>
+            <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+              {boardName}
+            </span>
+          </Link>
+
         </div>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between p-3 sm:p-6">
@@ -45,8 +52,9 @@ export default function PerPost({
             components={{
               a: (props) => <a className="text-primary" {...props} />,
             }}
+            rehypePlugins={[rehypeRaw]}
           >
-            {content}
+            {DOMPurify.sanitize(content)}
           </ReactMarkdown>
         </div>
 

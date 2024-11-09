@@ -1,6 +1,7 @@
-import { collection, getDocs, limit, orderBy, query, startAt, where } from "firebase/firestore";
+import { collection, doc, getDocs, limit, orderBy, query, setDoc, startAt, Timestamp, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/post";
+import { generatePostID } from "@/lib/utils";
 
 // get all posts from a board whose moderation status is not rejected
 export async function getPostsByBoard(board: string, orderByField: string = "timestamp", limitTo: number = 10, offset: number = 0) {
@@ -9,9 +10,8 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
     query(postsRef,
       where("board", "==", board),
       where("moderation_status", "!=", "rejected"),
-      orderBy(orderByField),
+      orderBy(orderByField, "desc"),
       limit(limitTo),
-      startAt(offset)
     )
   );
 
@@ -27,4 +27,23 @@ export async function getPostByID(postID: string) {
   );
 
   return postSnap.docs.map(doc => doc.data())[0] as Post;
+}
+
+export async function savePost(title: string, body: string, board: string) {
+  const postID = generatePostID();
+  const postRef = doc(db, "posts", `${board}_${postID}`);
+
+  await setDoc(postRef, {
+    id: postID,
+    title: title,
+    board: board,
+    upvotes: 0,
+    downvotes: 0,
+    body: body,
+    moderation_status: "pending",
+    comments: [],
+    timestamp: Timestamp.now(),
+  });
+
+  return postID;
 }

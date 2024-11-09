@@ -67,25 +67,6 @@ export async function getToken(token: string) {
   return null;
 }
 
-export async function savePost(title: string, body: string, board: string) {
-  const postRef = doc(db, "posts", board);
-  const postID = generatePostID();
-
-  await setDoc(postRef, {
-    id: postID,
-    title: title,
-    board: board,
-    upvotes: 0,
-    downvotes: 0,
-    body: body,
-    moderation_status: "pending",
-    comments: [],
-    timestamp: Timestamp.now(),
-  });
-
-  return postID;
-}
-
 interface SecurityLog {
   type_: "admin_login" | "moderation_action"
   detail: string
