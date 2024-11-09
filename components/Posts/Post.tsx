@@ -10,23 +10,32 @@ import Cmt from "@/components/Posts/Cmt";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
-import { PostData } from "@/lib/utils";
+import { Post as PostType} from "@/lib/post";
 import ReactMarkdown from "react-markdown";
+import { getPostSlug } from "@/lib/utils";
+
+function trimBodyContent(content: string) {
+  if (content.length > 50) {
+    return content.substring(0, 50) + "...";
+  }
+  return content;
+}
 
 export default function Post({
+  id,
   title,
-  content,
-  upVotes,
-  downVotes,
+  body,
+  upvotes,
+  downvotes,
   board,
-  noOfComments,
-}: PostData) {
+}: PostType) {
+  const postSlug = getPostSlug(id, title);
   return (
     <Card className="w-full min-h-[12rem] my-2 rounded-sm shadow-md hover:shadow-lg transition-shadow duration-200">
       <CardHeader className="p-4">
         <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
           <Link
-            href="."
+            href={`/post/${postSlug}`}
             className="text-lg sm:text-xl md:text-2xl font-bold hover:underline line-clamp-2"
           >
             {title}
@@ -46,13 +55,13 @@ export default function Post({
             a: (props) => <a className="text-primary" {...props} />,
           }}
         >
-          {content}
+          {trimBodyContent(body)}
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
-        <UpDwVote upVotes={upVotes} downVotes={downVotes} />
-        <Cmt noOfComments={noOfComments} />
-        <Share />
+        <UpDwVote upVotes={upvotes} downVotes={downvotes} />
+        <Cmt noOfComments={0} />
+        <Share postLink={postSlug} />
         <ReportContent />
       </CardFooter>
     </Card>
