@@ -40,12 +40,12 @@ function Footer() {
             {/* map */}
             {footerItems.map((item, index) => {
               return (
-                <Link target="_blank" href={item.href} key={index}>
-                  <div
-                    className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
-                  >
-                    <span className="scale-[2]">{item.icon}</span>
-                  </div>
+                <Link
+                  key={index}
+                  href={item.href}
+                  className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
+                >
+                  <span className="scale-[2]">{item.icon}</span>
                 </Link>
               );
             })}
