@@ -5,12 +5,12 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import UpDwVote from "@/components/Posts/UpDwVote";
-import Cmt from "@/components/Posts/Cmt";
+import VoteCounter from "@/components/Posts/VoteCounter";
+import CommentButton from "@/components/Posts/Comment";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
-import { Post as PostType} from "@/lib/post";
+import { Post as PostType } from "@/lib/post";
 import ReactMarkdown from "react-markdown";
 import DOMPurify from "isomorphic-dompurify";
 import rehypeRaw from "rehype-raw";
@@ -62,10 +62,10 @@ export default function Post({
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
-        <UpDwVote upVotes={upvotes} downVotes={downvotes} />
-        <Cmt noOfComments={0} />
+        <VoteCounter upVotes={upvotes} downVotes={downvotes} />
+        <CommentButton noOfComments={0} />
         <Share postLink={postSlug} />
-        <ReportContent />
+        <ReportContent postID={id} />
       </CardFooter>
     </Card>
   );

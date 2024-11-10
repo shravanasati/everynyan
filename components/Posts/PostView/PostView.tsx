@@ -2,9 +2,13 @@
 import "@/app/scrollbar.css";
 import PerPost from "@/components/Posts/PostView/PerPost";
 import { getPostByID } from "@/lib/firebase/posts";
+import { notFound } from "next/navigation";
 
 async function PostView({ postID }: { postID: string }) {
   const post = await getPostByID(postID)
+  if (!post) {
+    return notFound()
+  }
   return (
     <main className="min-h-[92vh] grid grid-cols-1 md:grid-cols-5 grid-rows-1 gap-2">
       {/* !!right sidebar */}

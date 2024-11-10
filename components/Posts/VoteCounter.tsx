@@ -3,7 +3,7 @@
 import { ArrowBigDown, ArrowBigUp, Minus } from "lucide-react";
 import { useState } from "react";
 
-export default function Component({
+export default function VoteCounter({
   upVotes = 0,
   downVotes = 0,
 }: {
