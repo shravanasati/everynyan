@@ -62,7 +62,7 @@ export default function PerPost({
           <UpDwVote upVotes={upVotes} downVotes={downVotes} />
           <div className="flex gap-2 justify-between sm:justify-end">
             <Share postLink={postSlug} />
-            <ReportContent />
+            <ReportContent postID={id} />
           </div>
         </div>
       </CardContent>

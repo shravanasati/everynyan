@@ -10,6 +10,8 @@ import { useState } from "react"
 import { approveContent, rejectContent } from "@/lib/actions/report"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
+import { Loader2 } from "lucide-react"
+
 
 
 type ReportPropType = Omit<DBReport, 'createdAt' | 'resolvedAt'> & {
@@ -47,31 +49,64 @@ function createHyperLink(report: ReportPropType) {
   )
 }
 
+type LoadingState = {
+  approve: boolean
+  reject: boolean
+}
+
 export function AdminReports({ reports }: AdminReportsProps) {
   const [pendingReports, setPendingReports] = useState(reports.filter(r => r.status == "pending"))
   const { toast } = useToast()
+  const initialLoadingStates: Record<string, LoadingState> = pendingReports.reduce(
+    (acc, report) => {
+      acc[report.reportID] = { approve: false, reject: false };
+      return acc;
+    },
+    {} as Record<string, LoadingState>
+  );
+  const [loadingStates, setLoadingStates] = useState<Record<string, LoadingState>>(initialLoadingStates)
+
   const handleModeration = async (report: ReportPropType, action: "approve" | "reject") => {
-    const isPost = report.commentID ? false : true
-    const moderationFunc = action == "approve" ? approveContent : rejectContent
-    const resp = await moderationFunc(
-      (report.postID || report.commentID)!,
-      isPost ? "post" : "comment"
-    )
-    if (!resp.success) {
-      console.error(resp.message)
+    setLoadingStates(prev => ({
+      ...prev,
+      [report.reportID]: { ...prev[report.reportID], [action]: true }
+    }))
+
+    try {
+      const isPost = report.commentID ? false : true
+      const moderationFunc = action == "approve" ? approveContent : rejectContent
+      const resp = await moderationFunc(
+        (report.postID || report.commentID)!,
+        isPost ? "post" : "comment"
+      )
+      if (!resp.success) {
+        console.error(resp.message)
+        toast({
+          title: "Moderation unsuccessfull",
+          variant: "destructive",
+          description: `${resp.message}`
+        })
+        return
+      }
+      await resolveReport(report.reportID)
+      setPendingReports(pendingReports.filter(item => item != report))
       toast({
-        title: "Moderation unsuccessfull",
-        variant: "destructive",
-        description: `${resp.message}`
+        title: "Moderation successfull",
+        description: `${isPost ? "Post" : "Comment"} <${isPost ? report.postID : report.commentID}> ${action}d`
       })
-      return
+    } catch (e) {
+      console.error(e)
+      toast({
+        title: "Moderation failed",
+        variant: "destructive",
+        description: "An unexpected error occurred"
+      })
+    } finally {
+    setLoadingStates(prev => ({
+      ...prev,
+      [report.reportID]: { ...prev[report.reportID], [action]: false }
+    }))
     }
-    await resolveReport(report.reportID)
-    setPendingReports(pendingReports.filter(item => item != report))
-    toast({
-      title: "Moderation successfull",
-      description: `${isPost ? "Post" : "Comment"} <${isPost ? report.postID : report.commentID}> ${action}d`
-    })
   }
 
   return (
@@ -103,13 +138,37 @@ export function AdminReports({ reports }: AdminReportsProps) {
                   <TableCell>
                     {(
                       <div className="flex space-x-2">
-                        <Button size="sm" className="bg-green-500 text-black" onClick={async () => {
-                          await handleModeration(report, "approve")
-                        }}>Approve</Button>
+                        <Button size="sm" className="bg-green-500 text-black"
+                          onClick={async () => {
+                            await handleModeration(report, "approve")
+                          }}
+                          disabled={loadingStates[report.reportID]?.approve || loadingStates[report.reportID]?.reject}
+                        >
+                          {loadingStates[report.reportID]?.approve ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Approving
+                            </>
+                          ) : (
+                            'Approve'
+                          )}
+                        </Button>
 
-                        <Button size="sm" variant="destructive" className="text-black" onClick={async () => {
-                          await handleModeration(report, "reject")
-                        }}>Reject</Button>
+                        <Button size="sm" variant="destructive" className="text-black"
+                          onClick={async () => {
+                            await handleModeration(report, "reject")
+                          }}
+                          disabled={loadingStates[report.reportID]?.approve || loadingStates[report.reportID]?.reject}
+                        >
+                          {loadingStates[report.reportID]?.reject ? (
+                            <>
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Rejecting
+                            </>
+                          ) : (
+                            'Reject'
+                          )}
+                        </Button>
                       </div>
                     )}
                   </TableCell>
