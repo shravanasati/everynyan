@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./fonts.css";
-import Navbar from "@/components/Navbar";
+import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 
@@ -40,9 +40,9 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <body className="font-obv antialiased">
-          <Navbar user={user}/>
-          {children}
-          <Footer />
+        <Navbar user={user} />
+        {children}
+        <Footer />
       </body>
     </html>
   );
