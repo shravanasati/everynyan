@@ -4,9 +4,9 @@ import PerPost from "@/components/Posts/PostView/PerPost";
 import { getPostByID } from "@/lib/firebase/posts";
 import { notFound } from "next/navigation";
 
-async function PostView({ postID }: { postID: string }) {
+async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean }) {
   const post = await getPostByID(postID)
-  if (!post) {
+  if (!post || post.moderation_status == "rejected" && !isAdmin) {
     return notFound()
   }
   return (
