@@ -26,6 +26,10 @@ export async function getPostByID(postID: string) {
 	)
   );
 
+  if (postSnap.empty) {
+    return null;
+  }
+
   return postSnap.docs.map(doc => doc.data())[0] as Post;
 }
 
