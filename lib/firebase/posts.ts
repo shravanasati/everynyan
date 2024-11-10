@@ -1,10 +1,11 @@
-import { collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, startAt, Timestamp, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, increment, limit, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/post";
 import { generatePostID } from "@/lib/utils";
 
 // get all posts from a board whose moderation status is not rejected
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", limitTo: number = 10, offset: number = 0) {
+// todo offset for lazy loading
+export async function getPostsByBoard(board: string, orderByField: string = "timestamp", limitTo: number = 10) {
   const postsRef = collection(db, "posts");
   const postsSnap = await getDocs(
     query(postsRef,
@@ -68,6 +69,32 @@ export async function updatePostModerationStatus(postID: string, newStatus: "app
     return true
   } catch (e) {
     console.error("error in update post moderation status", e)
+    return false
+  }
+}
+
+export async function upvotePost(board: string, postID: string) {
+  const postRef = doc(db, "posts", `${board}_${postID}`)
+  try {
+    await updateDoc(postRef, {
+      "upvotes": increment(1)
+    })
+    return true
+  } catch (e) {
+    console.error(e)
+    return false
+  }
+}
+
+export async function downvotePost(board: string, postID: string) {
+  const postRef = doc(db, "posts", `${board}_${postID}`)
+  try {
+    await updateDoc(postRef, {
+      "downvotes": increment(1)
+    })
+    return true
+  } catch (e) {
+    console.error(e)
     return false
   }
 }

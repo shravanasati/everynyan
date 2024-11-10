@@ -62,8 +62,8 @@ export default function Post({
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
-        <VoteCounter upVotes={upvotes} downVotes={downvotes} />
-        <CommentButton noOfComments={0} />
+        <VoteCounter upVotes={upvotes} downVotes={downvotes} board={board} postID={id} />
+        <CommentButton noOfComments={0} postSlug={postSlug} />
         <Share postLink={postSlug} />
         <ReportContent postID={id} />
       </CardFooter>
