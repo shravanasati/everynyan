@@ -1,13 +1,11 @@
 import { AdminReports } from "@/components/AdminReports"
-import { RawSecurityLog, SecurityLogType, SecurityLogs, FirestoreTimestamp } from "@/components/SecurityLogs"
+import { RawSecurityLog, SecurityLogType, SecurityLogs } from "@/components/SecurityLogs"
 import { Unauthorized } from "@/components/Unauthorized"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
+import { convertTimestamp } from "./time"
 
-export function convertTimestamp(timestamp: FirestoreTimestamp): string {
-  return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000).toISOString()
-}
 
 export default async function AdminPage() {
   const user = await getAuthUser()
