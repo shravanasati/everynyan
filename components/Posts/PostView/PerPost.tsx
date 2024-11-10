@@ -6,24 +6,29 @@ import ReportContent from "@/components/Posts/ReportContent";
 import UpDwVote from "@/components/Posts/UpDwVote";
 import "@/app/scrollbar.css";
 import ReactMarkdown from "react-markdown";
+import { getPostSlug } from "@/lib/utils";
+import Link from "next/link";
+import DOMPurify from "isomorphic-dompurify";
+import rehypeRaw from "rehype-raw";
 
 interface PostProps {
+  id: string;
   title: string;
   content: string;
   boardName: string;
-  createdAt: Date;
   upVotes?: number;
   downVotes?: number;
 }
 
 export default function PerPost({
+  id,
   title,
   content,
   boardName,
-  //   createdAt,
   upVotes,
   downVotes,
 }: PostProps) {
+  const postSlug = getPostSlug(id, title);
   return (
     <Card className="w-full h-full flex flex-col">
       <CardHeader className="space-y-1 p-3 sm:p-6">
@@ -31,9 +36,13 @@ export default function PerPost({
           <CardTitle className="text-xl sm:text-2xl font-bold break-words">
             {title}
           </CardTitle>
-          <span className="text-xs sm:text-sm text-muted-foreground">
-            {boardName}
-          </span>
+
+          <Link href={`/board/${boardName}`}>
+            <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+              {boardName}
+            </span>
+          </Link>
+
         </div>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between p-3 sm:p-6">
@@ -43,15 +52,16 @@ export default function PerPost({
             components={{
               a: (props) => <a className="text-primary" {...props} />,
             }}
+            rehypePlugins={[rehypeRaw]}
           >
-            {content}
+            {DOMPurify.sanitize(content)}
           </ReactMarkdown>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 mt-3 sm:mt-0">
           <UpDwVote upVotes={upVotes} downVotes={downVotes} />
           <div className="flex gap-2 justify-between sm:justify-end">
-            <Share />
+            <Share postLink={postSlug} />
             <ReportContent />
           </div>
         </div>

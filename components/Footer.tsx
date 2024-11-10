@@ -10,7 +10,7 @@ function Footer() {
       href: "https://github.com/shravanasati/everynyan",
     },
     {
-      name: "instagram", 
+      name: "instagram",
       icon: <InstagramLogoIcon />,
       href: "https://instagram.com/everynyan.support",
     },
@@ -38,7 +38,7 @@ function Footer() {
           </h4>
           <div className="flex flex-wrap gap-4 relative">
             {/* map */}
-            {footerItems.map((item,index) => {
+            {footerItems.map((item, index) => {
               return (
                 <Link
                   key={index}

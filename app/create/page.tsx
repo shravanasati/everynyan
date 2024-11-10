@@ -1,10 +1,10 @@
 import { PostCreator } from "@/components/PostCreator";
+import { Unauthorized } from "@/components/Unauthorized";
 import { getAuthUser } from "@/lib/user";
-import { redirect } from "next/navigation";
 
 export default async function CreatePost() {
   if (!await getAuthUser()) {
-    redirect("/login");
+    return <Unauthorized />;
   }
 
   return <PostCreator />;
