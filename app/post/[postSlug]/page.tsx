@@ -13,8 +13,9 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!user) {
     return <Unauthorized />;
   }
+  const isAdmin = user.role === "admin"
 
   const slug = params.postSlug
   const postID = slug.substring(slug.length - 6)
-  return <PostView postID = {postID} />;
+  return <PostView isAdmin={isAdmin} postID = {postID} />;
 }
