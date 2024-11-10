@@ -1,5 +1,7 @@
+import { AdminReports } from "@/components/AdminReports"
 import { RawSecurityLog, SecurityLogType, SecurityLogs, FirestoreTimestamp } from "@/components/SecurityLogs"
 import { Unauthorized } from "@/components/Unauthorized"
+import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 
@@ -13,7 +15,9 @@ export default async function AdminPage() {
     return <Unauthorized />
   }
 
-  const securityLogs = await getSecurityLogs()
+  const [securityLogs, unresolvedReports] = await Promise.all(
+    [getSecurityLogs(), getUnresolvedReports()]
+  )
 
   // sort logs by timestamp
   securityLogs.sort((a, b) => b.timestamp - a.timestamp)
@@ -26,10 +30,21 @@ export default async function AdminPage() {
     detail: log.detail
   }))
 
+  const formattedReports = unresolvedReports.map(report => ({
+    ...report,
+    createdAt: convertTimestamp(report.createdAt),
+    resolvedAt: report.resolvedAt ? convertTimestamp(report.resolvedAt) : null
+  }))
+
   return (
     <div className="container mx-2 py-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Page</h1>
-      <SecurityLogs logs={formattedLogs as SecurityLogType[]} />
+      <h1 className="text-3xl font-bold mb-6 ml-2">Admin Page</h1>
+      <div className="m-2">
+        <AdminReports reports={formattedReports} />
+      </div>
+      <div className="m-2">
+        <SecurityLogs logs={formattedLogs as SecurityLogType[]} />
+      </div>
     </div>
   )
 }

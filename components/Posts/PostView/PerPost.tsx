@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
-import UpDwVote from "@/components/Posts/UpDwVote";
+import UpDwVote from "@/components/Posts/VoteCounter";
 import "@/app/scrollbar.css";
 import ReactMarkdown from "react-markdown";
 import { getPostSlug } from "@/lib/utils";

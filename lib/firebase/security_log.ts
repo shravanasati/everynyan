@@ -1,6 +1,6 @@
-import { collection, doc, getDocs,  setDoc,  Timestamp} from "firebase/firestore";
-
+import { collection, doc, getDocs, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
+
 interface SecurityLog {
   type_: "admin_login" | "moderation_action"
   detail: string

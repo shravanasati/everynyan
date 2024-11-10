@@ -4,6 +4,7 @@ import "./fonts.css";
 import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "everynyan",
@@ -42,6 +43,7 @@ export default async function RootLayout({
       <body className="font-obv antialiased">
         <Navbar user={user} />
         {children}
+        <Toaster />
         <Footer />
       </body>
     </html>
