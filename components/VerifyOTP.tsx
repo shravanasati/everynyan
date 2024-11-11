@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from "react"
-import {  useRouter } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -22,91 +22,94 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { signin } from "@/lib/actions/signin"
-import { isValidEmail } from "@/lib/utils"
+} from "@/components/ui/card";
+import { signin } from "@/lib/actions/signin";
+import { isValidEmail } from "@/lib/utils";
 
 const formSchema = z.object({
   otp: z.string().length(6).regex(/^\d+$/, "OTP must contain only numbers"),
-})
+});
 
 export function OTPPage() {
-  const router = useRouter()
-  const [email, setEmail] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [email, setEmail] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const storedEmail = localStorage.getItem("email")
+    const storedEmail = localStorage.getItem("email");
     if (!storedEmail || !isValidEmail(storedEmail)) {
-      router.push("/login")
+      router.push("/login");
     } else {
-      setEmail(storedEmail)
+      setEmail(storedEmail);
     }
-  }, [router])
+  }, [router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: "",
     },
-  })
+  });
 
-  const { watch, setValue } = form
+  const { watch, setValue } = form;
 
-  const otpValue = watch("otp")
+  const otpValue = watch("otp");
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Backspace" && otpValue.length > 0) {
-        setValue("otp", otpValue.slice(0, -1))
+        setValue("otp", otpValue.slice(0, -1));
       }
-    }
+    };
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [otpValue, setValue])
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [otpValue, setValue]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true)
-    const newValues = values as { email: string; otp: string }
-    newValues.email = email || ""
+    setLoading(true);
+    const newValues = values as { email: string; otp: string };
+    newValues.email = email || "";
     if (!isValidEmail(newValues.email)) {
-      router.push("/login")
+      router.push("/login");
     }
-    console.log("Submitting OTP form:", newValues)
+    console.log("Submitting OTP form:", newValues);
     try {
-      const result = await signin(newValues)
+      const result = await signin(newValues);
       if (result.success) {
-        localStorage.removeItem("email")
-        router.push("/board")
+        localStorage.removeItem("email");
+        router.push("/board");
       } else {
-        const error = result.error || "An unexpected error occurred. Please try again."
+        const error =
+          result.error || "An unexpected error occurred. Please try again.";
         if (error === "OTP expired. Please request a new one.") {
-          localStorage.removeItem("email")
+          localStorage.removeItem("email");
           setTimeout(() => {
-            router.push("/login")
-          }, 3000)
+            router.push("/login");
+          }, 3000);
         }
-        form.setError("otp", { message: result.error })
+        form.setError("otp", { message: result.error });
       }
     } catch (error) {
-      console.error("Error during sign in:", error)
-      form.setError("otp", { message: "An unexpected error occurred. Please try again." })
+      console.error("Error during sign in:", error);
+      form.setError("otp", {
+        message: "An unexpected error occurred. Please try again.",
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   if (!email) {
-    return null // or a loading spinner
+    return null; // or a loading spinner
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
-      <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md border-border">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-zinc-50">Verify OTP</CardTitle>
-          <CardDescription className="text-zinc-400">
+          <CardTitle className="text-2xl font-bold">Verify OTP</CardTitle>
+          <CardDescription>
             Enter the 6-digit code sent to your email
           </CardDescription>
         </CardHeader>
@@ -118,7 +121,7 @@ export function OTPPage() {
                 name="otp"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium text-zinc-200">OTP</FormLabel>
+                    <FormLabel className="text-sm font-medium">OTP</FormLabel>
                     <FormControl>
                       <div className="grid grid-cols-6 gap-2">
                         {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -130,13 +133,19 @@ export function OTPPage() {
                             maxLength={1}
                             value={field.value[index] || ""}
                             onChange={(e) => {
-                              const newValue = field.value.slice(0, index) + e.target.value + field.value.slice(index + 1)
-                              field.onChange(newValue.slice(0, 6))
+                              const newValue =
+                                field.value.slice(0, index) +
+                                e.target.value +
+                                field.value.slice(index + 1);
+                              field.onChange(newValue.slice(0, 6));
                               if (e.target.value !== "" && index < 5) {
-                                (e.target.nextElementSibling as HTMLInputElement)?.focus()
+                                (
+                                  e.target
+                                    .nextElementSibling as HTMLInputElement
+                                )?.focus();
                               }
                             }}
-                            className="w-full h-12 text-center text-2xl bg-zinc-800 border-zinc-700 text-zinc-100"
+                            className="w-full h-12 text-center text-2xl bg-secondary"
                           />
                         ))}
                       </div>
@@ -147,7 +156,7 @@ export function OTPPage() {
               />
             </CardContent>
             <CardFooter>
-              <Button type="submit" disabled={loading} className="w-full bg-zinc-700 hover:bg-zinc-600 text-zinc-100">
+              <Button type="submit" disabled={loading} className="w-full">
                 {loading ? "Verifying..." : "Verify"}
               </Button>
             </CardFooter>
@@ -155,5 +164,5 @@ export function OTPPage() {
         </Form>
       </Card>
     </div>
-  )
+  );
 }
