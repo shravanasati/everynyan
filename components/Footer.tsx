@@ -1,6 +1,7 @@
 import { GitHubLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import React from "react";
+import { Meow } from "@/components/Meow";
 
 function Footer() {
   const footerItems = [
@@ -50,6 +51,7 @@ function Footer() {
                 </Link>
               );
             })}
+            <Meow />
             {/* map */}
           </div>
         </div>
