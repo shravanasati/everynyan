@@ -43,6 +43,7 @@ function Footer() {
                 <Link
                   key={index}
                   href={item.href}
+                  target="_blank"
                   className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary"
                 >
                   <span className="scale-[2]">{item.icon}</span>

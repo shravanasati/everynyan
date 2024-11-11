@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
-import UpDwVote from "@/components/Posts/UpDwVote";
+import VoteCounter from "@/components/Posts/VoteCounter";
 import "@/app/scrollbar.css";
 import ReactMarkdown from "react-markdown";
 import { getPostSlug } from "@/lib/utils";
@@ -59,10 +59,10 @@ export default function PerPost({
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 mt-3 sm:mt-0">
-          <UpDwVote upVotes={upVotes} downVotes={downVotes} />
+          <VoteCounter upVotes={upVotes} downVotes={downVotes} board={boardName} postID={id} />
           <div className="flex gap-2 justify-between sm:justify-end">
             <Share postLink={postSlug} />
-            <ReportContent />
+            <ReportContent postID={id} />
           </div>
         </div>
       </CardContent>
