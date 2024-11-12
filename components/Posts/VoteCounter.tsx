@@ -8,12 +8,10 @@ export default function VoteCounter({
   upVotes = 0,
   downVotes = 0,
   postID,
-  board
 }: {
   upVotes?: number;
   downVotes?: number;
   postID: string;
-  board: string;
 }) {
   const [currentUpVotes, setCurrentUpVotes] = useState(upVotes);
   const [currentDownVotes, setCurrentDownVotes] = useState(downVotes);
@@ -29,7 +27,7 @@ export default function VoteCounter({
   }, [postID]);
 
   const upvoteRequest = async () => {
-    const resp = await upvotePostAction(board, postID, isUpVoted);
+    const resp = await upvotePostAction(postID, isUpVoted);
     if (resp.error) {
       console.error(resp.error);
       // Revert on failure
@@ -44,7 +42,7 @@ export default function VoteCounter({
   }
 
   const downvoteRequest = async () => {
-    const resp = await downvotePostAction(board, postID, isDownVoted);
+    const resp = await downvotePostAction(postID, isDownVoted);
     if (resp.error) {
       console.error(resp.error);
       // Revert on failure

@@ -1,6 +1,6 @@
-import { collection, doc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
-import { Post } from "@/lib/post";
+import { Post } from "@/lib/post_models";
 import { generatePostID } from "@/lib/utils";
 
 // get all posts from a board whose moderation status is not rejected
@@ -20,23 +20,18 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
 }
 
 export async function getPostByID(postID: string) {
-  const postRef = collection(db, "posts");
-  const postSnap = await getDocs(
-    query(postRef,
-      where("id", "==", postID)
-    )
-  );
-
-  if (postSnap.empty) {
+  const postRef = doc(db, "posts", postID);
+  const postSnap = await getDoc(postRef);
+  if (!postSnap.exists()) {
     return null;
   }
 
-  return postSnap.docs.map(doc => doc.data())[0] as Post;
+  return postSnap.data() as Post;
 }
 
 export async function savePost(title: string, body: string, board: string) {
   const postID = generatePostID();
-  const postRef = doc(db, "posts", `${board}_${postID}`);
+  const postRef = doc(db, "posts", postID);
 
   await setDoc(postRef, {
     id: postID,
@@ -44,9 +39,9 @@ export async function savePost(title: string, body: string, board: string) {
     board: board,
     upvotes: 0,
     downvotes: 0,
+    comment_count: 0,
     body: body,
     moderation_status: "pending",
-    comments: [],
     timestamp: Timestamp.now(),
   });
 
@@ -54,16 +49,8 @@ export async function savePost(title: string, body: string, board: string) {
 }
 
 export async function updatePostModerationStatus(postID: string, newStatus: "approved" | "rejected") {
-  // todo optimize this query to use board_postID instead of id directly as docRef
   try {
-    const q = query(collection(db, "posts"), where("id", "==", postID))
-
-    const querySnapshot = await getDocs(q)
-    if (querySnapshot.empty) {
-      return false
-    }
-    const document = querySnapshot.docs[0]
-    const docRef = doc(db, "posts", document.id)
+    const docRef = doc(db, "posts", postID)
     await updateDoc(docRef, {
       "moderation_status": newStatus
     })
@@ -74,8 +61,8 @@ export async function updatePostModerationStatus(postID: string, newStatus: "app
   }
 }
 
-export async function upvotePost(board: string, postID: string, undo: boolean) {
-  const postRef = doc(db, "posts", `${board}_${postID}`)
+export async function upvotePost(postID: string, undo: boolean) {
+  const postRef = doc(db, "posts", postID)
   try {
     await updateDoc(postRef, {
       "upvotes": increment(undo ? -1 : 1)
@@ -87,8 +74,8 @@ export async function upvotePost(board: string, postID: string, undo: boolean) {
   }
 }
 
-export async function downvotePost(board: string, postID: string, undo: boolean) {
-  const postRef = doc(db, "posts", `${board}_${postID}`)
+export async function downvotePost(postID: string, undo: boolean) {
+  const postRef = doc(db, "posts", postID)
   try {
     await updateDoc(postRef, {
       "downvotes": increment(undo ? -1 : 1)

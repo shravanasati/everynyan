@@ -38,7 +38,8 @@ export default async function BoardDetailPage({ params }: BoardProps) {
             downvotes={post.downvotes}
             id={post.id}
             moderation_status={"pending"}
-            comments={[]} />
+            comment_count={post.comment_count}
+            />
         ))}
       </div>
     </div>
