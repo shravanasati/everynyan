@@ -110,14 +110,14 @@ export function Navbar({ user }: { user: User | null }) {
         {loggedIn ? (
           <button
             onClick={handleLogout}
-            className="font-semibold px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+            className="font-semibold px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 hidden md:inline"
           >
             Log Out
           </button>
         ) : (
           <Link
             href="/login"
-            className="font-semibold px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+            className="font-semibold px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 hidden md:inline"
           >
             Log In
           </Link>

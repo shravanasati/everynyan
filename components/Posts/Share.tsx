@@ -28,7 +28,7 @@ function Share({ postLink }: { postLink: string }) {
     >
       {
         !isCopied ? <Share2 className="size-6 text-primary-600" /> : <Loader2 className="size-6 text-primary animate-spin" />
-      }
+      } <span className="md:hidden inline ml-3">{isCopied ? "Wait":"Share"}</span>
     </div>
   );
 }
