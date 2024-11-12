@@ -10,7 +10,7 @@ import CommentButton from "@/components/Posts/Comment";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
-import { Post as PostType } from "@/lib/post";
+import { Post as PostType } from "@/lib/post_models";
 import ReactMarkdown from "react-markdown";
 import DOMPurify from "isomorphic-dompurify";
 import rehypeRaw from "rehype-raw";
@@ -29,6 +29,7 @@ export default function Post({
   body,
   upvotes,
   downvotes,
+  comment_count,
   board,
 }: PostType) {
   const postSlug = getPostSlug(id, title);
@@ -62,8 +63,8 @@ export default function Post({
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
-        <VoteCounter upVotes={upvotes} downVotes={downvotes} board={board} postID={id} />
-        <CommentButton noOfComments={0} postSlug={postSlug} />
+        <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
+        <CommentButton noOfComments={comment_count} postSlug={postSlug} />
         <Share postLink={postSlug} />
         <ReportContent postID={id} />
       </CardFooter>

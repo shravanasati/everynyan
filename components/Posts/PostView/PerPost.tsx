@@ -59,7 +59,7 @@ export default function PerPost({
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 mt-3 sm:mt-0">
-          <VoteCounter upVotes={upVotes} downVotes={downVotes} board={boardName} postID={id} />
+          <VoteCounter upVotes={upVotes} downVotes={downVotes} postID={id} />
           <div className="flex gap-2 justify-between sm:justify-end">
             <Share postLink={postSlug} />
             <ReportContent postID={id} />
