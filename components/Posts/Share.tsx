@@ -26,7 +26,7 @@ function Share({ postLink }: { postLink: string }) {
       aria-disabled={isCopied}
     >
       {
-        !isCopied ? <Share2 className="size-6 text-primary-600" /> : <Loader2 className="size-6 text-primary animate-spin" />
+        !isCopied ? <Share2 className="text-primary-600" size={20} /> : <Loader2 size={20} className="text-primary animate-spin" />
       } <span className="md:hidden inline ml-3">{isCopied ? "Wait":"Share"}</span>
     </div>
   );

@@ -34,6 +34,11 @@ export function generatePostID() {
   return Math.random().toString(36).substring(2, 8);
 }
 
+// generate a random 8 digit alphanumeric string
+export function generateCommentID() {
+  return Math.random().toString(36).substring(2, 10);
+}
+
 export function getPostSlug(id: string, title: string) {
   return `${title.replace(/[^a-zA-Z0-9]/g, "_").substring(0, 20)}_${id}`;
 }
