@@ -13,12 +13,11 @@ function Share({ postLink }: { postLink: string }) {
     setIsCopied(true);
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/post/${postLink}`);
-      console.log("Content copied to clipboard");
+      toast({ description: "Link copied to clipboard" });
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
     setIsCopied(false);
-    toast({ description: "Link copied to clipboard" });
   };
   return (
     <div
