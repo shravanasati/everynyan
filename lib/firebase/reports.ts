@@ -2,7 +2,7 @@ import { collection, doc, getDocs, query, setDoc, Timestamp, where } from "fireb
 import { db } from "./app";
 
 export type Report = {
-  postID?: string,
+  postID: string,
   commentID?: string,
   flag: string,
   status: "pending" | "resolved",
@@ -15,10 +15,6 @@ export type DBReport = Report & {
 }
 
 export async function reportContent(report: Report) {
-  if (!report.postID && !report.commentID) {
-    throw new Error("either postID or commentID is required");
-  }
-
   const reportID = `${report.postID || report.commentID || ""}_${Timestamp.now().seconds}`;
   const reportRef = doc(db, "reports", reportID);
   await setDoc(reportRef, {

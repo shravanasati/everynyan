@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 type ModerationStatus = "pending" | "approved" | "rejected";
 
 export type Post = {
@@ -17,5 +19,10 @@ export type Comment = {
 	upvotes: number;
 	downvotes: number;
 	parent_id: string | null;
+	level: number;
 	moderation_status: ModerationStatus;
+};
+
+export type DBComment = Comment & {
+	timestamp: Timestamp;
 };

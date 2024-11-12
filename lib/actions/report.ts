@@ -1,11 +1,12 @@
 "use server"
 
-import { updatePostModerationStatus } from "../firebase/posts"
-import { reportContent, Report as ReportType } from "../firebase/reports"
-import { addSecurityLog } from "../firebase/security_log"
-import { getAuthUser } from "../user"
+import { updateCommentModerationStatus } from "@/lib/firebase/comments"
+import { updatePostModerationStatus } from "@/lib/firebase/posts"
+import { reportContent, Report as ReportType } from "@/lib/firebase/reports"
+import { addSecurityLog } from "@/lib/firebase/security_log"
+import { getAuthUser } from "@/lib/user"
 
-async function _reportGeneric(contentID: string, flag: string, type: "post" | "comment") {
+async function _reportGeneric(postID: string, flag: string, type: "post" | "comment", commentID?: string) {
   try {
     const user = await getAuthUser()
     if (!user) {
@@ -17,17 +18,15 @@ async function _reportGeneric(contentID: string, flag: string, type: "post" | "c
     }
 
     const newReport: ReportType = {
+      postID: postID,
       flag: flag,
       status: "pending"
     }
-    if (type === "post") {
-      newReport.postID = contentID
-    } else if (type === "comment") {
-      newReport.commentID = contentID
+
+    if (type === "comment") {
+      newReport.commentID = commentID
     }
-    else {
-      throw new Error("Invalid type")
-    }
+
     await reportContent(newReport)
 
     return { success: true, message: "Content reported successfully" }
@@ -41,32 +40,44 @@ export async function reportPost(postID: string, flag: string) {
   return await _reportGeneric(postID, flag, "post")
 }
 
-export async function reportComment(commentID: string, flag: string) {
-  return await _reportGeneric(commentID, flag, "comment")
+export async function reportComment(postID: string, commentID: string, flag: string) {
+  return await _reportGeneric(postID, flag, "comment", commentID)
 }
 
-async function _moderateGeneric(action: "approve" | "reject", contentID: string, type: "post" | "comment") {
+async function _moderateGeneric(action: "approve" | "reject", postID: string, type: "post" | "comment", commentID?: string) {
   const user = await getAuthUser()
   if (!user || user.role !== "admin") {
-    return {success: false, message: "you are not authorized to perform this action"}
+    return { success: false, message: "you are not authorized to perform this action" }
   }
 
   if (type == "post") {
-    await updatePostModerationStatus(contentID, action == "approve" ? "approved" : "rejected")
+    await updatePostModerationStatus(postID, action == "approve" ? "approved" : "rejected")
     await addSecurityLog({
       type_: "moderation_action",
-      detail: `Post<id=${contentID}> ${action}d`
+      detail: `Post<id=${postID}> ${action}d`
+    })
+  } else {
+    await updateCommentModerationStatus(postID, commentID!, action == "approve" ? "approved" : "rejected")
+    await addSecurityLog({
+      type_: "moderation_action",
+      detail: `Comment<id=${postID}> ${action}d`
     })
   }
-  return {success: true, message: "moderation status updated successfully"}
-  // todo implement logic for comments
-  // todo add security log
+  return { success: true, message: "moderation status updated successfully" }
 }
 
-export async function approveContent(contentID: string, type: "post" | "comment") {
-  return await _moderateGeneric("approve", contentID, type)
+export async function approvePost(postID: string) {
+  return await _moderateGeneric("approve", postID, "post")
 }
 
-export async function rejectContent(contentID: string, type: "post" | "comment") {
-  return await _moderateGeneric("reject", contentID, type)
+export async function rejectPost(postID: string) {
+  return await _moderateGeneric("reject", postID, "post")
+}
+
+export async function approveComment(postID: string, commentID: string) {
+  return await _moderateGeneric("approve", postID, "comment", commentID)
+}
+
+export async function rejectComment(postID: string, commentID: string) {
+  return await _moderateGeneric("reject", postID, "comment", commentID)
 }

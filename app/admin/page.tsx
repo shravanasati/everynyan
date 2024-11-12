@@ -4,7 +4,7 @@ import { Unauthorized } from "@/components/Unauthorized"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
-import { convertTimestamp } from "./time"
+import { convertTimestamp } from "@/lib/utils"
 
 
 export default async function AdminPage() {

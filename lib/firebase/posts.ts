@@ -1,6 +1,6 @@
 import { collection, doc, limit, getDoc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where, startAfter, QueryConstraint, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
-import { Post } from "@/lib/post_models";
+import { Post } from "@/lib/models";
 import { generatePostID } from "@/lib/utils";
 
 interface PaginatedResult<T> {
@@ -30,12 +30,13 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
   const hasMore = docs.length > limitTo;
   const items = docs.slice(0, limitTo).map(doc => doc.data()) as Post[];
 
-  return {
+  const result: PaginatedResult<Post> = {
     items,
     lastDoc: hasMore ? docs[docs.length - 2] : null,
     hasMore
   }
 
+  return result
 }
 
 export async function getPostByID(postID: string) {
@@ -80,28 +81,24 @@ export async function updatePostModerationStatus(postID: string, newStatus: "app
   }
 }
 
-export async function upvotePost(postID: string, undo: boolean) {
+async function votePost(postID: string, undo: boolean, field: "upvotes" | "downvotes") {
   const postRef = doc(db, "posts", postID)
   try {
     await updateDoc(postRef, {
-      "upvotes": increment(undo ? -1 : 1)
+      [field]: increment(undo ? -1 : 1)
     })
     return true
   } catch (e) {
     console.error(e)
     return false
   }
+
+}
+
+export async function upvotePost(postID: string, undo: boolean) {
+  return await votePost(postID, undo, "upvotes")
 }
 
 export async function downvotePost(postID: string, undo: boolean) {
-  const postRef = doc(db, "posts", postID)
-  try {
-    await updateDoc(postRef, {
-      "downvotes": increment(undo ? -1 : 1)
-    })
-    return true
-  } catch (e) {
-    console.error(e)
-    return false
-  }
+  return await votePost(postID, undo, "downvotes")
 }

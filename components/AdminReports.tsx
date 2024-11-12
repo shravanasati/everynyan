@@ -7,7 +7,7 @@ import { resolveReport, type DBReport } from '@/lib/firebase/reports'
 import { parseISO } from "date-fns"
 import { toZonedTime, format } from "date-fns-tz"
 import { useState } from "react"
-import { approveContent, rejectContent } from "@/lib/actions/report"
+import { approveComment, approvePost, rejectComment, rejectPost } from "@/lib/actions/report"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2, ExternalLink } from "lucide-react"
@@ -36,9 +36,8 @@ function createHyperLink(report: ReportPropType) {
   let linkText: string;
   if (isPost) {
     href = `/post/${report.postID}`
-    linkText = report.postID!
+    linkText = report.postID
   } else {
-    // todo see if this working
     href = `/post/${report.postID}#${report.commentID}`
     linkText = report.commentID!
   }
@@ -76,11 +75,13 @@ export function AdminReports({ reports }: AdminReportsProps) {
 
     try {
       const isPost = report.commentID ? false : true
-      const moderationFunc = action == "approve" ? approveContent : rejectContent
-      const resp = await moderationFunc(
-        (report.postID || report.commentID)!,
-        isPost ? "post" : "comment"
-      )
+      let promise;
+      if (isPost) {
+        promise = action === "approve" ? approvePost(report.postID) : rejectPost(report.postID)
+      } else {
+        promise = action === "approve" ? approveComment(report.postID, report.commentID!) : rejectComment(report.postID, report.commentID!)
+      }
+      const resp = await promise;
       if (!resp.success) {
         console.error(resp.message)
         toast({
