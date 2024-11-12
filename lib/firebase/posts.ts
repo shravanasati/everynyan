@@ -1,18 +1,18 @@
-import { collection, doc, getDocs, increment, limit, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import { collection, doc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/post";
 import { generatePostID } from "@/lib/utils";
 
 // get all posts from a board whose moderation status is not rejected
 // todo offset for lazy loading
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", limitTo: number = 10) {
+export async function getPostsByBoard(board: string, orderByField: string = "timestamp") {
   const postsRef = collection(db, "posts");
   const postsSnap = await getDocs(
     query(postsRef,
       where("board", "==", board),
       where("moderation_status", "!=", "rejected"),
       orderBy(orderByField, "desc"),
-      limit(limitTo),
+      // limit(limitTo),
     )
   );
 
@@ -54,6 +54,7 @@ export async function savePost(title: string, body: string, board: string) {
 }
 
 export async function updatePostModerationStatus(postID: string, newStatus: "approved" | "rejected") {
+  // todo optimize this query to use board_postID instead of id directly as docRef
   try {
     const q = query(collection(db, "posts"), where("id", "==", postID))
 
@@ -73,11 +74,11 @@ export async function updatePostModerationStatus(postID: string, newStatus: "app
   }
 }
 
-export async function upvotePost(board: string, postID: string) {
+export async function upvotePost(board: string, postID: string, undo: boolean) {
   const postRef = doc(db, "posts", `${board}_${postID}`)
   try {
     await updateDoc(postRef, {
-      "upvotes": increment(1)
+      "upvotes": increment(undo ? -1 : 1)
     })
     return true
   } catch (e) {
@@ -86,11 +87,11 @@ export async function upvotePost(board: string, postID: string) {
   }
 }
 
-export async function downvotePost(board: string, postID: string) {
+export async function downvotePost(board: string, postID: string, undo: boolean) {
   const postRef = doc(db, "posts", `${board}_${postID}`)
   try {
     await updateDoc(postRef, {
-      "downvotes": increment(1)
+      "downvotes": increment(undo ? -1 : 1)
     })
     return true
   } catch (e) {

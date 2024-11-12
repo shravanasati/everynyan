@@ -3,9 +3,11 @@
 import { Loader2, Share2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 function Share({ postLink }: { postLink: string }) {
   const [isCopied, setIsCopied] = useState(false);
+  const { toast } = useToast();
 
   const handleClick = async () => {
     setIsCopied(true);
@@ -15,9 +17,8 @@ function Share({ postLink }: { postLink: string }) {
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 2000);
+    setIsCopied(false);
+    toast({ description: "Link copied to clipboard" });
   };
   return (
     <div
