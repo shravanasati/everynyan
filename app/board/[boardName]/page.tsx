@@ -24,11 +24,13 @@ export default async function BoardDetailPage({ params }: BoardProps) {
     return notFound()
   }
   const posts = await getPostsByBoard(boardName);
+  // todo @ni3rav implement pagination, use the lastDoc and hasMore results of above function
+  const postItems = posts.items;
 
   return (
     <div className="min-h-[92vh] px-4 flex items-center justify-center">
       <div className="md:w-1/2 w-11/12 min-h-fulll px-2 everynyan-scroll">
-        {posts.map((post, index) => (
+        {postItems.map((post, index) => (
           <Post
             key={index}
             title={post.title}

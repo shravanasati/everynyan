@@ -1,22 +1,41 @@
-import { collection, doc, getDoc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import { collection, doc, limit, getDoc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where, startAfter, QueryConstraint, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/post_models";
 import { generatePostID } from "@/lib/utils";
 
-// get all posts from a board whose moderation status is not rejected
-// todo offset for lazy loading
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp") {
-  const postsRef = collection(db, "posts");
-  const postsSnap = await getDocs(
-    query(postsRef,
-      where("board", "==", board),
-      where("moderation_status", "!=", "rejected"),
-      orderBy(orderByField, "desc"),
-      // limit(limitTo),
-    )
-  );
+interface PaginatedResult<T> {
+  items: T[];
+  lastDoc: QueryDocumentSnapshot<DocumentData> | null;
+  hasMore: boolean;
+}
 
-  return postsSnap.docs.map(doc => doc.data()) as Post[];
+// get all posts from a board whose moderation status is not rejected
+export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDoc: Post | null = null, limitTo: number = 10) {
+  const postsRef = collection(db, "posts");
+
+  const constraints: QueryConstraint[] = [
+    where("board", "==", board),
+    where("moderation_status", "!=", "rejected"),
+    orderBy(orderByField, "desc"),
+    limit(limitTo + 1),
+  ]
+  if (lastDoc) {
+    constraints.push(startAfter(lastDoc))
+  }
+
+  const q = query(postsRef, ...constraints)
+
+  const postsSnap = await getDocs(q)
+  const docs = postsSnap.docs;
+  const hasMore = docs.length > limitTo;
+  const items = docs.slice(0, limitTo).map(doc => doc.data()) as Post[];
+
+  return {
+    items,
+    lastDoc: hasMore ? docs[docs.length - 2] : null,
+    hasMore
+  }
+
 }
 
 export async function getPostByID(postID: string) {
