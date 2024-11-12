@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { FirestoreTimestamp } from "@/components/SecurityLogs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -41,4 +42,8 @@ export function generateCommentID() {
 
 export function getPostSlug(id: string, title: string) {
   return `${title.replace(/[^a-zA-Z0-9]/g, "_").substring(0, 20)}_${id}`;
+}
+
+export function convertTimestamp(timestamp: FirestoreTimestamp): string {
+  return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000).toISOString()
 }

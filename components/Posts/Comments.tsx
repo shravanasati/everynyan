@@ -4,9 +4,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import VoteCounter from "@/components/Posts/VoteCounter"
 import ReportContent from "@/components/Posts/ReportContent"
+import { parseISO } from "date-fns"
 import { MessageSquare } from "lucide-react"
 import { useState, useCallback } from 'react'
-import { DBComment } from "@/lib/models"
+import { Comment as CommentType } from "@/lib/models"
 import { createComment } from "@/lib/actions/createComment"
 import { CommentInput } from "./CommentInput"
 
@@ -49,13 +50,16 @@ function Comment({ commentID, postID, content, upvotes, downvotes, onReply }: Co
   )
 }
 
+type ReturnedComment = CommentType & { timestamp: string }
+
 interface CommentsProps {
   postID: string;
-  initialComments: DBComment[];
+  initialComments: ReturnedComment[];
 }
 
+
 export default function Comments({ postID, initialComments }: CommentsProps) {
-  const [comments, setComments] = useState<DBComment[]>(initialComments);
+  const [comments, setComments] = useState<ReturnedComment[]>(initialComments);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [newReply, setNewReply] = useState('');
 
@@ -86,15 +90,17 @@ export default function Comments({ postID, initialComments }: CommentsProps) {
 
   const sortedComments = comments.sort((a, b) => {
     if (a.parent_id === b.parent_id) {
-      return (a.timestamp as any) - (b.timestamp as any);
+      return (parseISO(a.timestamp).getSeconds()) - (parseISO(b.timestamp).getSeconds());
     }
     return a.level - b.level;
   });
 
+  // todo convert to plain objects for passing them down to client components
+
   return (
     <div className="space-y-4 mb-4" id="comments">
       <CommentInput onSubmit={submitTopLevelComment} />
-      {sortedComments.map((comment: DBComment) => (
+      {sortedComments.map((comment: ReturnedComment) => (
         <div key={comment.id} style={{ marginLeft: `${comment.level * 20}px` }}>
           <Comment
             commentID={comment.id}

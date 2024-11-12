@@ -37,7 +37,7 @@ export default function VoteCounter({
     const storedVote = localStorage.getItem(`${storageVotePrefix}-vote-${isComment ? commentID : postID}`);
     if (storedVote === "upvoted") setUpVoted(true);
     if (storedVote === "downvoted") setDownVoted(true);
-  }, [postID]);
+  }, []);
 
   const upvoteRequest = async () => {
     const upvotePromise = isComment ? upvoteCommentAction(postID, commentID!, isUpVoted) :  upvotePostAction(postID, isUpVoted)

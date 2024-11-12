@@ -53,7 +53,7 @@ export default function ReportContent({
     try {
       setLoading(true);
       let resp;
-      let isComment = commentID ? true : false;
+      const isComment = commentID ? true : false;
       if (!isComment) {
         resp = await reportPost(postID, selectedFlag);
       } else {

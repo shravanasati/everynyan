@@ -5,6 +5,7 @@ import { getPostComments } from "@/lib/firebase/comments";
 import { getPostByID } from "@/lib/firebase/posts";
 import { notFound } from "next/navigation";
 import Comments from "../Comments";
+import { convertTimestamp } from "@/lib/utils";
 
 async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean }) {
   const post = await getPostByID(postID)
@@ -12,6 +13,13 @@ async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean 
     return notFound()
   }
   const comments = await getPostComments(postID)
+  const formattedComments = comments.map((comment) => {
+    return {
+      ...comment,
+      timestamp: convertTimestamp(comment.timestamp)
+    }
+  })
+
   return (
     <main className="min-h-[92vh] grid grid-cols-1 md:grid-cols-5 grid-rows-1 gap-2">
       {/* !!right sidebar */}
@@ -30,7 +38,7 @@ async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean 
           {/* #comment */}
           <div className="row-span-3 row-start-4 md:row-start-3 everynyan-scroll">
 
-            <Comments postID={postID} initialComments={comments} />
+            <Comments postID={postID} initialComments={formattedComments} />
           </div>
           {/* #comment */}
         </div>
