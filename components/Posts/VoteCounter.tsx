@@ -2,7 +2,7 @@
 
 import { downvotePostAction, upvotePostAction } from "@/lib/actions/upvoteDownvote";
 import { ArrowBigDown, ArrowBigUp, Minus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function VoteCounter({
   upVotes = 0,
@@ -15,67 +15,87 @@ export default function VoteCounter({
   postID: string;
   board: string;
 }) {
-  // todo store isUpVoted and isDownVoted in local storage to persist state and prevent multiple votes
   const [currentUpVotes, setCurrentUpVotes] = useState(upVotes);
   const [currentDownVotes, setCurrentDownVotes] = useState(downVotes);
   const [isUpVoted, setUpVoted] = useState(false);
   const [isDownVoted, setDownVoted] = useState(false);
 
+  // todo localStorage can be easily manipulated by the user, so this is not a secure way to store vote status, consider using a server side solution
+  // Load vote status from local storage on component mount
+  useEffect(() => {
+    const storedVote = localStorage.getItem(`post-vote-${postID}`);
+    if (storedVote === "upvoted") setUpVoted(true);
+    if (storedVote === "downvoted") setDownVoted(true);
+  }, [postID]);
+
+  const upvoteRequest = async () => {
+    const resp = await upvotePostAction(board, postID, isUpVoted);
+    if (resp.error) {
+      console.error(resp.error);
+      // Revert on failure
+      setUpVoted(prev => !prev);
+      setCurrentUpVotes((prev) => prev + (isUpVoted ? 1 : -1));
+      if (isDownVoted) {
+        setDownVoted(true);
+        setCurrentDownVotes((prev) => prev + 1);
+      }
+      localStorage.setItem(`post-vote-${postID}`, isUpVoted ? "upvoted" : "none");
+    }
+  }
+
+  const downvoteRequest = async () => {
+    const resp = await downvotePostAction(board, postID, isDownVoted);
+    if (resp.error) {
+      console.error(resp.error);
+      // Revert on failure
+      setDownVoted(prev => !prev);
+      setCurrentDownVotes((prev) => prev + (isDownVoted ? 1 : -1));
+      if (isUpVoted) {
+        setUpVoted(true);
+        setCurrentUpVotes((prev) => prev + 1);
+      }
+      localStorage.setItem(`post-vote-${postID}`, isDownVoted ? "downvoted" : "none");
+    }
+  }
+
   const handleVote = async (vote: "up" | "down") => {
     if (vote === "up") {
       if (isUpVoted) {
-        // User is undoing their upvote
+        // Undo upvote
         setUpVoted(false);
         setCurrentUpVotes((prev) => prev - 1);
+        localStorage.setItem(`post-vote-${postID}`, "none");
       } else {
-        // User is upvoting
+        // Perform upvote
         setUpVoted(true);
         setCurrentUpVotes((prev) => prev + 1);
         if (isDownVoted) {
           setDownVoted(false);
           setCurrentDownVotes((prev) => prev - 1);
+          await downvoteRequest();
         }
+        localStorage.setItem(`post-vote-${postID}`, "upvoted");
       }
-      
-      // Call upvote action and handle error by reverting state if it fails
-      const resp = await upvotePostAction(board, postID);
-      if (resp.error) {
-        console.error(resp.error);
-        // Revert state on failure
-        setUpVoted(!isUpVoted);
-        setCurrentUpVotes((prev) => prev + (isUpVoted ? 1 : -1));
-        if (isDownVoted) {
-          setDownVoted(true);
-          setCurrentDownVotes((prev) => prev + 1);
-        }
-      }
+      await upvoteRequest();
+
     } else if (vote === "down") {
       if (isDownVoted) {
-        // User is undoing their downvote
-        setDownVoted(false);
+        // Undo downvote
+        setDownVoted(prev => !prev);
         setCurrentDownVotes((prev) => prev - 1);
+        localStorage.setItem(`post-vote-${postID}`, "none");
       } else {
-        // User is downvoting
+        // Perform downvote
         setDownVoted(true);
         setCurrentDownVotes((prev) => prev + 1);
         if (isUpVoted) {
-          setUpVoted(false);
+          setUpVoted(prev => !prev);
           setCurrentUpVotes((prev) => prev - 1);
+          await upvoteRequest();
         }
+        localStorage.setItem(`post-vote-${postID}`, "downvoted");
       }
-
-      // Call downvote action and handle error by reverting state if it fails
-      const resp = await downvotePostAction(board, postID);
-      if (resp.error) {
-        console.error(resp.error);
-        // Revert state on failure
-        setDownVoted(!isDownVoted);
-        setCurrentDownVotes((prev) => prev + (isDownVoted ? 1 : -1));
-        if (isUpVoted) {
-          setUpVoted(true);
-          setCurrentUpVotes((prev) => prev + 1);
-        }
-      }
+      await downvoteRequest();
     }
   };
 
