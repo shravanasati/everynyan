@@ -16,8 +16,8 @@ interface PostProps {
   title: string;
   content: string;
   boardName: string;
-  upVotes?: number;
-  downVotes?: number;
+  upVotes: number;
+  downVotes: number;
 }
 
 export default function PerPost({
@@ -67,5 +67,6 @@ export default function PerPost({
         </div>
       </CardContent>
     </Card>
+
   );
 }

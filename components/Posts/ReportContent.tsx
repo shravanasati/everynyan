@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 type ReportContentProps = {
-  postID?: string;
+  postID: string;
   commentID?: string;
 };
 
@@ -53,13 +53,12 @@ export default function ReportContent({
     try {
       setLoading(true);
       let resp;
-      if (postID) {
+      const isComment = commentID ? true : false;
+      if (!isComment) {
         resp = await reportPost(postID, selectedFlag);
-      } else if (commentID) {
-        resp = await reportComment(commentID, selectedFlag);
       } else {
-        throw new Error("either postID or commentID is required");
-      }
+        resp = await reportComment(postID, commentID!, selectedFlag);
+      } 
 
       if (!resp.success) {
         throw new Error(resp.message);
@@ -116,7 +115,7 @@ export default function ReportContent({
             <Loader2 className="h-4 w-5 text-primary animate-spin cursor-not-allowed" />
           ) : (
             <>
-              <TriangleAlert className="h-4 w-5" />
+              <TriangleAlert size={20}/>
               <span className="md:hidden">Report</span>
             </>
           )}

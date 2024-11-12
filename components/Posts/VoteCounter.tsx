@@ -1,33 +1,47 @@
 "use client";
 
-import { downvotePostAction, upvotePostAction } from "@/lib/actions/upvoteDownvote";
+import { downvoteCommentAction, downvotePostAction, upvoteCommentAction, upvotePostAction } from "@/lib/actions/upvoteDownvote";
 import { ArrowBigDown, ArrowBigUp, Minus } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function VoteCounter({
-  upVotes = 0,
-  downVotes = 0,
+  upVotes,
+  downVotes,
   postID,
+  commentID
 }: {
-  upVotes?: number;
-  downVotes?: number;
+  upVotes: number;
+  downVotes: number;
   postID: string;
+  commentID?: string
 }) {
   const [currentUpVotes, setCurrentUpVotes] = useState(upVotes);
   const [currentDownVotes, setCurrentDownVotes] = useState(downVotes);
   const [isUpVoted, setUpVoted] = useState(false);
   const [isDownVoted, setDownVoted] = useState(false);
 
+  let isComment = false;
+  let storageVotePrefix = "post";
+  if (commentID) {
+    isComment = true;
+    storageVotePrefix = "comment";
+  }
+
+  const setLocalStorageVote = (vote: "upvoted" | "downvoted" | "none") => {
+    localStorage.setItem(`${storageVotePrefix}-vote-${isComment ? commentID : postID}`, vote);
+  }
+
   // todo localStorage can be easily manipulated by the user, so this is not a secure way to store vote status, consider using a server side solution
   // Load vote status from local storage on component mount
   useEffect(() => {
-    const storedVote = localStorage.getItem(`post-vote-${postID}`);
+    const storedVote = localStorage.getItem(`${storageVotePrefix}-vote-${isComment ? commentID : postID}`);
     if (storedVote === "upvoted") setUpVoted(true);
     if (storedVote === "downvoted") setDownVoted(true);
-  }, [postID]);
+  }, []);
 
   const upvoteRequest = async () => {
-    const resp = await upvotePostAction(postID, isUpVoted);
+    const upvotePromise = isComment ? upvoteCommentAction(postID, commentID!, isUpVoted) :  upvotePostAction(postID, isUpVoted)
+    const resp = await upvotePromise;
     if (resp.error) {
       console.error(resp.error);
       // Revert on failure
@@ -37,12 +51,13 @@ export default function VoteCounter({
         setDownVoted(true);
         setCurrentDownVotes((prev) => prev + 1);
       }
-      localStorage.setItem(`post-vote-${postID}`, isUpVoted ? "upvoted" : "none");
+      setLocalStorageVote(isUpVoted ? "upvoted" : "none");
     }
   }
 
   const downvoteRequest = async () => {
-    const resp = await downvotePostAction(postID, isDownVoted);
+    const downvotePromise = isComment ? downvoteCommentAction(postID, commentID!, isDownVoted) : downvotePostAction(postID, isDownVoted)
+    const resp = await downvotePromise;
     if (resp.error) {
       console.error(resp.error);
       // Revert on failure
@@ -52,7 +67,7 @@ export default function VoteCounter({
         setUpVoted(true);
         setCurrentUpVotes((prev) => prev + 1);
       }
-      localStorage.setItem(`post-vote-${postID}`, isDownVoted ? "downvoted" : "none");
+      setLocalStorageVote(isDownVoted ? "downvoted" : "none");
     }
   }
 
@@ -62,7 +77,7 @@ export default function VoteCounter({
         // Undo upvote
         setUpVoted(false);
         setCurrentUpVotes((prev) => prev - 1);
-        localStorage.setItem(`post-vote-${postID}`, "none");
+        setLocalStorageVote("none");
       } else {
         // Perform upvote
         setUpVoted(true);
@@ -72,7 +87,7 @@ export default function VoteCounter({
           setCurrentDownVotes((prev) => prev - 1);
           await downvoteRequest();
         }
-        localStorage.setItem(`post-vote-${postID}`, "upvoted");
+        setLocalStorageVote("upvoted");
       }
       await upvoteRequest();
 
@@ -81,7 +96,7 @@ export default function VoteCounter({
         // Undo downvote
         setDownVoted(prev => !prev);
         setCurrentDownVotes((prev) => prev - 1);
-        localStorage.setItem(`post-vote-${postID}`, "none");
+        setLocalStorageVote("none");
       } else {
         // Perform downvote
         setDownVoted(true);
@@ -91,7 +106,7 @@ export default function VoteCounter({
           setCurrentUpVotes((prev) => prev - 1);
           await upvoteRequest();
         }
-        localStorage.setItem(`post-vote-${postID}`, "downvoted");
+        setLocalStorageVote("downvoted");
       }
       await downvoteRequest();
     }

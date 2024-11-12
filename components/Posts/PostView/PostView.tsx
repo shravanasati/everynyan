@@ -1,14 +1,25 @@
 // import { Card } from "@/components/ui/card"
 import "@/app/scrollbar.css";
 import PerPost from "@/components/Posts/PostView/PerPost";
+import { getPostComments } from "@/lib/firebase/comments";
 import { getPostByID } from "@/lib/firebase/posts";
 import { notFound } from "next/navigation";
+import Comments from "../Comments";
+import { convertTimestamp } from "@/lib/utils";
 
 async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean }) {
   const post = await getPostByID(postID)
   if (!post || post.moderation_status == "rejected" && !isAdmin) {
     return notFound()
   }
+  const comments = await getPostComments(postID)
+  const formattedComments = comments.map((comment) => {
+    return {
+      ...comment,
+      timestamp: convertTimestamp(comment.timestamp)
+    }
+  })
+
   return (
     <main className="min-h-[92vh] grid grid-cols-1 md:grid-cols-5 grid-rows-1 gap-2">
       {/* !!right sidebar */}
@@ -25,8 +36,9 @@ async function PostView({ postID, isAdmin }: { postID: string, isAdmin: boolean 
           {/* #post */}
 
           {/* #comment */}
-          <div className="row-span-3 row-start-4 md:row-start-3 bg-green-400 everynyan-scroll">
-            comments
+          <div className="row-span-3 row-start-4 md:row-start-3 everynyan-scroll">
+
+            <Comments postID={postID} initialComments={formattedComments} />
           </div>
           {/* #comment */}
         </div>

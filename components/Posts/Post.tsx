@@ -6,11 +6,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import VoteCounter from "@/components/Posts/VoteCounter";
-import CommentButton from "@/components/Posts/Comment";
+import CommentCount from "@/components/Posts/CommentCount";
 import Share from "@/components/Posts/Share";
 import ReportContent from "@/components/Posts/ReportContent";
 import Link from "next/link";
-import { Post as PostType } from "@/lib/post_models";
+import { Post as PostType } from "@/lib/models";
 import ReactMarkdown from "react-markdown";
 import DOMPurify from "isomorphic-dompurify";
 import rehypeRaw from "rehype-raw";
@@ -64,7 +64,7 @@ export default function Post({
       </CardContent>
       <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
         <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
-        <CommentButton noOfComments={comment_count} postSlug={postSlug} />
+        <CommentCount noOfComments={comment_count} postSlug={postSlug} />
         <Share postLink={postSlug} />
         <ReportContent postID={id} />
       </CardFooter>
