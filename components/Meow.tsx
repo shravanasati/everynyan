@@ -1,10 +1,6 @@
-"use client";
-
 import { Cat } from "lucide-react";
-import { useState } from "react";
 
 export function Meow() {
-  const [animate, setAnimate] = useState(true);
   return (
     <>
       <div className="size-10 sm:size-12 md:size-14 border border-primary/50 flex justify-center items-center rounded-lg cursor-pointer group hover:border-primary transition-colors text-primary/50 hover:text-primary hover:motion-preset-flomoji-[🐱]">
