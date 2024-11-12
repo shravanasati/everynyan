@@ -10,7 +10,7 @@ import { useState } from "react"
 import { approveContent, rejectContent } from "@/lib/actions/report"
 import Link from "next/link"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2 } from "lucide-react"
+import { Loader2, ExternalLink } from "lucide-react"
 
 
 
@@ -43,9 +43,11 @@ function createHyperLink(report: ReportPropType) {
     linkText = report.commentID!
   }
   return (
-    <span className="underline">
-      <Link href={href} target="_blank"> {linkText} </Link>
-    </span>
+    <Link href={href} target="_blank">
+      <div className="hover:underline flex items-center">
+        {linkText} <ExternalLink size={16} className="ml-1" />
+      </div >
+    </Link>
   )
 }
 
@@ -102,10 +104,10 @@ export function AdminReports({ reports }: AdminReportsProps) {
         description: "An unexpected error occurred"
       })
     } finally {
-    setLoadingStates(prev => ({
-      ...prev,
-      [report.reportID]: { ...prev[report.reportID], [action]: false }
-    }))
+      setLoadingStates(prev => ({
+        ...prev,
+        [report.reportID]: { ...prev[report.reportID], [action]: false }
+      }))
     }
   }
 

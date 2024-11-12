@@ -1,3 +1,5 @@
+type ModerationStatus = "pending" | "approved" | "rejected";
+
 export type Post = {
 	id: string;
 	title: string;
@@ -5,16 +7,15 @@ export type Post = {
 	downvotes: number;
 	board: string;
 	body: string;
-	moderation_status: "pending" | "approved" | "rejected";
-	comments: Comment[];
+	comment_count: number;
+	moderation_status: ModerationStatus;
 };
 
 export type Comment = {
 	id: string;
-	post_id: string;
 	body: string;
 	upvotes: number;
 	downvotes: number;
-	moderation_status: "pending" | "approved" | "rejected";
-	comments: Comment[];
+	parent_id: string | null;
+	moderation_status: ModerationStatus;
 };

@@ -23,12 +23,10 @@ export async function createPost(values: z.infer<typeof createPostSchema>) {
     return { success: false, errors: result.error.flatten().fieldErrors }
   }
 
-  console.log(`Creating post on board: ${values.board}`)
 
   try {
     const data = result.data
     const postID = await savePost(data.title, data.body, data.board)
-    console.log(`Post created with ID: ${postID}`)
     return { success: true, slug: getPostSlug(postID, data.title) }
 
   } catch (error) {
