@@ -9,6 +9,8 @@ interface PostPageProps {
   };
 }
 
+// todo dynamically generate metadata
+
 export default async function PostPage({ params }: PostPageProps) {
   const user = await getAuthUser();
   if (!user) {
