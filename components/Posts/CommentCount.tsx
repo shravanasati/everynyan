@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 function CommentCount({ noOfComments, postSlug }: { noOfComments: number, postSlug: string }) {
+  // todo fix noOfComments to not count rejected comments
   return (
     <Link href={`/post/${postSlug}#comments`}>
       <div className="h-6 w-[14.5rem] md:w-20 px-2 py-4 rounded-2xl flex gap-1 justify-center items-center bg-primary/20 cursor-pointer">

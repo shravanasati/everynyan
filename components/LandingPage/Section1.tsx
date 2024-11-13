@@ -35,6 +35,7 @@ export default function Section1() {
             height={600}
             width={424}
             className="animate-float max-w-full h-auto"
+            priority={true}
           />
         </div>
       </div>
