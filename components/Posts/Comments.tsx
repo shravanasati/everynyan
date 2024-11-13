@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ interface SingleCommentProps {
   comment: CommentNodeType;
   postID: string;
   onReply: (commentId: string) => void;
-  isReplying: boolean;
+  replyingTo: string | null;
   onSubmitReply: (body: string) => Promise<void>;
   onCancelReply: () => void;
 }
@@ -30,11 +30,12 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   comment,
   postID,
   onReply,
-  isReplying,
+  replyingTo,
   onSubmitReply,
   onCancelReply,
 }) => {
   const [replyText, setReplyText] = useState("");
+  const isReplying = replyingTo === comment.id;
 
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
@@ -102,7 +103,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               comment={reply}
               postID={postID}
               onReply={onReply}
-              isReplying={isReplying && reply.id === comment.id}
+              replyingTo={replyingTo}
               onSubmitReply={onSubmitReply}
               onCancelReply={onCancelReply}
             />
@@ -212,7 +213,7 @@ export default function Comments({
           comment={comment}
           postID={postID}
           onReply={handleReply}
-          isReplying={replyingTo === comment.id}
+          replyingTo={replyingTo}
           onSubmitReply={handleSubmitReply}
           onCancelReply={() => setReplyingTo(null)}
         />
