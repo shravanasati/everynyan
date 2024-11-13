@@ -13,6 +13,8 @@ interface BoardProps {
   };
 }
 
+// todo dynamically generate metadata
+
 export default async function BoardDetailPage({ params }: BoardProps) {
   if (!(await getAuthUser())) {
     return <Unauthorized />;

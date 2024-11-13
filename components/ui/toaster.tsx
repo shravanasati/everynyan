@@ -13,7 +13,6 @@ import {
 export function Toaster() {
   const { toasts } = useToast()
 
-  // todo set background color primary secondary or outline
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {

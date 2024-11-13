@@ -6,6 +6,10 @@ import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 import { convertTimestamp } from "@/lib/utils"
 
+export const metadata = {
+  title: "Admin Page",
+  description: "Admin page for everynyan"
+}
 
 export default async function AdminPage() {
   const user = await getAuthUser()
