@@ -58,7 +58,7 @@ export default function ReportContent({
         resp = await reportPost(postID, selectedFlag);
       } else {
         resp = await reportComment(postID, commentID!, selectedFlag);
-      } 
+      }
 
       if (!resp.success) {
         throw new Error(resp.message);
@@ -110,13 +110,13 @@ export default function ReportContent({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="h-8 w-[14.5rem] md:w-16 px-2 py-4 rounded-full flex gap-1 justify-center items-center bg-primary/20 cursor-pointer text-red-600 hover:bg-primary/30 transition-colors">
+        <div className="h-8 w-full sm:w-auto px-4 sm:px-2 py-4 rounded-full flex gap-1 justify-center items-center bg-primary/20 cursor-pointer text-red-600 hover:bg-primary/30 transition-colors">
           {loading ? (
             <Loader2 className="h-4 w-5 text-primary animate-spin cursor-not-allowed" />
           ) : (
             <>
-              <TriangleAlert size={20}/>
-              <span className="md:hidden">Report</span>
+              <TriangleAlert size={20} />
+              <span className="sm:hidden">Report</span>
             </>
           )}
         </div>
