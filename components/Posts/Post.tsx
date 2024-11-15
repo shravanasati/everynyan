@@ -35,38 +35,42 @@ export default function Post({
   const postSlug = getPostSlug(id, title);
   return (
     <Card className="w-full min-h-[12rem] my-2 rounded-sm shadow-md hover:shadow-lg transition-shadow duration-200">
-      <CardHeader className="p-4">
-        <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+      <CardHeader className="p-3 sm:p-4">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-start sm:space-y-0 sm:space-x-4">
           <Link
             href={`/post/${postSlug}`}
-            className="text-lg sm:text-xl md:text-2xl font-bold hover:underline line-clamp-2"
+            className="text-base sm:text-lg md:text-xl font-bold hover:underline line-clamp-2 sm:line-clamp-none flex-grow"
           >
             {title}
           </Link>
           <Link
             href={`/board/${board}`}
-            className="text-sm sm:text-base text-muted-foreground hover:text-primary transition-colors duration-200"
+            className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200 whitespace-nowrap"
           >
             {board}
           </Link>
         </div>
       </CardHeader>
-      <CardContent className="p-4 text-sm sm:text-base">
+      <CardContent className="p-3 sm:p-4 text-sm">
         <ReactMarkdown
           className="line-clamp-3 sm:line-clamp-4"
           components={{
-            a: (props) => <a className="text-primary" {...props} />,
+            a: (props) => (
+              <a className="text-primary hover:underline" {...props} />
+            ),
           }}
           rehypePlugins={[rehypeRaw]}
         >
           {DOMPurify.sanitize(trimBodyContent(body))}
         </ReactMarkdown>
       </CardContent>
-      <CardFooter className="p-4 flex items-center justify-center md:justify-start flex-wrap gap-2">
-        <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
-        <CommentCount noOfComments={comment_count} postSlug={postSlug} />
-        <Share postLink={postSlug} />
-        <ReportContent postID={id} />
+      <CardFooter className="p-3 sm:p-4 flex flex-wrap items-center justify-start gap-2 sm:gap-3">
+        <div className="w-full sm:w-auto flex flex-wrap items-center justify-start gap-2 sm:gap-3">
+          <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
+          <CommentCount noOfComments={comment_count} postSlug={postSlug} />
+          <Share postLink={postSlug} />
+          <ReportContent postID={id} />
+        </div>
       </CardFooter>
     </Card>
   );
