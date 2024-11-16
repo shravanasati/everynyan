@@ -3,14 +3,19 @@ import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/models";
 import { generatePostID } from "@/lib/utils";
 
-interface PaginatedResult<T> {
+export interface PaginatedResult<T> {
   items: T[];
   lastDoc: QueryDocumentSnapshot<DocumentData> | null;
   hasMore: boolean;
 }
 
 // get all posts from a board whose moderation status is not rejected
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDoc: Post | null = null, limitTo: number = 10) {
+export async function getPostsByBoard(
+  board: string,
+  orderByField: string = "timestamp",
+  lastDoc: QueryDocumentSnapshot<DocumentData> | null = null,
+  limitTo: number = 10
+): Promise<PaginatedResult<Post>> {
   const postsRef = collection(db, "posts");
 
   const constraints: QueryConstraint[] = [
@@ -18,25 +23,24 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
     where("moderation_status", "!=", "rejected"),
     orderBy(orderByField, "desc"),
     limit(limitTo + 1),
-  ]
+  ];
+
   if (lastDoc) {
-    constraints.push(startAfter(lastDoc))
+    constraints.push(startAfter(lastDoc));
   }
 
-  const q = query(postsRef, ...constraints)
+  const q = query(postsRef, ...constraints);
+  const postsSnap = await getDocs(q);
 
-  const postsSnap = await getDocs(q)
   const docs = postsSnap.docs;
-  const hasMore = docs.length > limitTo;
-  const items = docs.slice(0, limitTo).map(doc => doc.data()) as Post[];
+  const hasMore = docs.length > limitTo; // Check if more data exists
+  const items = docs.slice(0, limitTo).map((doc) => doc.data() as Post); // Exclude the extra document
 
-  const result: PaginatedResult<Post> = {
+  return {
     items,
     lastDoc: hasMore ? docs[docs.length - 2] : null,
-    hasMore
-  }
-
-  return result
+    hasMore,
+  };
 }
 
 export async function getPostByID(postID: string) {
