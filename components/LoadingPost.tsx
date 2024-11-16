@@ -25,4 +25,20 @@ function LoadingPost() {
     </div>
   );
 }
-export default LoadingPost;
+
+function CaughtUp() {
+  return (
+    <div className="w-full py-8 flex justify-center items-center">
+      <div className="text-center">
+        <p className="text-lg font-semibold text-primary">
+          You&apos;re all caught up here!
+        </p>
+        <p className="text-sm text-muted-foreground mt-2">
+          Check back later for new content
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export { LoadingPost, CaughtUp };

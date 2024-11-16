@@ -6,7 +6,7 @@ import { getPostsByBoard } from "@/lib/firebase/posts";
 import { boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
-import LoadingPost from "@/components/LoadingPost";
+import { LoadingPost, CaughtUp } from "@/components/LoadingPost";
 
 interface BoardProps {
   params: {
@@ -49,7 +49,7 @@ export default async function BoardDetailPage({ params }: BoardProps) {
               comment_count={post.comment_count}
             />
           ))}
-          <LoadingPost />
+          {posts.hasMore ? <LoadingPost /> : <CaughtUp />}
         </div>
       </main>
     </div>
