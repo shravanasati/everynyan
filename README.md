@@ -25,6 +25,7 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID=
 
 MODERATOR_EMAILS=
+DISCORD_WEBHOOK_URL=
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.

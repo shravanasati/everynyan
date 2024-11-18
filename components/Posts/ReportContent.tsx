@@ -28,6 +28,8 @@ type ReportContentProps = {
   commentID?: string;
 };
 
+const DISCORD_WEBHOOK_URL = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL;
+
 export default function ReportContent({
   postID,
   commentID,
@@ -62,6 +64,33 @@ export default function ReportContent({
 
       if (!resp.success) {
         throw new Error(resp.message);
+      }
+
+      if (!DISCORD_WEBHOOK_URL) {
+        console.error("DISCORD_WEBHOOK_URL is not defined.");
+        throw new Error("Webhook URL is missing. Unable to report content.");
+      }
+
+      const discordRes = await fetch(DISCORD_WEBHOOK_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content:
+            `🚨 **New Report** 🚨\n\n` +
+            `${
+              isComment
+                ? `**Comment ID: \t** ${commentID} (Post ID: ${postID})`
+                : `**Post ID: \t** ${postID}`
+            }\n\n` +
+            `**Selected Flag:\t** ${selectedFlag}`,
+        }),
+      });
+
+      if (!discordRes.ok) {
+        console.error("Discord webhook failed:", discordRes.statusText);
+        throw new Error(`Discord webhook error: ${discordRes.statusText}`);
       }
 
       toast({
