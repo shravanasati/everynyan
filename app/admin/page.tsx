@@ -8,7 +8,7 @@ import { convertTimestamp } from "@/lib/utils"
 
 export const metadata = {
   title: "Admin Page",
-  description: "Admin page for everynyan"
+  description: "Admin page for EveryNyan"
 }
 
 export default async function AdminPage() {

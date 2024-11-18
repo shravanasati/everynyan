@@ -1,10 +1,10 @@
-# everynyan
+# EveryNyan
 
-everynyan is a social media website which focuses heavily on anonymity and exclusivity.
+EveryNyan is a social media website which focuses heavily on anonymity and exclusivity.
 
 ### Setting up the local development environment
 
-everynyan is built using Next.js.
+EveryNyan is built using Next.js.
 
 1. Clone the repository.
 
@@ -56,4 +56,4 @@ pnpm dev
 
 ### Contribution
 
-everynyan is open to contributions. If you wish to contribute, follow the above instructions to setup your development environment, but make sure to clone your forked copy.
+EveryNyan is open to contributions. If you wish to contribute, follow the above instructions to setup your development environment, but make sure to clone your forked copy.

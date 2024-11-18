@@ -7,8 +7,8 @@ import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "everynyan",
-  description: "it's for everyone",
+  title: "EveryNyan",
+  description: "It's for everyone cuz it's EveryNyan",
 };
 
 export default async function RootLayout({
