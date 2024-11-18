@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function Share({ postLink = "" }: { postLink?: string }) {
+export default function Share({ postLink }: { postLink?: string }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [postUrl, setPostUrl] = useState("");
