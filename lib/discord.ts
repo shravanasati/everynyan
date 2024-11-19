@@ -6,6 +6,7 @@ interface discordWebhookReportProps {
 }
 export async function discordWebhookReport({ type, commentID, postID, selectedFlag }: discordWebhookReportProps) {
     const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+    const baseUrl = "https://everynyan.tech/post"
 
     if (!DISCORD_WEBHOOK_URL) {
         console.error("DISCORD_WEBHOOK_URL is not defined.");
@@ -18,7 +19,8 @@ export async function discordWebhookReport({ type, commentID, postID, selectedFl
             (type === "comment"
                 ? `**Comment ID:** ${commentID} (Post ID: ${postID})\n`
                 : `**Post ID:** ${postID}\n`) +
-            `**Selected Flag:** ${selectedFlag}`;
+            `**Selected Flag:** ${selectedFlag}\n` +
+            `**Post URL:** ${baseUrl}${postID}\n`;
 
         const discordRes = await fetch(DISCORD_WEBHOOK_URL, {
             method: "POST",
