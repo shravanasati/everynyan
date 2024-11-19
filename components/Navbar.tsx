@@ -67,7 +67,7 @@ export function Navbar({ user }: { user: User | null }) {
           </SheetTrigger>
           <SheetContent
             className="w-full bg-background/90 backdrop-blur-lg"
-            side="top"
+            side="left"
           >
             <div className="flex flex-col items-start justify-center space-y-4 p-4 max-w-md mx-auto">
               {sheetLinks.map((link) => (
