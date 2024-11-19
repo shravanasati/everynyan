@@ -30,7 +30,7 @@ export default function PerPost({
   const postSlug = getPostSlug(id, title);
 
   return (
-    <Card className="w-full flex flex-col border-0 bg-transparent rounded-none border-b-[1px] border-primary/">
+    <Card className="w-full flex flex-col border-0 bg-primary/5 rounded-md">
       <CardHeader className="relative space-y-1 py-3 px-1 sm:p-6">
         <div className="flex flex-col gap-2">
           <CardTitle className="text-xl sm:text-2xl font-bold break-words">
@@ -44,8 +44,8 @@ export default function PerPost({
         </div>
         <ReportContent postID={id} className="absolute top-6 right-5" />
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
-        <div className="mb-3 sm:mb-4 max-h-52 overflow-y-scroll py-8 everynyan-scroll">
+      <CardContent className="">
+        <div className="mb-3 sm:mb-4 max-h-52 overflow-y-scroll py-4 px-2 everynyan-scroll rounded-md bg-primary/[0.025]">
           <ReactMarkdown
             components={{
               a: (props) => <a className="text-primary" {...props} />,
