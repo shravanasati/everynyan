@@ -6,7 +6,7 @@ import {
   upvoteCommentAction,
   upvotePostAction,
 } from "@/lib/actions/upvoteDownvote";
-import { ArrowBigDown, ArrowBigUp, Minus } from "lucide-react";
+import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function VoteCounter({
@@ -126,28 +126,30 @@ export default function VoteCounter({
   };
 
   return (
-    <div className="h-8 px-2 sm:px-3 py-1 rounded-2xl flex gap-1 sm:gap-2 justify-center items-center bg-primary/20 w-full sm:w-auto">
-      <ArrowBigUp
-        className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
-          !isDownVoted && isUpVoted ? "fill-primary text-primary" : ""
-        }`}
-        onClick={() => handleVote("up")}
-      />
-      <span className="h-full flex justify-center items-center cursor-default text-sm sm:text-base">
-        {currentUpVotes}
-      </span>
-      <span className="flex justify-center items-center cursor-default">
-        <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
-      </span>
-      <span className="h-full flex justify-center items-center cursor-default text-sm sm:text-base">
-        {currentDownVotes}
-      </span>
-      <ArrowBigDown
-        className={`cursor-pointer w-5 h-5 sm:w-6 sm:h-6 ${
-          isDownVoted && !isUpVoted ? "fill-primary text-primary" : ""
-        }`}
-        onClick={() => handleVote("down")}
-      />
+    <div className="rounded-3xl p-2 flex gap-2 sm:gap-2 justify-between items-center bg-primary/10 text-white/40">
+      <div className="flex justify-center w-max h-max cursor-pointer">
+        <ArrowBigUp
+          className={`mr-1 size-6 ${
+            !isDownVoted && isUpVoted ? " fill-emerald-500 text-emerald-500" : "fill-none"
+          }`}
+          onClick={() => handleVote("up")}
+        />
+        <span className="h-full flex justify-center font-semibold items-center text-xs sm:text-base">
+          {currentUpVotes}
+        </span>
+      </div>
+      <div className="flex w-[1px] h-5 bg-white/40 justify-center items-center " />
+      <div className="flex  justify-start cursor-pointer w-max h-max">
+        <span className="h-full flex justify-center items-center font-semibold text-xs sm:text-base">
+          {currentDownVotes}
+        </span>
+        <ArrowBigDown
+          className={`ml-1 size-6  ${
+            isDownVoted && !isUpVoted ? "fill-rose-500 text-rose-500" : ""
+          }`}
+          onClick={() => handleVote("down")}
+        />
+      </div>
     </div>
   );
 }

@@ -75,6 +75,7 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
         </div>
       ) : (
         posts.map((post) => (
+          <>
           <PostComponent
             key={post.id}
             title={post.title}
@@ -86,6 +87,8 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
             moderation_status={post.moderation_status}
             comment_count={post.comment_count}
           />
+          <div className="h-[1px] w-full bg-primary/20"></div>
+          </>
         ))
       )}
 

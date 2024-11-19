@@ -34,9 +34,10 @@ export default function Post({
 }: PostType) {
   const postSlug = getPostSlug(id, title);
   return (
-    <Card className="w-full min-h-[12rem] my-2 rounded-sm shadow-md hover:shadow-lg transition-shadow duration-200">
-      <CardHeader className="p-3 sm:p-4">
-        <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-start sm:space-y-0 sm:space-x-4">
+    <Card className="w-full min-h-[12rem] my-2 rounded-sm bg-transparent border-none">
+      <CardHeader className="p-3 sm:p-4 relative">
+        <ReportContent postID={id} className="top-4 right-4" />
+        <div className="flex flex-col space-y-2">
           <Link
             href={`/post/${postSlug}`}
             className="text-base sm:text-lg md:text-xl font-bold hover:underline line-clamp-2 sm:line-clamp-none flex-grow"
@@ -65,11 +66,14 @@ export default function Post({
         </ReactMarkdown>
       </CardContent>
       <CardFooter className="p-3 sm:p-4 flex flex-wrap items-center justify-start gap-2 sm:gap-3">
-        <div className="w-full sm:w-auto flex flex-wrap items-center justify-start gap-2 sm:gap-3">
-          <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
-          <CommentCount noOfComments={comment_count} postSlug={postSlug} />
-          <Share postLink={postSlug} />
-          <ReportContent postID={id} />
+        <div className="w-full h-max flex flex-row items-center justify-between gap-2 sm:gap-3">
+          <div className="flex-1 flex items-center justify-start gap-4">
+            <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
+            <CommentCount noOfComments={comment_count} postSlug={postSlug} />
+          </div>
+          <div className="w-max h-max">
+            <Share postLink={postSlug} />
+          </div>
         </div>
       </CardFooter>
     </Card>
