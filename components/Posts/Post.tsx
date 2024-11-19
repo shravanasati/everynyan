@@ -34,7 +34,7 @@ export default function Post({
 }: PostType) {
   const postSlug = getPostSlug(id, title);
   return (
-    <Card className="w-full min-h-[12rem] my-2 rounded-sm bg-transparent border-none">
+    <Card className="w-full min-h-[12rem] my-2 rounded-md bg-primary/[0.015] border-none py-2">
       <CardHeader className="p-3 sm:p-4 relative">
         <ReportContent postID={id} className="top-4 right-4" />
         <div className="flex flex-col space-y-2">

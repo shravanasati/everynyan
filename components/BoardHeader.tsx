@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 
 const routeEmojis: { [key: string]: string } = {
-  confession: "🤫",
+  confessions: "🤫",
   yap: "🗣️🔊",
   random: "🌀❓",
   gyan: "🤓☝️",
