@@ -134,7 +134,7 @@ export default function VoteCounter({
           }`}
           onClick={() => handleVote("up")}
         />
-        <span className="h-full flex justify-center font-semibold items-center text-xs sm:text-base">
+        <span className="h-full flex justify-center font-semibold items-center text-base">
           {currentUpVotes}
         </span>
       </div>

@@ -44,7 +44,7 @@ export default function PerPost({
         </div>
         <ReportContent postID={id} className="absolute top-6 right-5" />
       </CardHeader>
-      <CardContent className="">
+      <CardContent className="333">
         <div className="mb-3 sm:mb-4 max-h-52 overflow-y-scroll py-4 px-2 everynyan-scroll rounded-md bg-primary/[0.025]">
           <ReactMarkdown
             components={{
