@@ -2,7 +2,7 @@
 
 import { updateCommentModerationStatus } from "@/lib/firebase/comments"
 import { updatePostModerationStatus } from "@/lib/firebase/posts"
-import { reportContent, Report as ReportType } from "@/lib/firebase/reports"
+import { reportContent, Report as ReportType, resolveReport } from "@/lib/firebase/reports"
 import { addSecurityLog } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 
@@ -44,7 +44,7 @@ export async function reportComment(postID: string, commentID: string, flag: str
   return await _reportGeneric(postID, flag, "comment", commentID)
 }
 
-async function _moderateGeneric(action: "approve" | "reject", postID: string, type: "post" | "comment", commentID?: string) {
+async function _moderateGeneric(reportID: string, action: "approve" | "reject", postID: string, type: "post" | "comment", commentID?: string) {
   const user = await getAuthUser()
   if (!user || user.role !== "admin") {
     return { success: false, message: "you are not authorized to perform this action" }
@@ -63,21 +63,22 @@ async function _moderateGeneric(action: "approve" | "reject", postID: string, ty
       detail: `Comment<id=${postID}> ${action}d`
     })
   }
+  await resolveReport(reportID)
   return { success: true, message: "moderation status updated successfully" }
 }
 
-export async function approvePost(postID: string) {
-  return await _moderateGeneric("approve", postID, "post")
+export async function approvePost(reportID: string, postID: string) {
+  return await _moderateGeneric(reportID, "approve", postID, "post")
 }
 
-export async function rejectPost(postID: string) {
-  return await _moderateGeneric("reject", postID, "post")
+export async function rejectPost(reportID: string, postID: string) {
+  return await _moderateGeneric(reportID, "reject", postID, "post")
 }
 
-export async function approveComment(postID: string, commentID: string) {
-  return await _moderateGeneric("approve", postID, "comment", commentID)
+export async function approveComment(reportID: string, postID: string, commentID: string) {
+  return await _moderateGeneric(reportID, "approve", postID, "comment", commentID)
 }
 
-export async function rejectComment(postID: string, commentID: string) {
-  return await _moderateGeneric("reject", postID, "comment", commentID)
+export async function rejectComment(reportID: string, postID: string, commentID: string) {
+  return await _moderateGeneric(reportID, "reject", postID, "comment", commentID)
 }

@@ -4,7 +4,7 @@ import { Unauthorized } from "@/components/Unauthorized"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
-import { convertTimestamp } from "@/lib/utils"
+import { convertTimestamp, formatDate } from "@/lib/utils"
 
 export const metadata = {
   title: "Admin Page",
@@ -28,14 +28,14 @@ export default async function AdminPage() {
 
   const formattedLogs = rawLogs.map(log => ({
     type_: log.type_,
-    timestamp: convertTimestamp(log.timestamp),
+    timestamp: formatDate(convertTimestamp(log.timestamp)),
     detail: log.detail
   }))
 
   const formattedReports = unresolvedReports.map(report => ({
     ...report,
-    createdAt: convertTimestamp(report.createdAt),
-    resolvedAt: report.resolvedAt ? convertTimestamp(report.resolvedAt) : null
+    createdAt: formatDate(convertTimestamp(report.createdAt)),
+    resolvedAt: report.resolvedAt ? formatDate(convertTimestamp(report.resolvedAt)) : null
   }))
 
   return (

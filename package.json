@@ -25,11 +25,12 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "firebase": "^10.13.2",
+    "firebase-admin": "^13.0.0",
     "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",
     "isomorphic-dompurify": "^2.16.0",
     "lucide-react": "^0.439.0",
+    "net": "^1.0.2",
     "next": "14.2.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -41,6 +42,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "tailwindcss-motion": "0.3.0-beta",
+    "tls": "^0.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {

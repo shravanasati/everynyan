@@ -1,4 +1,4 @@
-import { collection, doc, limit, getDoc, getDocs, increment, orderBy, query, setDoc, Timestamp, updateDoc, where, startAfter, QueryConstraint, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
+import {Timestamp, QueryDocumentSnapshot, DocumentData, FieldValue } from "firebase-admin/firestore"
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/models";
 import { generatePostID } from "@/lib/utils";
@@ -10,22 +10,18 @@ interface PaginatedResult<T> {
 }
 
 // get all posts from a board whose moderation status is not rejected
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDoc: Post | null = null, limitTo: number = 10) {
-  const postsRef = collection(db, "posts");
+export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDoc: QueryDocumentSnapshot<DocumentData> | null = null, limitTo: number = 10) {
+  let postsRef = db.collection("posts").
+    where("board", "==", board).
+    where("moderation_status", "!=", "rejected").
+    orderBy(orderByField, "desc").
+    limit(limitTo + 1)
 
-  const constraints: QueryConstraint[] = [
-    where("board", "==", board),
-    where("moderation_status", "!=", "rejected"),
-    orderBy(orderByField, "desc"),
-    limit(limitTo + 1),
-  ]
   if (lastDoc) {
-    constraints.push(startAfter(lastDoc))
+    postsRef = postsRef.startAfter(lastDoc)
   }
 
-  const q = query(postsRef, ...constraints)
-
-  const postsSnap = await getDocs(q)
+  const postsSnap = await postsRef.get()
   const docs = postsSnap.docs;
   const hasMore = docs.length > limitTo;
   const items = docs.slice(0, limitTo).map(doc => doc.data()) as Post[];
@@ -40,9 +36,9 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
 }
 
 export async function getPostByID(postID: string) {
-  const postRef = doc(db, "posts", postID);
-  const postSnap = await getDoc(postRef);
-  if (!postSnap.exists()) {
+  const postRef = db.collection("posts").doc(postID)
+  const postSnap = await postRef.get()
+  if (!postSnap.exists) {
     return null;
   }
 
@@ -51,9 +47,9 @@ export async function getPostByID(postID: string) {
 
 export async function savePost(title: string, body: string, board: string) {
   const postID = generatePostID();
-  const postRef = doc(db, "posts", postID);
+  const postRef = db.collection("posts").doc(postID)
 
-  await setDoc(postRef, {
+  await postRef.set({
     id: postID,
     title: title,
     board: board,
@@ -63,15 +59,15 @@ export async function savePost(title: string, body: string, board: string) {
     body: body,
     moderation_status: "pending",
     timestamp: Timestamp.now(),
-  });
+  })
 
   return postID;
 }
 
 export async function updatePostModerationStatus(postID: string, newStatus: "approved" | "rejected") {
   try {
-    const docRef = doc(db, "posts", postID)
-    await updateDoc(docRef, {
+    const docRef = db.collection("posts").doc(postID)
+    await docRef.update({
       "moderation_status": newStatus
     })
     return true
@@ -82,10 +78,10 @@ export async function updatePostModerationStatus(postID: string, newStatus: "app
 }
 
 async function votePost(postID: string, undo: boolean, field: "upvotes" | "downvotes") {
-  const postRef = doc(db, "posts", postID)
+  const postRef = db.collection("posts").doc(postID)
   try {
-    await updateDoc(postRef, {
-      [field]: increment(undo ? -1 : 1)
+    await postRef.update({
+      [field]: FieldValue.increment(undo ? -1 : 1)
     })
     return true
   } catch (e) {

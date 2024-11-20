@@ -1,11 +1,4 @@
-import {
-  doc,
-  getDoc,
-  setDoc,
-  deleteDoc,
-  Timestamp,
-} from "firebase/firestore";
-
+import { Timestamp } from "firebase-admin/firestore";
 import { db } from "@/lib/firebase/app";
 
 export type OTPEntry = {
@@ -14,19 +7,19 @@ export type OTPEntry = {
 };
 
 export async function saveOTP(email: string, otp: string) {
-  const otpRef = doc(db, "otp", email);
-
-  await setDoc(otpRef, {
+  const otpRef = db.collection("otp").doc(email)
+  await otpRef.set({
     otp,
     timestamp: Timestamp.now(),
   });
+
 }
 
 export async function getOTP(email: string) {
-  const otpRef = doc(db, "otp", email);
-  const otpSnap = await getDoc(otpRef);
+  const otpRef = db.collection("otp").doc(email)
+  const otpSnap = await otpRef.get()
 
-  if (otpSnap.exists()) {
+  if (otpSnap.exists) {
     return otpSnap.data() as OTPEntry;
   }
 
@@ -34,14 +27,13 @@ export async function getOTP(email: string) {
 }
 
 export async function deleteOTP(email: string) {
-  const otpRef = doc(db, "otp", email);
-  await deleteDoc(otpRef);
+  const otpRef = db.collection("otp").doc(email)
+  await otpRef.delete();
 }
 
 export async function storeToken(token: string, isAdmin: boolean) {
-  const tokenRef = doc(db, "tokens", token);
-
-  await setDoc(tokenRef, {
+  const tokenRef = db.collection("tokens").doc(token);
+  await tokenRef.set({
     token,
     role: isAdmin ? "admin" : "user",
     timestamp: Timestamp.now(),
@@ -49,15 +41,15 @@ export async function storeToken(token: string, isAdmin: boolean) {
 }
 
 export async function deleteToken(token: string) {
-  const tokenRef = doc(db, "tokens", token);
-  await deleteDoc(tokenRef);
+  const tokenRef = db.collection("tokens").doc(token);
+  await tokenRef.delete();
 }
 
 export async function getToken(token: string) {
-  const tokenRef = doc(db, "tokens", token);
-  const tokenSnap = await getDoc(tokenRef);
+  const tokenRef = db.collection("tokens").doc(token);
+  const tokenSnap = await tokenRef.get();
 
-  if (tokenSnap.exists()) {
+  if (tokenSnap.exists) {
     return tokenSnap.data();
   }
 
