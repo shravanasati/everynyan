@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, query, setDoc, Timestamp, where } from "firebase/firestore";
+import { Timestamp } from "firebase-admin/firestore";
 import { db } from "./app";
 
 export type Report = {
@@ -16,8 +16,9 @@ export type DBReport = Report & {
 
 export async function reportContent(report: Report) {
   const reportID = `${report.postID || report.commentID || ""}_${Timestamp.now().seconds}`;
-  const reportRef = doc(db, "reports", reportID);
-  await setDoc(reportRef, {
+  const reportRef = db.collection("reports").doc(reportID)
+
+  await reportRef.set({
     ...report,
     createdAt: Timestamp.now(),
     resolvedAt: null,
@@ -26,14 +27,13 @@ export async function reportContent(report: Report) {
 }
 
 export async function getUnresolvedReports() {
-  const reportsRef = collection(db, "reports");
-  const reportsSnap = await getDocs(query(reportsRef, where("status", "==", "pending")));
-
+  const reportsRef = db.collection("reports").where("status", "==", "pending")
+  const reportsSnap = await reportsRef.get();
   const reports = reportsSnap.docs.map(doc => doc.data());
   return reports as DBReport[];
 }
 
 export async function resolveReport(reportID: string) {
-  const reportRef = doc(db, "reports", reportID);
-  await setDoc(reportRef, { status: "resolved", resolvedAt: Timestamp.now() }, { merge: true });
+  const reportRef = db.collection("reports").doc(reportID);
+  await reportRef.update({ status: "resolved", resolvedAt: Timestamp.now() });
 }

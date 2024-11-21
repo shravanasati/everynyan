@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { FirestoreTimestamp } from "@/components/SecurityLogs";
+import { parseISO } from "date-fns"
+import { toZonedTime, format } from "date-fns-tz"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -46,4 +48,10 @@ export function getPostSlug(id: string, title: string) {
 
 export function convertTimestamp(timestamp: FirestoreTimestamp): string {
   return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000).toISOString()
+}
+
+export const formatDate = (timestamp: string) => {
+  const date = parseISO(timestamp)
+  const istDate = toZonedTime(date, 'Asia/Kolkata')
+  return format(istDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone: 'Asia/Kolkata' })
 }

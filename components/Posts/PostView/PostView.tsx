@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import Comments from "../Comments";
 import { convertTimestamp } from "@/lib/utils";
 
+// todo DO NOT call firebase functions in use client components
+
 async function PostView({
   postID,
   isAdmin,

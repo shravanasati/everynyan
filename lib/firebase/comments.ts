@@ -1,11 +1,11 @@
 import type { Comment as CommentType, DBComment } from "@/lib/models";
 import { db } from "./app";
-import { collection, doc, getDocs, increment, query, Timestamp, updateDoc, where, writeBatch } from "firebase/firestore";
+import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { generateCommentID } from "../utils";
 
 export async function addComment(postID: string, commentBody: string, level: number, parentID: string | null) {
   try {
-    const batch = writeBatch(db)
+    const batch = db.batch()
     const commentID = generateCommentID()
     const comment: CommentType = {
       id: commentID,
@@ -17,8 +17,8 @@ export async function addComment(postID: string, commentBody: string, level: num
       moderation_status: "pending"
     }
 
-    const postRef = doc(db, "posts", postID)
-    const commentsRef = doc(collection(postRef, "comments"), commentID)
+    const postRef = db.collection("posts").doc(postID)
+    const commentsRef = db.collection("posts").doc(postID).collection("comments").doc(commentID)
 
     const dbComment = {
       ...comment,
@@ -27,7 +27,7 @@ export async function addComment(postID: string, commentBody: string, level: num
     batch.set(commentsRef, dbComment)
 
     batch.update(postRef, {
-      comment_count: increment(1)
+      comment_count: FieldValue.increment(1)
     })
 
     await batch.commit()
@@ -39,9 +39,12 @@ export async function addComment(postID: string, commentBody: string, level: num
 }
 
 export async function getPostComments(postID: string) {
-  const postRef = doc(db, "posts", postID)
-  const commentsRef = collection(postRef, "comments")
-  const commentsSnap = await getDocs(query(commentsRef, where("moderation_status", "!=", "rejected")))
+  const commentsRef = db.collection("posts").
+    doc(postID).
+    collection("comments").
+    where("moderation_status", "!=", "rejected")
+
+  const commentsSnap = await commentsRef.get()
 
   const comments: DBComment[] = []
   commentsSnap.forEach((comment) => {
@@ -52,10 +55,10 @@ export async function getPostComments(postID: string) {
 }
 
 async function voteComment(postID: string, commentID: string, undo: boolean, field: "upvotes" | "downvotes") {
-  const commentRef = doc(db, "posts", postID, "comments", commentID)
+  const commentRef = db.collection("posts").doc(postID).collection("comments").doc(commentID)
   try {
-    await updateDoc(commentRef, {
-      [field]: increment(undo ? -1 : 1)
+    await commentRef.update({
+      [field]: FieldValue.increment(undo ? -1 : 1)
     })
     return true
   } catch (e) {
@@ -74,8 +77,8 @@ export async function downvoteComment(postID: string, commentID: string, undo: b
 
 export async function updateCommentModerationStatus(postID: string, commentID: string, newStatus: "approved" | "rejected") {
   try {
-    const docRef = doc(db, "posts", postID, "comments", commentID)
-    await updateDoc(docRef, {
+    const docRef = db.collection("posts").doc(postID).collection("comments").doc(commentID)
+    await docRef.update({
       "moderation_status": newStatus
     })
     return true

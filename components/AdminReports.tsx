@@ -3,9 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { resolveReport, type DBReport } from '@/lib/firebase/reports'
-import { parseISO } from "date-fns"
-import { toZonedTime, format } from "date-fns-tz"
+import { type DBReport } from '@/lib/firebase/reports'
 import { useState } from "react"
 import { approveComment, approvePost, rejectComment, rejectPost } from "@/lib/actions/report"
 import Link from "next/link"
@@ -21,12 +19,6 @@ type ReportPropType = Omit<DBReport, 'createdAt' | 'resolvedAt'> & {
 
 type AdminReportsProps = {
   reports: ReportPropType[]
-}
-
-const formatDate = (timestamp: string) => {
-  const date = parseISO(timestamp)
-  const istDate = toZonedTime(date, 'Asia/Kolkata')
-  return format(istDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone: 'Asia/Kolkata' })
 }
 
 
@@ -77,9 +69,9 @@ export function AdminReports({ reports }: AdminReportsProps) {
       const isPost = report.commentID ? false : true
       let promise;
       if (isPost) {
-        promise = action === "approve" ? approvePost(report.postID) : rejectPost(report.postID)
+        promise = action === "approve" ? approvePost(report.reportID, report.postID) : rejectPost(report.reportID, report.postID)
       } else {
-        promise = action === "approve" ? approveComment(report.postID, report.commentID!) : rejectComment(report.postID, report.commentID!)
+        promise = action === "approve" ? approveComment(report.reportID, report.postID, report.commentID!) : rejectComment(report.reportID, report.postID, report.commentID!)
       }
       const resp = await promise;
       if (!resp.success) {
@@ -91,7 +83,6 @@ export function AdminReports({ reports }: AdminReportsProps) {
         })
         return
       }
-      await resolveReport(report.reportID)
       setPendingReports(pendingReports.filter(item => item != report))
       toast({
         title: "Moderation successfull",
@@ -133,7 +124,7 @@ export function AdminReports({ reports }: AdminReportsProps) {
             <TableBody>
               {pendingReports.map((report, index) => (
                 <TableRow key={index}>
-                  <TableCell>{formatDate(report.createdAt)}</TableCell>
+                  <TableCell>{report.createdAt}</TableCell>
                   <TableCell>{report.commentID ? 'Comment' : 'Post'}</TableCell>
                   <TableCell>{createHyperLink(report)}</TableCell>
                   <TableCell>{report.flag}</TableCell>
