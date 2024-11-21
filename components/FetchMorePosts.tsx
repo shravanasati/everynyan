@@ -1,23 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useRef } from "react";
 import { useInView } from "react-intersection-observer";
-import { Post } from "@/lib/models";
+import { Post as PostType } from "@/lib/models";
 import { LoadingPost, CaughtUp } from "@/components/LoadingPost";
-import { getPostsByBoard } from "@/lib/firebase/posts";
 import PostComponent from "@/components/Posts/Post";
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { PaginatedResult } from "@/lib/firebase/posts";
 
 interface FetchMorePostsProps {
   boardName: string;
 }
 
 export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [lastDoc, setLastDoc] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [lastDocID, setLastDocID] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const initialFetchDone = useRef(false);
 
   const { ref, inView } = useInView({});
 
@@ -26,10 +26,26 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
 
     setLoading(true);
     try {
-      const result = await getPostsByBoard(boardName, "timestamp", lastDoc);
+      const resp = await fetch("/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          board: boardName,
+          lastDocID: lastDocID,
+          limitTo: 10,
+          orderByField: "timestamp",
+        }),
+      });
+
+      const result: PaginatedResult<PostType> & { error: string } = await resp.json();
+      if (resp.status !== 200) {
+        throw new Error(result.error);
+      }
 
       setPosts((prev) => [...prev, ...result.items]);
-      setLastDoc(result.lastDoc);
+      setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
       setInitialLoad(false);
     } catch (error) {
@@ -42,7 +58,8 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
 
   // initial load
   useEffect(() => {
-    if (initialLoad) {
+    if (initialLoad && !initialFetchDone.current) {
+      initialFetchDone.current = true;
       fetchMore();
     }
   }, [boardName]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -76,7 +93,7 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
       ) : (
         posts.map((post) => (
           <PostComponent
-            key={post.id}
+            key={`${post.id}`}
             title={post.title}
             body={post.body}
             board={post.board}
@@ -95,3 +112,4 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
     </>
   );
 }
+

@@ -1,23 +1,24 @@
-import {Timestamp, QueryDocumentSnapshot, DocumentData, FieldValue } from "firebase-admin/firestore"
+import { Timestamp, FieldValue } from "firebase-admin/firestore"
 import { db } from "@/lib/firebase/app";
 import { Post } from "@/lib/models";
 import { generatePostID } from "@/lib/utils";
 
 export interface PaginatedResult<T> {
   items: T[];
-  lastDoc: QueryDocumentSnapshot<DocumentData> | null;
+  lastDocID: string | null;
   hasMore: boolean;
 }
 
 // get all posts from a board whose moderation status is not rejected
-export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDoc: QueryDocumentSnapshot<DocumentData> | null = null, limitTo: number = 10) {
+export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDocID: string | null = null, limitTo: number = 10) {
   let postsRef = db.collection("posts").
     where("board", "==", board).
     where("moderation_status", "!=", "rejected").
     orderBy(orderByField, "desc").
     limit(limitTo + 1)
 
-  if (lastDoc) {
+  if (lastDocID) {
+    const lastDoc = await db.collection("posts").doc(lastDocID).get()
     postsRef = postsRef.startAfter(lastDoc)
   }
 
@@ -26,11 +27,13 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
   const hasMore = docs.length > limitTo; // Check if more data exists
   const items = docs.slice(0, limitTo).map((doc) => doc.data() as Post); // Exclude the extra document
 
-  return {
+  const result: PaginatedResult<Post> = {
     items,
-    lastDoc: hasMore ? docs[docs.length - 2] : null,
+    lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
     hasMore,
   };
+
+  return result
 }
 
 export async function getPostByID(postID: string) {
