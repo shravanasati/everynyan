@@ -30,9 +30,9 @@ export default function PerPost({
   const postSlug = getPostSlug(id, title);
 
   return (
-    <Card className="w-full flex flex-col">
-      <CardHeader className="space-y-1 p-3 sm:p-6">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+    <Card className="w-full flex flex-col border-0 bg-primary/5 rounded-md">
+      <CardHeader className="relative space-y-1 py-3 px-1 sm:p-6">
+        <div className="flex flex-col gap-2">
           <CardTitle className="text-xl sm:text-2xl font-bold break-words">
             {title}
           </CardTitle>
@@ -42,9 +42,10 @@ export default function PerPost({
             </span>
           </Link>
         </div>
+        <ReportContent postID={id} className="absolute top-6 right-5" />
       </CardHeader>
-      <CardContent className="p-3 sm:p-6">
-        <div className="rounded-lg bg-primary/5 p-3 sm:p-4 mb-3 sm:mb-4 h-40 overflow-y-auto everynyan-scroll">
+      <CardContent className="333">
+        <div className="mb-3 sm:mb-4 max-h-52 overflow-y-scroll py-4 px-2 everynyan-scroll rounded-md bg-primary/[0.025]">
           <ReactMarkdown
             components={{
               a: (props) => <a className="text-primary" {...props} />,
@@ -54,12 +55,9 @@ export default function PerPost({
             {DOMPurify.sanitize(content)}
           </ReactMarkdown>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2">
+        <div className="flex flex-row gap-2 items-center">
           <VoteCounter upVotes={upVotes} downVotes={downVotes} postID={id} />
-          <div className="flex gap-2 justify-between sm:justify-end">
-            <Share postLink={postSlug} />
-            <ReportContent postID={id} />
-          </div>
+          <Share postLink={postSlug} />
         </div>
       </CardContent>
     </Card>

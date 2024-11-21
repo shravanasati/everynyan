@@ -36,7 +36,7 @@ export function Navbar({ user }: { user: User | null }) {
         <span className="text-2xl font-bold">EveryNyan</span>
       </Link>
 
-      <div className="hidden md:flex items-center justify-center space-x-8">
+      {/* <div className="hidden md:flex items-center justify-center space-x-8">
         {sheetLinks.map((link) => (
           <Link
             key={link.text}
@@ -50,7 +50,7 @@ export function Navbar({ user }: { user: User | null }) {
             {link.text}
           </Link>
         ))}
-      </div>
+      </div> */}
 
       {/* Buttons and sheet opener */}
       <div className="flex items-center space-x-4">
@@ -59,7 +59,7 @@ export function Navbar({ user }: { user: User | null }) {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden inline text-primary"
+              className="text-primary"
             >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
@@ -67,7 +67,7 @@ export function Navbar({ user }: { user: User | null }) {
           </SheetTrigger>
           <SheetContent
             className="w-full bg-background/90 backdrop-blur-lg"
-            side="top"
+            side="left"
           >
             <div className="flex flex-col items-start justify-center space-y-4 p-4 max-w-md mx-auto">
               {sheetLinks.map((link) => (
@@ -107,7 +107,7 @@ export function Navbar({ user }: { user: User | null }) {
           </SheetContent>
         </Sheet>
 
-        {loggedIn ? (
+        {/* {loggedIn ? (
           <button
             onClick={handleLogout}
             className="font-semibold px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200 hidden md:inline"
@@ -121,7 +121,7 @@ export function Navbar({ user }: { user: User | null }) {
           >
             Log In
           </Link>
-        )}
+        )} */}
       </div>
     </nav>
   );

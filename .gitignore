@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env.prod
 
 .env.prod
 
@@ -36,3 +37,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+**/public/sw.js
+**/public/workbox-*.js
+
+**/public/sw.js.map
+**/public/workbox-*.js
+*.map 
+serviceAccountKey*.json

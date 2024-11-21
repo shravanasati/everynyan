@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import {parseISO} from 'date-fns'
-import { format, toZonedTime } from 'date-fns-tz'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -27,12 +25,6 @@ export type SecurityLogType = {
 
 export function SecurityLogs({ logs = [] }: { logs?: SecurityLogType[] }) {
   const [filterType, setFilterType] = useState<string>('all')
-
-  const formatDate = (timestamp: SecurityLogType['timestamp']) => {
-    const date = parseISO(timestamp)
-    const istDate = toZonedTime(date, 'Asia/Kolkata')
-    return format(istDate, 'yyyy-MM-dd HH:mm:ss zzz', { timeZone: 'Asia/Kolkata' })
-  }
 
   const uniqueTypes = useMemo(() => {
     return ['all', ...Array.from(new Set(logs.map(log => log.type_)))]
@@ -74,7 +66,7 @@ export function SecurityLogs({ logs = [] }: { logs?: SecurityLogType[] }) {
             <TableBody>
               {filteredLogs.map((log) => (
                 <TableRow key={log.timestamp}>
-                  <TableCell className="font-mono">{formatDate(log.timestamp)}</TableCell>
+                  <TableCell className="font-mono">{log.timestamp}</TableCell>
                   <TableCell>{log.type_}</TableCell>
                   <TableCell>{log.detail}</TableCell>
                 </TableRow>

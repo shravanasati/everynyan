@@ -1,0 +1,21 @@
+{
+  "name": "EveryNyan's PWA",
+  "short_name": "EveryNyan",
+  "description": "EveryNyan's Progressive Web App built with Next.js",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#EDBD58",
+  "background_color": "#090909"
+}

@@ -10,11 +10,26 @@ interface CommentInputProps {
 
 export function CommentInput({ onSubmit }: CommentInputProps) {
   const [comment, setComment] = useState("");
+  const [disableInput, setDisableInput] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (comment.trim()) {
+      setDisableInput(true);
+      setCooldown(5);
       onSubmit(comment);
       setComment("");
+
+      const countdownInterval = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            setDisableInput(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
   };
 
@@ -30,10 +45,10 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
       <div className="flex justify-end">
         <Button
           onClick={handleSubmit}
-          disabled={!comment.trim()}
+          disabled={!comment.trim() || disableInput}
           className="w-full sm:w-auto"
         >
-          Post Comment
+          {disableInput ? `Wait ${cooldown}s...` : "Post Comment"}
         </Button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, TriangleAlert } from "lucide-react";
+import { FlagIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { reportPost, reportComment } from "@/lib/actions/report";
 import { useToast } from "@/hooks/use-toast";
@@ -22,15 +22,18 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type ReportContentProps = {
   postID: string;
   commentID?: string;
+  className?: string;
 };
 
 export default function ReportContent({
   postID,
   commentID,
+  className,
 }: ReportContentProps) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -110,13 +113,17 @@ export default function ReportContent({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="h-8 w-full sm:w-auto px-4 sm:px-2 py-4 rounded-full flex gap-1 justify-center items-center bg-primary/20 cursor-pointer text-red-600 hover:bg-primary/30 transition-colors">
+        <div
+          className={cn(
+            "w-max absolute sm:w-auto p-1 rounded-full flex gap-1 justify-center items-center cursor-pointer text-red-500/80 hover:bg-red-500/30 transition-colors",
+            className
+          )}
+        >
           {loading ? (
             <Loader2 className="h-4 w-5 text-primary animate-spin cursor-not-allowed" />
           ) : (
             <>
-              <TriangleAlert size={20} />
-              <span className="sm:hidden">Report</span>
+              <FlagIcon className="size-4 md:size-5" />
             </>
           )}
         </div>
@@ -178,7 +185,7 @@ export default function ReportContent({
         <p className="text-xs sm:text-sm mt-4 text-muted-foreground">
           In case of emergency contact us on &nbsp;
           <Link
-            href="https://instagram.com/everynyan.support"
+            href="https://instagram.com/everynyan.tech"
             className="text-primary/45 hover:underline"
           >
             Instagram

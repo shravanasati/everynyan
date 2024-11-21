@@ -45,7 +45,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 
   return (
     <div className="w-full">
-      <Card className="w-full" id={comment.id}>
+      <Card className="w-full border-none" id={comment.id}>
         <CardContent className="p-4">
           <div className="rounded-lg bg-primary/5 p-3 mb-3">
             <p className="text-sm text-foreground whitespace-pre-wrap break-words">
@@ -80,7 +80,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
       {isReplying && (
         <div className="mt-2 space-y-2 mb-4">
           <textarea
-            className="w-full bg-secondary p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+            className="w-full bg-secondary p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
             rows={3}
             value={replyText}
             onChange={(e) => setReplyText(e.target.value)}
