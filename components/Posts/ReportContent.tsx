@@ -33,7 +33,7 @@ type ReportContentProps = {
 export default function ReportContent({
   postID,
   commentID,
-  className
+  className,
 }: ReportContentProps) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -66,7 +66,6 @@ export default function ReportContent({
       if (!resp.success) {
         throw new Error(resp.message);
       }
-
 
       toast({
         description: "Content reported successfully!",
@@ -114,12 +113,17 @@ export default function ReportContent({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className={cn("w-max absolute sm:w-auto p-1 rounded-full flex gap-1 justify-center items-center cursor-pointer text-red-500/80 hover:bg-red-500/30 transition-colors",className)}>
+        <div
+          className={cn(
+            "w-max absolute sm:w-auto p-1 rounded-full flex gap-1 justify-center items-center cursor-pointer text-red-500/80 hover:bg-red-500/30 transition-colors",
+            className
+          )}
+        >
           {loading ? (
             <Loader2 className="h-4 w-5 text-primary animate-spin cursor-not-allowed" />
           ) : (
             <>
-              <FlagIcon  className="size-4 md:size-5" />
+              <FlagIcon className="size-4 md:size-5" />
             </>
           )}
         </div>
@@ -181,7 +185,7 @@ export default function ReportContent({
         <p className="text-xs sm:text-sm mt-4 text-muted-foreground">
           In case of emergency contact us on &nbsp;
           <Link
-            href="https://instagram.com/everynyan.support"
+            href="https://instagram.com/everynyan.tech"
             className="text-primary/45 hover:underline"
           >
             Instagram
