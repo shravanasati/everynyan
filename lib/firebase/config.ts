@@ -7,6 +7,7 @@ interface FirebaseConfig {
   appId: string | undefined;
 }
 
+
 const config: FirebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

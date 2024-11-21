@@ -1,11 +1,13 @@
-import Post from "@/components/Posts/Post";
+// import Post from "@/components/Posts/Post";
 import { getAuthUser } from "@/lib/user";
 import "@/app/scrollbar.css";
 import { Unauthorized } from "@/components/Unauthorized";
-import { getPostsByBoard } from "@/lib/firebase/posts";
-import { boardList } from "@/lib/boards";
+// import { getPostsByBoard } from "@/lib/firebase/posts";
+import { Board, boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
+import { FetchMorePosts } from "@/components/FetchMorePosts";
+import { Metadata } from "next";
 
 interface BoardProps {
   params: {
@@ -14,6 +16,36 @@ interface BoardProps {
 }
 
 // todo dynamically generate metadata
+function getBoardMetadata(boardName: string, boardListProp: Board[]) {
+  const boardMetadata = boardListProp.find(
+    (board: Board) => board.href === boardName
+  );
+
+  if (!boardMetadata) {
+    console.warn(`Board "${boardName}" not found in the list.`);
+    return {
+      title: "Board does not exist",
+      description: "Metadata is not available for non-existing board",
+    };
+  }
+
+  return {
+    title: `${boardMetadata.title} | EveryNyan`,
+    description:
+      boardMetadata.description || `Welcome to ${boardMetadata.title} board.`,
+  };
+}
+
+export async function generateMetadata({
+  params,
+}: BoardProps): Promise<Metadata> {
+  const boardMetadata = getBoardMetadata(params.boardName, boardList);
+
+  return {
+    title: `${boardMetadata.title}`,
+    description: `${boardMetadata.description} | EveryNyan`,
+  };
+}
 
 export default async function BoardDetailPage({ params }: BoardProps) {
   if (!(await getAuthUser())) {
@@ -25,17 +57,15 @@ export default async function BoardDetailPage({ params }: BoardProps) {
   if (!allowedBoardNames.includes(boardName)) {
     return notFound();
   }
-  const posts = await getPostsByBoard(boardName);
-  // todo @ni3rav implement pagination, use the lastDoc and hasMore results of above function
-  // !! alright immma do this once the test drive begins and comment component is ready man, will start test drive from 14th onward right?
-  const postItems = posts.items;
+  // const posts = await getPostsByBoard(boardName);
+  // const postItems = posts.items;
 
   return (
     <div className="min-h-screen bg-background">
       <BoardHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
-          {postItems.map((post, index) => (
+          {/* {postItems.map((post, index) => (
             <Post
               key={post.id || index}
               title={post.title}
@@ -47,7 +77,8 @@ export default async function BoardDetailPage({ params }: BoardProps) {
               moderation_status="pending"
               comment_count={post.comment_count}
             />
-          ))}
+          ))} */}
+          <FetchMorePosts boardName={boardName} />
         </div>
       </main>
     </div>

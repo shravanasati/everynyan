@@ -29,9 +29,18 @@ yarn-error.log*
 .env*.local
 .env.prod
 
+.env.prod
+
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+**/public/sw.js
+**/public/workbox-*.js
+
+**/public/sw.js.map
+**/public/workbox-*.js
+*.map 

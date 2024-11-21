@@ -2,7 +2,6 @@
 
 import { Loader2, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -14,11 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function Share({ postLink }: { postLink: string }) {
+export default function Share({ postLink }: { postLink?: string }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [postUrl, setPostUrl] = useState("");
   const { toast } = useToast();
+
   useEffect(() => {
     setPostUrl(`${window.location.origin}/post/${postLink}`);
   }, [postLink]);
@@ -45,21 +45,12 @@ export default function Share({ postLink }: { postLink: string }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div
-          className={cn(
-            "h-6 w-[14.5rem] md:w-16 px-2 py-4 rounded-2xl flex gap-1 justify-center items-center bg-primary/20"
-          )}
-          onClick={() => setIsOpen(true)}
-          aria-disabled={isCopied}
-        >
-          {!isCopied ? (
-            <Share2 className="size-6 text-primary-600" />
+        <div className="w-max h-max p-2 rounded-2xl items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+          {isCopied ? (
+            <Loader2 size={20} className="animate-spin" />
           ) : (
-            <Loader2 className="size-6 text-primary animate-spin" />
-          )}{" "}
-          <span className="md:hidden inline ml-3">
-            {isCopied ? "Wait" : "Share"}
-          </span>
+            <Share2 className="size-4" />
+          )}
         </div>
       </DialogTrigger>
       <DialogContent className="bg-[#090909] w-[95vw] max-w-md mx-auto sm:max-w-lg">
@@ -70,7 +61,7 @@ export default function Share({ postLink }: { postLink: string }) {
         </DialogHeader>
         <div className="w-full py-6 flex flex-col justify-center items-center gap-6">
           <div className="w-full max-w-sm overflow-hidden">
-            <Input value={postUrl} readOnly className="w-full"/>
+            <Input value={postUrl} readOnly className="w-full" />
           </div>
           <div className="w-full flex justify-center flex-wrap items-center gap-4">
             <Button type="button" variant="default" onClick={handleClick}>

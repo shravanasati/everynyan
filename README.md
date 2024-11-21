@@ -1,10 +1,10 @@
-# everynyan
+# EveryNyan
 
-everynyan is a social media website which focuses heavily on anonymity and exclusivity.
+EveryNyan is a social media website which focuses heavily on anonymity and exclusivity.
 
 ### Setting up the local development environment
 
-everynyan is built using Next.js.
+EveryNyan is built using Next.js.
 
 1. Clone the repository.
 
@@ -25,6 +25,7 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 NEXT_PUBLIC_FIREBASE_APP_ID=
 
 MODERATOR_EMAILS=
+DISCORD_WEBHOOK_URL=
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
@@ -55,4 +56,4 @@ pnpm dev
 
 ### Contribution
 
-everynyan is open to contributions. If you wish to contribute, follow the above instructions to setup your development environment, but make sure to clone your forked copy.
+EveryNyan is open to contributions. If you wish to contribute, follow the above instructions to setup your development environment, but make sure to clone your forked copy.

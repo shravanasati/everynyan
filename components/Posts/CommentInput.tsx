@@ -1,33 +1,54 @@
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CommentInputProps {
   onSubmit: (comment: string) => void;
 }
 
 export function CommentInput({ onSubmit }: CommentInputProps) {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
+  const [disableInput, setDisableInput] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (comment.trim()) {
+      setDisableInput(true);
+      setCooldown(5);
       onSubmit(comment);
-      setComment('');
+      setComment("");
+
+      const countdownInterval = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            setDisableInput(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
     }
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 w-full">
       <Textarea
         placeholder="Add a comment..."
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         rows={3}
-        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary resize-none"
       />
       <div className="flex justify-end">
-        <Button onClick={handleSubmit} disabled={!comment.trim()}>
-          Post Comment
+        <Button
+          onClick={handleSubmit}
+          disabled={!comment.trim() || disableInput}
+          className="w-full sm:w-auto"
+        >
+          {disableInput ? `Wait ${cooldown}s...` : "Post Comment"}
         </Button>
       </div>
     </div>

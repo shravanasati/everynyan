@@ -2,15 +2,18 @@ import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-function CommentCount({ noOfComments, postSlug }: { noOfComments: number, postSlug: string }) {
-  // todo fix noOfComments to not count rejected comments
+function CommentCount({
+  noOfComments,
+  postSlug,
+}: {
+  noOfComments: number;
+  postSlug: string;
+}) {
   return (
     <Link href={`/post/${postSlug}#comments`}>
-      <div className="h-6 w-[14.5rem] md:w-20 px-2 py-4 rounded-2xl flex gap-1 justify-center items-center bg-primary/20 cursor-pointer">
+      <div className="w-max px-5 py-[0.50rem] rounded-3xl font-thin text-xs flex gap-1 justify-center items-center bg-primary/10 cursor-pointer hover:bg-primary/30 transition-colors text-white/40">
         <MessageCircle className="size-6" />
-        <span className="h-full p-1.5 flex justify-center items-center text-base cursor-default">
-          {noOfComments}
-        </span>
+        <span className="text-base font-semibold">{noOfComments}</span>
       </div>
     </Link>
   );

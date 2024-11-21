@@ -13,15 +13,14 @@ function Footer() {
     {
       name: "instagram",
       icon: <InstagramLogoIcon />,
-      href: "https://instagram.com/everynyan.support",
+      href: "https://instagram.com/everynyan.tech",
     },
     // follow this syntax to add more icons
     // {
-    //   name: "twitter2", 
+    //   name: "twitter2",
     //   icon: <TwitterLogoIcon />,
     //   href: "https://x.com/ni3rav",
     // },
-
   ];
 
   return (

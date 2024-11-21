@@ -4,8 +4,8 @@ import { BoardsView } from "@/components/BoardsView";
 import { Unauthorized } from "@/components/Unauthorized";
 
 export const metadata = {
-  title: "Boards",
-  description: "Boards for everynyan",
+  title: "Boards | EveryNyan",
+  description: "Boards for EveryNyan",
 };
 
 export default async function BoardsPage() {
