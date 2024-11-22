@@ -1,15 +1,18 @@
-import { getPostsByBoard } from "@/lib/firebase/posts"
+import { boardList } from "@/lib/boards"
+import { getPostsByBoard, getPostsFeed, PaginatedResult } from "@/lib/firebase/posts"
+import { Post } from "@/lib/models"
 import { getAuthUser } from "@/lib/user"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
 export const revalidate = 60
+const validBoards = boardList.map(e => e.href) as [string, ...string[]]
 
 const bodySchema = z.strictObject({
-  board: z.string(),
-  orderByField: z.string(),
-  lastDocID: z.string().optional().nullable(),
-  limitTo: z.number(),
+  board: z.enum(validBoards).nullable(),
+  orderByField: z.enum(["upvotes", "comment_count", "downvotes", "timestamp"]),
+  lastDocID: z.string().nullable(),
+  limitTo: z.number().min(1).max(10),
 })
 
 export async function POST(request: NextRequest) {
@@ -20,13 +23,18 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    console.log(data)
     const result = bodySchema.safeParse(data)
     if (!result.success) {
       return NextResponse.json({ error: "Invalid request body: " + result.error.flatten().fieldErrors }, { status: 400 })
     }
+
     const { board, orderByField, lastDocID, limitTo } = result.data
-    const posts = await getPostsByBoard(board, orderByField, lastDocID, limitTo)
+    let posts: PaginatedResult<Post> 
+    if (board) {
+      posts = await getPostsByBoard(board, orderByField, lastDocID, limitTo)
+    } else {
+      posts = await getPostsFeed(orderByField, lastDocID, limitTo)
+    }
     return NextResponse.json(posts)
   }
 

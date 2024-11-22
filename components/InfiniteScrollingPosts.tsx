@@ -6,23 +6,46 @@ import { Post as PostType } from "@/lib/models";
 import { LoadingPost, CaughtUp } from "@/components/LoadingPost";
 import PostComponent from "@/components/Posts/Post";
 import { PaginatedResult } from "@/lib/firebase/posts";
+import { useToast } from "@/hooks/use-toast";
+import { SortDropdown } from "@/components/SortDropdown";
 
-interface FetchMorePostsProps {
-  boardName: string;
+interface InfiniteScrollingPostsProps {
+  boardName: string | null;
 }
 
-export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
+const sortByFields = [
+  {
+    title: "Newest",
+    value: "timestamp"
+  },
+  {
+    title: "Popular",
+    value: "upvotes"
+  },
+  {
+    title: "Controversial",
+    value: "downvotes"
+  },
+  {
+    title: "Most commented",
+    value: "comment_count"
+  }
+]
+
+export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProps) {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [lastDocID, setLastDocID] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const initialFetchDone = useRef(false);
+  const [sortBy, setSortBy] = useState<string>("timestamp");
+  const { toast } = useToast()
 
   const { ref, inView } = useInView({});
 
-  const fetchMore = async () => {
-    if (loading || !hasMore) return;
+  const fetchMore = async (reset = false) => {
+    if (loading || (!hasMore && !reset)) return;
 
     setLoading(true);
     try {
@@ -33,9 +56,9 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
         },
         body: JSON.stringify({
           board: boardName,
-          lastDocID: lastDocID,
+          lastDocID: reset ? null : lastDocID,
           limitTo: 10,
-          orderByField: "timestamp",
+          orderByField: sortBy,
         }),
       });
 
@@ -44,13 +67,14 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
         throw new Error(result.error);
       }
 
-      setPosts((prev) => [...prev, ...result.items]);
+      setPosts((prev) => reset ? result.items : [...prev, ...result.items]);
       setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
       setInitialLoad(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
+      toast({ title: "Post fetching failed", description: String(error), variant: "destructive" })
     } finally {
       setLoading(false);
     }
@@ -71,6 +95,16 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
     }
   }, [inView]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // refetch when sort option changes
+  useEffect(() => {
+    if (!initialLoad) {
+      setPosts([]);
+      setLastDocID(null);
+      setHasMore(true);
+      fetchMore(true);
+    }
+  }, [sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // loading skeleton
   if (initialLoad) {
     return (
@@ -83,6 +117,13 @@ export function FetchMorePosts({ boardName }: FetchMorePostsProps) {
 
   return (
     <>
+      <div className="mb-4">
+        <SortDropdown
+          options={sortByFields}
+          value={sortBy}
+          onValueChange={(value) => setSortBy(value)}
+        />
+      </div>
       {posts.length === 0 && !loading && !initialLoad ? (
         <div className="text-center py-8">
           <p className="text-lg font-semibold text-primary">No posts yet!</p>

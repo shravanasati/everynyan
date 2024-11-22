@@ -6,7 +6,7 @@ import { Unauthorized } from "@/components/Unauthorized";
 import { Board, boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
-import { FetchMorePosts } from "@/components/FetchMorePosts";
+import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import { Metadata } from "next";
 
 interface BoardProps {
@@ -78,7 +78,7 @@ export default async function BoardDetailPage({ params }: BoardProps) {
               comment_count={post.comment_count}
             />
           ))} */}
-          <FetchMorePosts boardName={boardName} />
+          <InfiniteScrollingPosts boardName={boardName} />
         </div>
       </main>
     </div>
