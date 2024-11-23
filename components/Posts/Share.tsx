@@ -1,7 +1,7 @@
 "use client";
 
-import { Loader2, Share2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { CopyIcon, Loader2, Share2 } from "lucide-react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -12,23 +12,21 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TwitterLogoIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { WhatsAppLogoIcon } from "./WhatsAppLogoIcon";
 
-export default function Share({ postLink }: { postLink?: string }) {
+export default function Share({ postLink: postSlug }: { postLink: string }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [postUrl, setPostUrl] = useState("");
   const { toast } = useToast();
-
-  useEffect(() => {
-    setPostUrl(`${window.location.origin}/post/${postLink}`);
-  }, [postLink]);
+  const postURL = `${window.location.origin}/post/${postSlug}`;
 
   const handleClick = async () => {
     setIsCopied(true);
-    const toClipboard = `${window.location.origin}/post/${postLink}`;
 
     try {
-      await navigator.clipboard.writeText(toClipboard);
+      await navigator.clipboard.writeText(postURL);
       toast({ description: "Copied!🍝" });
       console.log("Content copied to clipboard");
     } catch (err) {
@@ -61,19 +59,29 @@ export default function Share({ postLink }: { postLink?: string }) {
         </DialogHeader>
         <div className="w-full py-6 flex flex-col justify-center items-center gap-6">
           <div className="w-full max-w-sm overflow-hidden">
-            <Input value={postUrl} readOnly className="w-full" />
+            <Input value={postURL} readOnly className="w-full" />
           </div>
           <div className="w-full flex justify-center flex-wrap items-center gap-4">
             <Button type="button" variant="default" onClick={handleClick}>
-              Copy
+              <CopyIcon className="size-4" />
             </Button>
-            <Button
+            <Button type="button" variant="outline" >
+              <Link href={`https://x.com/intent/post?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+                <TwitterLogoIcon className="size-4" />
+              </Link>
+            </Button>
+            <Button type="button" variant="outline" >
+              <Link href={`https://api.whatsapp.com/send/?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+                <WhatsAppLogoIcon className="size-4 fill-white" />
+              </Link>
+            </Button>
+            {/* <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
             >
               Close
-            </Button>
+            </Button> */}
           </div>
         </div>
       </DialogContent>
