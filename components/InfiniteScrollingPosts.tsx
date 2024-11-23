@@ -16,7 +16,7 @@ interface InfiniteScrollingPostsProps {
 
 const sortByFields = [
   {
-    title: "Newest",
+    title: "Latest",
     value: "timestamp"
   },
   {

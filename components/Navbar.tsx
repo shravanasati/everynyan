@@ -7,7 +7,14 @@ import { useRouter, usePathname } from "next/navigation";
 import SvgLogo from "@/components/SvgLogo";
 import { User } from "@/lib/user";
 import { logout } from "@/lib/actions/logout";
-import { Menu, Home, Compass, PenTool, LogIn, LogOut } from "lucide-react";
+import {
+  Home,
+  Compass,
+  PenTool,
+  LogIn,
+  LogOut,
+  BadgePlus,
+} from "lucide-react";
 import { useState } from "react";
 
 export function Navbar({ user }: { user: User | null }) {
@@ -56,12 +63,8 @@ export function Navbar({ user }: { user: User | null }) {
       <div className="flex items-center space-x-4">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-primary"
-            >
-              <Menu className="h-6 w-6" />
+            <Button variant="ghost" size="icon" className="text-primary">
+              <BadgePlus className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
@@ -86,13 +89,13 @@ export function Navbar({ user }: { user: User | null }) {
                 </Link>
               ))}
               {loggedIn ? (
-                <button
+                <Button
                   onClick={handleLogout}
                   className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogOut className="h-6 w-6" />
                   <span>Log Out</span>
-                </button>
+                </Button>
               ) : (
                 <Link
                   href="/login"
