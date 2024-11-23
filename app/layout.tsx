@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -52,6 +53,10 @@ export default async function RootLayout({
         <Toaster />
         <Footer />
       </body>
+      {
+        process.env.NODE_ENV === "production" &&
+        <GoogleAnalytics gaId="G-3XCDLX2W7Z" />
+      }
     </html>
   );
 }
