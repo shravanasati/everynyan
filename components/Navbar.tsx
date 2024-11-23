@@ -86,13 +86,13 @@ export function Navbar({ user }: { user: User | null }) {
                 </Link>
               ))}
               {loggedIn ? (
-                <button
+                <Button
                   onClick={handleLogout}
                   className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogOut className="h-6 w-6" />
                   <span>Log Out</span>
-                </button>
+                </Button>
               ) : (
                 <Link
                   href="/login"

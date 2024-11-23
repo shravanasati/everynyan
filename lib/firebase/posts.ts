@@ -9,10 +9,37 @@ export interface PaginatedResult<T> {
   hasMore: boolean;
 }
 
+// todo refactor this to reduce code duplication
+
 // get all posts from a board whose moderation status is not rejected
 export async function getPostsByBoard(board: string, orderByField: string = "timestamp", lastDocID: string | null = null, limitTo: number = 10) {
   let postsRef = db.collection("posts").
     where("board", "==", board).
+    where("moderation_status", "!=", "rejected").
+    orderBy(orderByField, "desc").
+    limit(limitTo + 1)
+
+  if (lastDocID) {
+    const lastDoc = await db.collection("posts").doc(lastDocID).get()
+    postsRef = postsRef.startAfter(lastDoc)
+  }
+
+  const postsSnap = await postsRef.get()
+  const docs = postsSnap.docs;
+  const hasMore = docs.length > limitTo; // Check if more data exists
+  const items = docs.slice(0, limitTo).map((doc) => doc.data() as Post); // Exclude the extra document
+
+  const result: PaginatedResult<Post> = {
+    items,
+    lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
+    hasMore,
+  };
+
+  return result
+}
+
+export async function getPostsFeed(orderByField: string = "timestamp", lastDocID: string | null = null, limitTo: number = 10) {
+  let postsRef = db.collection("posts").
     where("moderation_status", "!=", "rejected").
     orderBy(orderByField, "desc").
     limit(limitTo + 1)

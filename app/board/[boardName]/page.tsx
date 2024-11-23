@@ -4,7 +4,7 @@ import { Unauthorized } from "@/components/Unauthorized";
 import { Board, boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
-import { FetchMorePosts } from "@/components/FetchMorePosts";
+import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import { Metadata } from "next";
 
 interface BoardProps {
@@ -85,7 +85,20 @@ export default async function BoardDetailPage({ params }: BoardProps) {
       <BoardHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
-          <FetchMorePosts boardName={boardName} />
+          {/* {postItems.map((post, index) => (
+            <Post
+              key={post.id || index}
+              title={post.title}
+              body={post.body}
+              board={post.board}
+              upvotes={post.upvotes}
+              downvotes={post.downvotes}
+              id={post.id}
+              moderation_status="pending"
+              comment_count={post.comment_count}
+            />
+          ))} */}
+          <InfiniteScrollingPosts boardName={boardName} />
         </div>
       </main>
     </div>
