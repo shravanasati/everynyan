@@ -41,11 +41,6 @@ export default async function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
-        <script
-          data-goatcounter="https://everynyan.goatcounter.com/count"
-          defer
-          src="//gc.zgo.at/count.js"
-        ></script>
       </head>
       <body className="font-obv antialiased">
         <Navbar user={user} />
