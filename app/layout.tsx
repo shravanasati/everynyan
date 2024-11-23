@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -40,11 +41,6 @@ export default async function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
-        <script
-          data-goatcounter="https://everynyan.goatcounter.com/count"
-          defer
-          src="//gc.zgo.at/count.js"
-        ></script>
       </head>
       <body className="font-obv antialiased">
         <Navbar user={user} />
@@ -52,6 +48,10 @@ export default async function RootLayout({
         <Toaster />
         <Footer />
       </body>
+      {
+        process.env.NODE_ENV === "production" &&
+        <GoogleAnalytics gaId="G-3XCDLX2W7Z" />
+      }
     </html>
   );
 }

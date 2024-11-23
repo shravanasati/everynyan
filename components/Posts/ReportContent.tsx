@@ -123,7 +123,7 @@ export default function ReportContent({
             <Loader2 className="h-4 w-5 text-primary animate-spin cursor-not-allowed" />
           ) : (
             <>
-              <FlagIcon className="size-4 md:size-5" />
+              <FlagIcon className="size-4 md:size-4" />
             </>
           )}
         </div>

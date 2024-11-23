@@ -45,11 +45,11 @@ export default function Share({ postLink }: { postLink?: string }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="w-max h-max p-2 rounded-2xl items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
+        <div className="w-max h-max p-1 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-primary/20 transition-colors">
           {isCopied ? (
             <Loader2 size={20} className="animate-spin" />
           ) : (
-            <Share2 className="size-4" />
+            <Share2 className="size-4 text-primary" />
           )}
         </div>
       </DialogTrigger>

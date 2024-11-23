@@ -40,7 +40,7 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         rows={3}
-        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+        className="w-full p-2 border rounded-md focus:outline-none focus:border-2 resize-none"
       />
       <div className="flex justify-end">
         <Button

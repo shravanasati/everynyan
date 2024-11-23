@@ -127,27 +127,33 @@ export default function VoteCounter({
 
   return (
     <div className="rounded-3xl p-2 flex gap-2 sm:gap-2 justify-between items-center bg-primary/10 text-white/40">
-      <div className="flex justify-center w-max h-max cursor-pointer">
+      <div
+        className="flex justify-center w-max h-max cursor-pointer"
+        onClick={() => handleVote("up")}
+      >
         <ArrowBigUp
           className={`mr-1 size-6 ${
-            !isDownVoted && isUpVoted ? " fill-emerald-500 text-emerald-500" : "fill-none"
+            !isDownVoted && isUpVoted
+              ? " fill-emerald-500 text-emerald-500"
+              : "fill-none"
           }`}
-          onClick={() => handleVote("up")}
         />
         <span className="h-full flex justify-center font-semibold items-center text-base">
           {currentUpVotes}
         </span>
       </div>
-      <div className="flex w-[1px] h-5 bg-white/40 justify-center items-center " />
-      <div className="flex  justify-start cursor-pointer w-max h-max">
-        <span className="h-full flex justify-center items-center font-semibold text-xs sm:text-base">
+      <div className="flex w-[1px] h-6 bg-white/30 justify-center items-center " />
+      <div
+        className="flex justify-start cursor-pointer w-max h-max"
+        onClick={() => handleVote("down")}
+      >
+        <span className="h-full flex justify-center font-semibold items-center text-base">
           {currentDownVotes}
         </span>
         <ArrowBigDown
           className={`ml-1 size-6  ${
             isDownVoted && !isUpVoted ? "fill-rose-500 text-rose-500" : ""
           }`}
-          onClick={() => handleVote("down")}
         />
       </div>
     </div>

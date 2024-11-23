@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import VoteCounter from "@/components/Posts/VoteCounter";
 import ReportContent from "@/components/Posts/ReportContent";
 import { parseISO } from "date-fns";
-import { MessageSquare } from "lucide-react";
+import { MessageCircle, MinusCircleIcon, PlusCircleIcon, Spline } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { Comment as CommentType } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
@@ -36,7 +36,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 }) => {
   const [replyText, setReplyText] = useState("");
   const isReplying = replyingTo === comment.id;
-
+  const [subCommentVisible, setSubCommentVisible] = useState(false);
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
     await onSubmitReply(replyText);
@@ -45,33 +45,58 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 
   return (
     <div className="w-full">
-      <Card className="w-full border-none" id={comment.id}>
-        <CardContent className="p-4">
-          <div className="rounded-lg bg-primary/5 p-3 mb-3">
+      <Card className="relative w-full border-none" id={comment.id}>
+        <div className={`absolute top-0 -left-6 flex items-center justify-center ${comment.parent_id != null ? 'block' : 'hidden'}`}>
+          <Spline strokeDasharray="1 3" strokeDashoffset={0.8} className="-rotate-90 w-8 text-[#2F2612]" strokeLinecap="square"/>
+        </div>
+        <CardContent className="p-3">
+          <div className="rounded-lg bg-primary/5 p-3 mb-3 ">
             <p className="text-sm text-foreground whitespace-pre-wrap break-words">
               {comment.body}
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-2 space-y-2 sm:space-y-0">
-            <VoteCounter
-              upVotes={comment.upvotes}
-              downVotes={comment.downvotes}
-              commentID={comment.id}
-              postID={postID}
-            />
-            <div className="flex items-center space-x-2 w-full sm:w-auto">
+          <div className="flex items-center justify-between mt-2 sm:space-y-0">
+            <div className="flex items-center justify-between gap-3">
+              {comment.replies.length > 0 ? (
+                <div
+                  className="rounded-3xl p-2 bg-primary/10 text-white/40 cursor-pointer"
+                  onClick={() => setSubCommentVisible((prev) => !prev)}
+                >
+                  {/* For show and hidden feature of comments */}
+                  {subCommentVisible ? (
+                    <MinusCircleIcon className="size-[1.2rem]" />
+                  ) : (
+                    <PlusCircleIcon className="size-[1.2rem]" />
+                  )}
+                </div>
+              ) : null}
+
+              <VoteCounter
+                upVotes={comment.upvotes}
+                downVotes={comment.downvotes}
+                commentID={comment.id}
+                postID={postID}
+              />
+            </div>
+            <div className="flex items-center justify-end space-x-2 w-full sm:w-auto">
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground hover:text-primary w-full sm:w-auto"
+                className="text-muted-foreground hover:text-primary w-max flex items-center justify-center"
                 onClick={() => onReply(comment.id)}
               >
-                <MessageSquare size={18} className="mr-1" />
-                <span className="sr-only">Reply to comment</span>
-                Reply
+                <MessageCircle size={18} className="mr-1" />
+                <div>
+                  <span className="sr-only">Reply to comment</span>
+                  Reply
+                </div>
               </Button>
-              <ReportContent postID={postID} commentID={comment.id} />
+              <ReportContent
+                postID={postID}
+                commentID={comment.id}
+                className="relative"
+              />
             </div>
           </div>
         </CardContent>
@@ -95,8 +120,9 @@ const SingleComment: React.FC<SingleCommentProps> = ({
         </div>
       )}
 
-      {comment.replies.length > 0 && (
-        <div className="ml-4 sm:ml-8 mt-4 space-y-4">
+      {(comment.replies.length > 0 && subCommentVisible) && (
+        <div className="pl-8 relative h-max pt-4 space-y-4">
+          <div className="w-[1px] h-full rounded-full bg-transparent border absolute left-[0.8rem] top-0 overflow-hidden border-dashed" />
           {comment.replies.map((reply) => (
             <SingleComment
               key={reply.id}

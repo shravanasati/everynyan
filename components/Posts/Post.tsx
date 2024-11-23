@@ -34,19 +34,20 @@ export default function Post({
 }: PostType) {
   const postSlug = getPostSlug(id, title);
   return (
-    <Card className="w-full min-h-[12rem] my-2 rounded-md bg-primary/[0.015] border-none py-2">
-      <CardHeader className="p-3 sm:p-4 relative">
+    <Card className="relative w-full min-h-[12rem] my-2 rounded-md bg-primary/[0.015] border-none py-2">
+      <Link href={`/post/${postSlug}`} className="absolute z-0 w-full h-full" />
+      <CardHeader className="p-3 sm:p-4 relative w-full">
         <ReportContent postID={id} className="top-4 right-4" />
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col w-max space-y-2 ">
           <Link
             href={`/post/${postSlug}`}
-            className="text-base sm:text-lg md:text-xl font-bold hover:underline line-clamp-2 sm:line-clamp-none flex-grow"
+            className="text-base sm:text-lg md:text-xl font-bold  line-clamp-2 sm:line-clamp-none flex-grow hover:underline"
           >
             {title}
           </Link>
           <Link
             href={`/board/${board}`}
-            className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200 whitespace-nowrap"
+            className="text-xs w-max sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200 whitespace-nowrap"
           >
             {board}
           </Link>
@@ -67,11 +68,11 @@ export default function Post({
       </CardContent>
       <CardFooter className="p-3 sm:p-4 flex flex-wrap items-center justify-start gap-2 sm:gap-3">
         <div className="w-full h-max flex flex-row items-center justify-between gap-2 sm:gap-3">
-          <div className="flex-1 flex items-center justify-start gap-4">
+          <div className="flex-1 flex items-center justify-start gap-4 relative z-10">
             <VoteCounter upVotes={upvotes} downVotes={downvotes} postID={id} />
             <CommentCount noOfComments={comment_count} postSlug={postSlug} />
           </div>
-          <div className="w-max h-max">
+          <div className="w-max h-max relative z-10">
             <Share postLink={postSlug} />
           </div>
         </div>

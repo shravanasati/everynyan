@@ -30,8 +30,8 @@ export default function PerPost({
   const postSlug = getPostSlug(id, title);
 
   return (
-    <Card className="w-full flex flex-col border-0 bg-primary/5 rounded-md">
-      <CardHeader className="relative space-y-1 py-3 px-1 sm:p-6">
+    <Card className="w-full flex flex-col border-0  bg-primary/5 rounded-md">
+      <CardHeader className="relative space-y-1 md:py-3 md:px-4 px-3 py-2">
         <div className="flex flex-col gap-2">
           <CardTitle className="text-xl sm:text-2xl font-bold break-words">
             {title}
