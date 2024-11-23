@@ -39,34 +39,34 @@ export async function generateMetadata({
 }: BoardProps): Promise<Metadata> {
   const boardMetadata = getBoardMetadata(params.boardName, boardList);
 
-  const ogImageUrl = new URL(
-    `/api/og?title=${encodeURIComponent(boardMetadata.title)}`,
-    process.env.NEXT_PUBLIC_BASE_URL
-  ).toString();
+  // const ogImageUrl = new URL(
+  //   `/api/og?title=${encodeURIComponent(boardMetadata.title)}`,
+  //   process.env.NEXT_PUBLIC_BASE_URL
+  // ).toString();
 
   return {
     title: boardMetadata.title,
     description: `${boardMetadata.description} | EveryNyan`,
-    openGraph: {
-      title: `${boardMetadata.title} | EveryNyan`,
-      description:
-        boardMetadata.description || `Welcome to ${boardMetadata.title} board.`,
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: `${boardMetadata.title} | EveryNyan`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${boardMetadata.title} | EveryNyan`,
-      description:
-        boardMetadata.description || `Welcome to ${boardMetadata.title} board.`,
-      images: [ogImageUrl],
-    },
+    // openGraph: {
+    //   title: `${boardMetadata.title} | EveryNyan`,
+    //   description:
+    //     boardMetadata.description || `Welcome to ${boardMetadata.title} board.`,
+    //   images: [
+    //     {
+    //       url: ogImageUrl,
+    //       width: 1200,
+    //       height: 630,
+    //       alt: `${boardMetadata.title} | EveryNyan`,
+    //     },
+    //   ],
+    // },
+    // twitter: {
+    //   card: "summary_large_image",
+    //   title: `${boardMetadata.title} | EveryNyan`,
+    //   description:
+    //     boardMetadata.description || `Welcome to ${boardMetadata.title} board.`,
+    //   images: [ogImageUrl],
+    // },
   };
 }
 

@@ -41,7 +41,7 @@ export default function Post({
         <div className="flex flex-col w-max space-y-2 ">
           <Link
             href={`/post/${postSlug}`}
-            className="text-base sm:text-lg md:text-xl font-bold  line-clamp-1 sm:line-clamp-none flex-grow hover:underlinei"
+            className="md:max-w-96 max-w-72 text-base sm:text-lg md:text-xl font-bold  line-clamp-1 sm:line-clamp-none flex-grow hover:underlinei"
           >
             {title}
           </Link>
