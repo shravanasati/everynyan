@@ -2,7 +2,7 @@
 import { getAuthUser } from "@/lib/user";
 import "@/app/scrollbar.css";
 import { Unauthorized } from "@/components/Unauthorized";
-// import { getPostsByBoard } from "@/lib/firebase/posts";
+import { getPostsByBoard } from "@/lib/firebase/posts";
 import { Board, boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
@@ -57,8 +57,8 @@ export default async function BoardDetailPage({ params }: BoardProps) {
   if (!allowedBoardNames.includes(boardName)) {
     return notFound();
   }
-  // const posts = await getPostsByBoard(boardName);
-  // const postItems = posts.items;
+  const posts = await getPostsByBoard(boardName);
+  const data = JSON.stringify(posts);
 
   return (
     <div className="min-h-screen bg-background">
@@ -78,7 +78,7 @@ export default async function BoardDetailPage({ params }: BoardProps) {
               comment_count={post.comment_count}
             />
           ))} */}
-          <InfiniteScrollingPosts boardName={boardName} />
+          <InfiniteScrollingPosts data={data} boardName={boardName} />
         </div>
       </main>
     </div>

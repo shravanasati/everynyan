@@ -20,7 +20,8 @@ export default function Share({ postLink: postSlug }: { postLink: string }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const postURL = `${window.location.origin}/post/${postSlug}`;
+  const baseURL = (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://everynyan.tech");
+  const postURL = `${baseURL}/post/${postSlug}`;
 
   const handleClick = async () => {
     setIsCopied(true);

@@ -1,15 +1,19 @@
 import BlobGradient from "@/components/Gradients/BlobGradient";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
+import { getPostsFeed } from "@/lib/firebase/posts";
 import { getAuthUser } from "@/lib/user";
 
 export default async function Home() {
   const user = await getAuthUser()
   if (user) {
+    // todo get preferences from local storage
+    const resp = await getPostsFeed()
+    const data = JSON.stringify(resp)
     return (
       <main className="min-h-screen bg-background container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
-          <InfiniteScrollingPosts boardName={null} />
+          <InfiniteScrollingPosts data={data} boardName={null} />
         </div>
       </main>
     )
