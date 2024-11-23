@@ -1,6 +1,7 @@
 import { getAuthUser } from "@/lib/user";
 import "@/app/scrollbar.css";
 import { Unauthorized } from "@/components/Unauthorized";
+import { getPostsByBoard } from "@/lib/firebase/posts";
 import { Board, boardList } from "@/lib/boards";
 import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
@@ -79,13 +80,28 @@ export default async function BoardDetailPage({ params }: BoardProps) {
   if (!allowedBoardNames.includes(boardName)) {
     return notFound();
   }
+  const posts = await getPostsByBoard(boardName);
+  const data = JSON.stringify(posts);
 
   return (
     <div className="min-h-screen bg-background">
       <BoardHeader />
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
-          <InfiniteScrollingPosts boardName={boardName} />
+          {/* {postItems.map((post, index) => (
+            <Post
+              key={post.id || index}
+              title={post.title}
+              body={post.body}
+              board={post.board}
+              upvotes={post.upvotes}
+              downvotes={post.downvotes}
+              id={post.id}
+              moderation_status="pending"
+              comment_count={post.comment_count}
+            />
+          ))} */}
+          <InfiniteScrollingPosts data={data} boardName={boardName} />
         </div>
       </main>
     </div>

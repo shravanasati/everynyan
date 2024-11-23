@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Post as PostType } from "@/lib/models";
 import { LoadingPost, CaughtUp } from "@/components/LoadingPost";
@@ -11,6 +11,7 @@ import { SortDropdown } from "@/components/SortDropdown";
 
 interface InfiniteScrollingPostsProps {
   boardName: string | null;
+  data: string;
 }
 
 const sortByFields = [
@@ -32,13 +33,14 @@ const sortByFields = [
   }
 ]
 
-export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProps) {
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [lastDocID, setLastDocID] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState(true);
+export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPostsProps) {
+  const dataObj = JSON.parse(data);
+  const [posts, setPosts] = useState<PostType[]>(dataObj.items);
+  const [lastDocID, setLastDocID] = useState<string | null>(dataObj.lastDocID);
+  const [hasMore, setHasMore] = useState(dataObj.hasMore);
   const [loading, setLoading] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
-  const initialFetchDone = useRef(false);
+  // const [initialLoad, setInitialLoad] = useState(true);
+  // const initialFetchDone = useRef(false);
   const [sortBy, setSortBy] = useState<string>("timestamp");
   const { toast } = useToast()
 
@@ -70,7 +72,7 @@ export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProp
       setPosts((prev) => reset ? result.items : [...prev, ...result.items]);
       setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
-      setInitialLoad(false);
+      // setInitialLoad(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
@@ -80,40 +82,40 @@ export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProp
     }
   };
 
-  // initial load
-  useEffect(() => {
-    if (initialLoad && !initialFetchDone.current) {
-      initialFetchDone.current = true;
-      fetchMore();
-    }
-  }, [boardName]); // eslint-disable-line react-hooks/exhaustive-deps
+  // // initial load
+  // useEffect(() => {
+  //   if (initialLoad && !initialFetchDone.current) {
+  //     initialFetchDone.current = true;
+  //     fetchMore();
+  //   }
+  // }, [boardName]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // infinite scroll
   useEffect(() => {
-    if (!initialLoad && inView && !loading) {
+    if (/*!initialLoad &&*/ inView && !loading) {
       fetchMore();
     }
   }, [inView]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // refetch when sort option changes
   useEffect(() => {
-    if (!initialLoad) {
+    // if (!initialLoad) {
       setPosts([]);
       setLastDocID(null);
       setHasMore(true);
       fetchMore(true);
-    }
+    // }
   }, [sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // loading skeleton
-  if (initialLoad) {
-    return (
-      <>
-        <LoadingPost />
-        <LoadingPost />
-      </>
-    );
-  }
+  // // loading skeleton
+  // if (initialLoad) {
+  //   return (
+  //     <>
+  //       <LoadingPost />
+  //       <LoadingPost />
+  //     </>
+  //   );
+  // }
 
   return (
     <>
@@ -124,7 +126,7 @@ export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProp
           onValueChange={(value) => setSortBy(value)}
         />
       </div>
-      {posts.length === 0 && !loading && !initialLoad ? (
+      {posts.length === 0 && !loading /*&& !initialLoad*/ ? (
         <div className="text-center py-8">
           <p className="text-lg font-semibold text-primary">No posts yet!</p>
           <p className="text-sm text-muted-foreground mt-2">
@@ -147,7 +149,7 @@ export function InfiniteScrollingPosts({ boardName }: InfiniteScrollingPostsProp
         ))
       )}
 
-      {loading && !initialLoad && <LoadingPost />}
+      {loading && /*!initialLoad &&*/ <LoadingPost />}
       {!hasMore && posts.length > 0 && <CaughtUp />}
       <div ref={ref} className="h-10" />
     </>
