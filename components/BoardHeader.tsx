@@ -14,7 +14,7 @@ const routeEmojis: { [key: string]: string } = {
 export default function BoardHeader() {
   const pathName = usePathname();
   const boardName = pathName.slice(7);
-  const emoji = routeEmojis[boardName] || "📌";
+  const emoji = routeEmojis[boardName];
   const capitalizedBoardName =
     boardName.charAt(0).toUpperCase() + boardName.slice(1);
 
@@ -49,14 +49,14 @@ export default function BoardHeader() {
               initial="initial"
               whileHover="hover"
             >
-              {emoji}
+              {emoji || "☕"}
             </motion.span>
             <motion.span
               className="text-3xl md:text-4xl font-bold tracking-wider"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              {capitalizedBoardName}
+              {capitalizedBoardName || "Feed"}
             </motion.span>
             <motion.span
               className="text-3xl"
@@ -64,7 +64,7 @@ export default function BoardHeader() {
               initial="initial"
               whileHover="hover"
             >
-              {emoji}
+              {emoji || "☕"}
             </motion.span>
           </Link>
         </motion.div>
