@@ -67,7 +67,6 @@ export function PostCreator() {
         setError(Object.values(response.errors!)[0][0]);
         return;
       }
-      console.log("Post created:", response);
 
       // redirect to the newly created post
       router.push(`/post/${response.slug}`);
