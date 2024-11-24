@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const uniEmailRegex = /^[a-z]+\.(cse|ict|cie)(2[1-3])@(aii|adaniuni)\.ac\.in$/;
+export const uniEmailRegex = /^[a-z]+\.(cse|ict|cie)(d){0,1}(2[1-4])@(aii|adaniuni)\.ac\.in$/;
 
 export function isValidEmail(email: string) {
   return uniEmailRegex.test(email);

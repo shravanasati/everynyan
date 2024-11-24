@@ -73,12 +73,11 @@ export function OTPPage() {
     if (!isValidEmail(newValues.email)) {
       router.push("/login");
     }
-    console.log("Submitting OTP form:", newValues);
     try {
       const result = await signin(newValues);
       if (result.success) {
         localStorage.removeItem("email");
-        router.push("/board");
+        router.push("/");
       } else {
         const error =
           result.error || "An unexpected error occurred. Please try again.";
