@@ -15,7 +15,7 @@ export function SortDropdown({ options, value, onValueChange }: SortDropdownProp
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Sort by" />
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (

@@ -55,3 +55,17 @@ export async function getToken(token: string) {
 
   return null;
 }
+
+export async function getTokenCount() {
+  const tokenRef = db.collection("tokens");
+  const tokenSnap = await tokenRef.count().get();
+
+  return tokenSnap.data().count;
+}
+
+export async function getOTPCount() {
+  const otpRef = db.collection("otp");
+  const otpSnap = await otpRef.count().get();
+
+  return otpSnap.data().count;
+}

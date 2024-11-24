@@ -41,6 +41,10 @@ export default async function AdminPage() {
   return (
     <div className="container mx-2 py-8">
       <h1 className="text-3xl font-bold mb-6 ml-2">Admin Page</h1>
+      {/* <div className="m-2 bg-secondary w-fit p-2">
+        <p className="text-xl font-semibold">Active Sessions: {tokenCount}</p>
+        <p className="text-xl font-semibold">Emails attempted sign in: {otpCount}</p>
+      </div> */}
       <div className="m-2">
         <AdminReports reports={formattedReports} />
       </div>

@@ -15,6 +15,8 @@ const bodySchema = z.strictObject({
   limitTo: z.number().min(1).max(10),
 })
 
+// todo refresh cookies
+
 export async function POST(request: NextRequest) {
   try {
     const user = await getAuthUser()
