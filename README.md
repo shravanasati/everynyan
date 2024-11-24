@@ -1,6 +1,6 @@
 # EveryNyan
 
-EveryNyan is a social media website which focuses heavily on anonymity and exclusivity.
+[EveryNyan](https://everynyan.tech) is a social media website which focuses heavily on anonymity and exclusivity.
 
 ### Setting up the local development environment
 
@@ -17,15 +17,23 @@ git clone https://github.com/shravanasati/everynyan.git
 SECRET_KEY=
 RESEND_API_KEY=
 
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-NEXT_PUBLIC_FIREBASE_APP_ID=
+FIREBASE_STORAGE_BUCKET=
+FIREBASE_PROJECT_ID=
+FIREBASE_PRIVATE_KEY_ID=
+FIREBASE_PRIVATE_KEY=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_CLIENT_ID=
+FIREBASE_AUTH_URI=
+FIREBASE_TOKEN_URI=
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL=
+FIREBASE_CLIENT_X509_CERT_URL=
+FIREBASE_UNIVERSE_DOMAIN=
 
 MODERATOR_EMAILS=
 DISCORD_WEBHOOK_URL=
+
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
@@ -38,7 +46,13 @@ Moderator emails is a comma-separated list of emails of users who have moderatio
 
 Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
 
-You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore and store those credentials in env file as well.
+You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore. Then go to the Project Settings > Service Accounts > Generate a private key.
+
+Download the generated JSON file, and extract the keys and store them in the `.env.local` file. Also note the `FIREBASE_STORAGE_KEY` and `FIREBASE_PROJECT_ID` configuration.
+
+`DISCORD_WEBHOOK_URL` is used to notify the admins when a new report is published. Get it from the channel settings > webhook URL.
+
+The last set of configuration you'd need is for the Cloudflare Turnstile captcha. Go to the [Cloudflare dashboard](https://dash.cloudflare.com), and create a new Turnstile widget in managed mode, add `localhost` in the list of allowed hostnames. Finally store the site key and secret key in the `.env.local` file.
 
 
 3. Install all the dependencies.
