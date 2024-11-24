@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -31,7 +31,7 @@ const sortByFields = [
     title: "Most commented",
     value: "comment_count"
   }
-]
+];
 
 export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPostsProps) {
   const dataObj = JSON.parse(data);
@@ -39,15 +39,14 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
   const [lastDocID, setLastDocID] = useState<string | null>(dataObj.lastDocID);
   const [hasMore, setHasMore] = useState(dataObj.hasMore);
   const [loading, setLoading] = useState(false);
-  // const [initialLoad, setInitialLoad] = useState(true);
-  // const initialFetchDone = useRef(false);
   const [sortBy, setSortBy] = useState<string>("timestamp");
-  const { toast } = useToast()
+  const { toast } = useToast();
 
-  const { ref, inView } = useInView({});
+  const { ref, inView } = useInView();
 
   const fetchMore = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
+    console.log("Fetching more posts...");
 
     setLoading(true);
     try {
@@ -72,50 +71,33 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
       setPosts((prev) => reset ? result.items : [...prev, ...result.items]);
       setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
-      // setInitialLoad(false);
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
-      toast({ title: "Post fetching failed", description: String(error), variant: "destructive" })
+      toast({ 
+        title: "Post fetching failed", 
+        description: String(error), 
+        variant: "destructive" 
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  // // initial load
-  // useEffect(() => {
-  //   if (initialLoad && !initialFetchDone.current) {
-  //     initialFetchDone.current = true;
-  //     fetchMore();
-  //   }
-  // }, [boardName]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // infinite scroll
+  // Infinite scroll
   useEffect(() => {
-    if (/*!initialLoad &&*/ inView && !loading) {
+    if (inView && !loading) {
       fetchMore();
     }
   }, [inView]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // refetch when sort option changes
-  useEffect(() => {
-    // if (!initialLoad) {
-      setPosts([]);
-      setLastDocID(null);
-      setHasMore(true);
-      fetchMore(true);
-    // }
-  }, [sortBy]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // // loading skeleton
-  // if (initialLoad) {
-  //   return (
-  //     <>
-  //       <LoadingPost />
-  //       <LoadingPost />
-  //     </>
-  //   );
-  // }
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setPosts([]);
+    setLastDocID(null);
+    setHasMore(true);
+    fetchMore(true);
+  };
 
   return (
     <>
@@ -123,10 +105,10 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
         <SortDropdown
           options={sortByFields}
           value={sortBy}
-          onValueChange={(value) => setSortBy(value)}
+          onValueChange={handleSortChange}
         />
       </div>
-      {posts.length === 0 && !loading /*&& !initialLoad*/ ? (
+      {posts.length === 0 && !loading ? (
         <div className="text-center py-8">
           <p className="text-lg font-semibold text-primary">No posts yet!</p>
           <p className="text-sm text-muted-foreground mt-2">
@@ -149,10 +131,9 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
         ))
       )}
 
-      {loading && /*!initialLoad &&*/ <LoadingPost />}
+      {loading && <LoadingPost />}
       {!hasMore && posts.length > 0 && <CaughtUp />}
       <div ref={ref} className="h-10" />
     </>
   );
 }
-
