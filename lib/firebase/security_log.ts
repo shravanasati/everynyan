@@ -17,7 +17,7 @@ export async function addSecurityLog(log: SecurityLog) {
 }
 
 export async function getSecurityLogs() {
-  const logsRef = db.collection("security_logs");
+  const logsRef = db.collection("security_logs").orderBy("timestamp", "desc").limit(20);
   const logsSnap = await logsRef.get();
 
   const logs = logsSnap.docs.map(doc => doc.data());
