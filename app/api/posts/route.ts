@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
 export const revalidate = 60
+export const dynamic = "force-dynamic"
 const validBoards = boardList.map(e => e.href) as [string, ...string[]]
 
 const querySchema = z.strictObject({
