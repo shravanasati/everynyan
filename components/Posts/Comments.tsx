@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import VoteCounter from "@/components/Posts/VoteCounter";
 import ReportContent from "@/components/Posts/ReportContent";
 import { parseISO } from "date-fns";
-import { MessageCircle, MinusCircleIcon, PlusCircleIcon, Spline } from "lucide-react";
+import {
+  MessageCircle,
+  MinusCircleIcon,
+  PlusCircleIcon,
+  Spline,
+} from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { Comment as CommentType } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
@@ -37,20 +42,46 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   const [replyText, setReplyText] = useState("");
   const isReplying = replyingTo === comment.id;
   const [subCommentVisible, setSubCommentVisible] = useState(false);
+  const [disableReplyInput, setDisableReplyInput] = useState(false);
+  const [replyCooldown, setReplyCooldown] = useState(0);
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
+
+    setDisableReplyInput(true);
+    setReplyCooldown(5);
+
     await onSubmitReply(replyText);
     setReplyText("");
+
+    const countdownInterval = setInterval(() => {
+      setReplyCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval);
+          setDisableReplyInput(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   };
 
   return (
     <div className="w-full">
       <Card className="relative w-full border-none" id={comment.id}>
-        <div className={`absolute top-0 -left-6 flex items-center justify-center ${comment.parent_id != null ? 'block' : 'hidden'}`}>
-          <Spline strokeDasharray="1 3" strokeDashoffset={0.8} className="-rotate-90 w-8 text-[#2F2612]" strokeLinecap="square"/>
+        <div
+          className={`absolute top-0 -left-6 flex items-center justify-center ${
+            comment.parent_id != null ? "block" : "hidden"
+          }`}
+        >
+          <Spline
+            strokeDasharray="1 3"
+            strokeDashoffset={0.8}
+            className="-rotate-90 w-8 text-[#2F2612]"
+            strokeLinecap="square"
+          />
         </div>
         <CardContent className="p-3">
-          <div className="rounded-lg bg-primary/5 p-3 mb-3 ">
+          <div className="rounded-lg bg-primary/[0.015] p-3 mb-3 ">
             <p className="text-sm text-foreground whitespace-pre-wrap break-words">
               {comment.body}
             </p>
@@ -115,12 +146,18 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             <Button variant="outline" onClick={onCancelReply}>
               Cancel
             </Button>
-            <Button onClick={handleSubmitReply}>Submit Reply</Button>
+            <Button
+              disabled={!replyText.trim() || disableReplyInput}
+              onClick={handleSubmitReply}
+            >
+              {" "}
+              {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
+            </Button>
           </div>
         </div>
       )}
 
-      {(comment.replies.length > 0 && subCommentVisible) && (
+      {comment.replies.length > 0 && subCommentVisible && (
         <div className="pl-8 relative h-max pt-4 space-y-4">
           <div className="w-[1px] h-full rounded-full bg-transparent border absolute left-[0.8rem] top-0 overflow-hidden border-dashed" />
           {comment.replies.map((reply) => (

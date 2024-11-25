@@ -3,8 +3,41 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --primary: 40.95 80.43% 63.92%;
+  --primary-foreground: 40 45.45% 6.47%;
+
+  --card: 40 18.75% 6.27%;
+  --card-foreground: 40.91 78.57% 94.51%;
+
+  --popover: 0 0% 0%;
+  --popover-foreground: 40.91 78.57% 94.51%;
+
+  --secondary: 41.54 45.61% 22.35%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 0 0% 9.8%;
+  --muted-foreground: 0 0% 50.2%;
+
+  --accent: 41.54 45.61% 22.35%;
+  --accent-foreground: 40.91 78.57% 94.51%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 41.38 44.62% 12.75%;
+  --input: 40 13.76% 21.37%;
+  --ring: 40.95 80.43% 63.92%;
+
+  --chart-1: 40.95 80.43% 63.92%;
+  --chart-2: 41.28 53.65% 54.31%;
+  --chart-3: 41.25 45.28% 41.57%;
+  --chart-4: 41.48 45.25% 35.1%;
+  --chart-5: 40.3 45.58% 28.82%;
+
+  --radius: 0.5rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,43 +61,6 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 40.91 78.57% 94.51%;
-
-    --primary: 40.95 80.43% 63.92%;
-    --primary-foreground: 40 45.45% 6.47%;
-
-    --card: 40 18.75% 6.27%;
-    --card-foreground: 40.91 78.57% 94.51%;
-
-    --popover: 0 0% 0%;
-    --popover-foreground: 40.91 78.57% 94.51%;
-
-    --secondary: 41.54 45.61% 22.35%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 0 0% 9.8%;
-    --muted-foreground: 0 0% 50.2%;
-
-    --accent: 41.54 45.61% 22.35%;
-    --accent-foreground: 40.91 78.57% 94.51%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 41.38 44.62% 12.75%;
-    --input: 40 13.76% 21.37%;
-    --ring: 40.95 80.43% 63.92%;
-
-    --chart-1: 40.95 80.43% 63.92%;
-    --chart-2: 41.28 53.65% 54.31%;
-    --chart-3: 41.25 45.28% 41.57%;
-    --chart-4: 41.48 45.25% 35.1%;
-    --chart-5: 40.3 45.58% 28.82%;
-
-    --radius: 0.5rem;
-  }
-  .dark {
     --background: 0 0% 0%;
     --foreground: 40.91 78.57% 94.51%;
 
