@@ -8,24 +8,32 @@ import { z } from "zod"
 export const revalidate = 60
 const validBoards = boardList.map(e => e.href) as [string, ...string[]]
 
-const bodySchema = z.strictObject({
-  board: z.enum(validBoards).nullable(),
+const querySchema = z.strictObject({
+  board: z.enum(validBoards).optional().nullable(),
   orderByField: z.enum(["upvotes", "comment_count", "downvotes", "timestamp"]),
-  lastDocID: z.string().nullable(),
+  lastDocID: z.string().optional().nullable(),
   limitTo: z.number().min(1).max(10),
 })
 
 // todo refresh cookies
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     const user = await getAuthUser()
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const data = await request.json()
-    const result = bodySchema.safeParse(data)
+    const dataEntries = Array.from(request.nextUrl.searchParams.entries()).map(([key, value]) => {
+      if (key === "limitTo") {
+        return [key, parseInt(value)];
+      }
+      return [key, value];
+    });
+
+    const data = Object.fromEntries(dataEntries);
+    const result = querySchema.safeParse(data)
+
     if (!result.success) {
       return NextResponse.json({ error: "Invalid request body: " + result.error.flatten().fieldErrors }, { status: 400 })
     }
