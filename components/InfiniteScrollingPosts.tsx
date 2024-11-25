@@ -50,17 +50,17 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
 
     setLoading(true);
     try {
-      const resp = await fetch("/api/posts", {
-        method: "POST",
+      const searchParams = new URLSearchParams();
+      if (boardName) searchParams.append("board", boardName);
+      if (!reset && lastDocID) searchParams.append("lastDocID", lastDocID);
+      searchParams.append("limitTo", "10");
+      searchParams.append("orderByField", sortBy);
+
+      const resp = await fetch("/api/posts?" + searchParams.toString(), {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          board: boardName,
-          lastDocID: reset ? null : lastDocID,
-          limitTo: 10,
-          orderByField: sortBy,
-        }),
+        }
       });
 
       const result: PaginatedResult<PostType> & { error: string } = await resp.json();
@@ -74,10 +74,10 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
-      toast({ 
-        title: "Post fetching failed", 
-        description: String(error), 
-        variant: "destructive" 
+      toast({
+        title: "Post fetching failed",
+        description: String(error),
+        variant: "destructive"
       });
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@
 import { cookies } from "next/headers"
 import { decrypt } from "./crypt"
 import { getToken } from "./firebase/firestore"
+import { cache } from "react"
 
 type Role = "admin" | "user"
 
@@ -11,7 +12,7 @@ export type User = {
 	role: Role | undefined;
 }
 
-export async function getAuthUser() {
+export const getAuthUser = cache(async () => {
 	const session = cookies().get("session")
 	if (!session) {
 		return null
@@ -29,7 +30,7 @@ export async function getAuthUser() {
 		if (!dbToken) {
 			return null
 		}
-		
+
 		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role) {
 			return null
 		}
@@ -40,4 +41,4 @@ export async function getAuthUser() {
 		console.error("error in getAuthUser", error)
 		return null
 	}
-}
+})
