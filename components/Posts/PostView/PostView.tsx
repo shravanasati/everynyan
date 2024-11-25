@@ -14,11 +14,10 @@ async function PostView({
   postID: string;
   isAdmin: boolean;
 }) {
-  const post = await getPostByID(postID);
+  const [post, comments] = await Promise.all([getPostByID(postID), getPostComments(postID)]);
   if (!post || (post.moderation_status == "rejected" && !isAdmin)) {
     return notFound();
   }
-  const comments = await getPostComments(postID);
   const formattedComments = comments.map((comment) => ({
     ...comment,
     timestamp: convertTimestamp(comment.timestamp),
