@@ -7,14 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SvgLogo from "@/components/SvgLogo";
 import { User } from "@/lib/user";
 import { logout } from "@/lib/actions/logout";
-import {
-  Home,
-  Compass,
-  PenTool,
-  LogIn,
-  LogOut,
-  BadgePlus,
-} from "lucide-react";
+import { Newspaper, Compass, PenTool, LogIn, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar({ user }: { user: User | null }) {
@@ -24,7 +17,7 @@ export function Navbar({ user }: { user: User | null }) {
   const [open, setOpen] = useState(false);
 
   const sheetLinks = [
-    { href: "/", text: "Home", icon: Home },
+    { href: "/", text: "Feed", icon: Newspaper },
     { href: "/board", text: "Explore", icon: Compass },
     { href: "/create", text: "Post", icon: PenTool },
   ];
@@ -64,7 +57,7 @@ export function Navbar({ user }: { user: User | null }) {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="text-primary">
-              <BadgePlus className="h-6 w-6" />
+              <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
