@@ -21,7 +21,7 @@ export default function Section1() {
             <Button
               variant="outline"
               size="lg"
-              className="px-8 py-6 text-2xl font-black hover:motion-preset-confetti hover:motion-duration-1000 animate-subtlePulse hover:flex"
+              className="px-8 py-6 text-2xl font-extrabold hover:motion-preset-confetti hover:motion-duration-1000 animate-subtlePulse hover:flex border-primary/20 border-2 rounded-3xl"
             >
               Let&apos;s Go!
             </Button>

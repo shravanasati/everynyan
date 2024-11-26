@@ -8,6 +8,7 @@ import {
 } from "@/lib/actions/upvoteDownvote";
 import { ArrowBigDown, ArrowBigUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import { motion } from 'framer-motion'
 
 export default function VoteCounter({
   upVotes,
@@ -126,36 +127,93 @@ export default function VoteCounter({
   };
 
   return (
+    // <div className="rounded-3xl p-2 flex gap-2 sm:gap-2 justify-between items-center bg-primary/10 text-white/40">
+    //   <div
+    //     className="flex justify-center w-max h-max cursor-pointer"
+    //     onClick={() => handleVote("up")}
+    //   >
+    //     <ArrowBigUp
+    //       className={`mr-1 size-6 ${
+    //         !isDownVoted && isUpVoted
+    //           ? " fill-emerald-500 text-emerald-500"
+    //           : "fill-none"
+    //       }`}
+    //     />
+    //     <span className="h-full flex justify-center font-semibold items-center text-base">
+    //       {currentUpVotes}
+    //     </span>
+    //   </div>
+    //   <div className="flex w-[1px] h-6 bg-white/30 justify-center items-center " />
+    //   <div
+    //     className="flex justify-start cursor-pointer w-max h-max"
+    //     onClick={() => handleVote("down")}
+    //   >
+    //     <span className="h-full flex justify-center font-semibold items-center text-base">
+    //       {currentDownVotes}
+    //     </span>
+    //     <ArrowBigDown
+    //       className={`ml-1 size-6  ${
+    //         isDownVoted && !isUpVoted ? "fill-rose-500 text-rose-500" : ""
+    //       }`}
+    //     />
+    //   </div>
+    // </div>
     <div className="rounded-3xl p-2 flex gap-2 sm:gap-2 justify-between items-center bg-primary/10 text-white/40">
-      <div
+      <motion.div
         className="flex justify-center w-max h-max cursor-pointer"
         onClick={() => handleVote("up")}
+        whileTap={{ scale: 0.95 }}
       >
-        <ArrowBigUp
-          className={`mr-1 size-6 ${
-            !isDownVoted && isUpVoted
-              ? " fill-emerald-500 text-emerald-500"
-              : "fill-none"
-          }`}
-        />
-        <span className="h-full flex justify-center font-semibold items-center text-base">
+        <motion.div
+          animate={{
+            scale: isUpVoted ? [1, 1.2, 1] : 1,
+            rotate: isUpVoted ? [0, 15, -15, 0] : 0,
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <ArrowBigUp
+            className={`mr-1 size-6 ${
+              !isDownVoted && isUpVoted
+                ? "fill-emerald-500 text-emerald-500"
+                : "fill-none"
+            }`}
+          />
+        </motion.div>
+        <motion.span
+          className="h-full flex justify-center font-semibold items-center text-base"
+          animate={{ scale: isUpVoted ? [1, 1.2, 1] : 1 }}
+          transition={{ duration: 0.5 }}
+        >
           {currentUpVotes}
-        </span>
-      </div>
+        </motion.span>
+      </motion.div>
       <div className="flex w-[1px] h-6 bg-white/30 justify-center items-center " />
-      <div
+      <motion.div
         className="flex justify-start cursor-pointer w-max h-max"
         onClick={() => handleVote("down")}
+        whileTap={{ scale: 0.95 }}
       >
-        <span className="h-full flex justify-center font-semibold items-center text-base">
+        <motion.span
+          className="h-full flex justify-center font-semibold items-center text-base"
+          animate={{ scale: isDownVoted ? [1, 1.2, 1] : 1 }}
+          transition={{ duration: 0.5 }}
+        >
           {currentDownVotes}
-        </span>
-        <ArrowBigDown
-          className={`ml-1 size-6  ${
-            isDownVoted && !isUpVoted ? "fill-rose-500 text-rose-500" : ""
-          }`}
-        />
-      </div>
+        </motion.span>
+        <motion.div
+          animate={{
+            scale: isDownVoted ? [1, 1.2, 1] : 1,
+            rotate: isDownVoted ? [0, 15, -15, 0] : 0,
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <ArrowBigDown
+            className={`ml-1 size-6  ${
+              isDownVoted && !isUpVoted ? "fill-rose-500 text-rose-500" : ""
+            }`}
+          />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
