@@ -1,5 +1,4 @@
-"use client"
-
+"use client";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { Post as PostType } from "@/lib/models";
@@ -17,67 +16,86 @@ interface InfiniteScrollingPostsProps {
 const sortByFields = [
   {
     title: "Latest",
-    value: "timestamp"
+    value: "timestamp",
   },
   {
     title: "Popular",
-    value: "upvotes"
+    value: "upvotes",
   },
   {
     title: "Controversial",
-    value: "downvotes"
+    value: "downvotes",
   },
   {
-    title: "Most commented",
-    value: "comment_count"
-  }
+    title: "Engaging",
+    value: "comment_count",
+  },
 ];
 
-export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPostsProps) {
+export function InfiniteScrollingPosts({
+  boardName,
+  data,
+}: InfiniteScrollingPostsProps) {
   const dataObj = JSON.parse(data);
   const [posts, setPosts] = useState<PostType[]>(dataObj.items);
   const [lastDocID, setLastDocID] = useState<string | null>(dataObj.lastDocID);
   const [hasMore, setHasMore] = useState(dataObj.hasMore);
   const [loading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState<string>("timestamp");
-  const { toast } = useToast();
 
+  const { toast } = useToast();
   const { ref, inView } = useInView();
 
   const fetchMore = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
-    console.log("Fetching more posts...");
+
+    console.log("Fetching more posts...", {
+      reset,
+      boardName,
+      lastDocID,
+      sortBy,
+    });
 
     setLoading(true);
     try {
-      const resp = await fetch("/api/posts", {
-        method: "POST",
+      const searchParams = new URLSearchParams();
+      if (boardName) searchParams.append("board", boardName);
+
+      // Only append lastDocID if not resetting
+      if (!reset && lastDocID) {
+        searchParams.append("lastDocID", lastDocID);
+      }
+
+      searchParams.append("limitTo", "10");
+      searchParams.append("orderByField", sortBy);
+
+      const resp = await fetch("/api/posts?" + searchParams.toString(), {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          board: boardName,
-          lastDocID: reset ? null : lastDocID,
-          limitTo: 10,
-          orderByField: sortBy,
-        }),
       });
 
-      const result: PaginatedResult<PostType> & { error: string } = await resp.json();
+      const result: PaginatedResult<PostType> & { error: string } =
+        await resp.json();
+
       if (resp.status !== 200) {
         throw new Error(result.error);
       }
 
-      setPosts((prev) => reset ? result.items : [...prev, ...result.items]);
+      // If resetting, replace posts completely
+      // If not resetting, append new posts
+      setPosts((prev) => (reset ? result.items : [...prev, ...result.items]));
+
       setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
-      toast({ 
-        title: "Post fetching failed", 
-        description: String(error), 
-        variant: "destructive" 
+      toast({
+        title: "Post fetching failed",
+        description: String(error),
+        variant: "destructive",
       });
     } finally {
       setLoading(false);
@@ -89,14 +107,20 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
     if (inView && !loading) {
       fetchMore();
     }
-  }, [inView]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [inView, loading]); // Added loading to dependency array
 
-  const handleSortChange = (value: string) => {
-    setSortBy(value);
+  // New useEffect to handle sort changes
+  useEffect(() => {
+    // Reset and fetch when sort changes
     setPosts([]);
     setLastDocID(null);
     setHasMore(true);
     fetchMore(true);
+  }, [sortBy]); // Trigger fetch when sortBy changes
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    // Removed redundant reset logic as it's now in useEffect
   };
 
   return (
@@ -130,7 +154,6 @@ export function InfiniteScrollingPosts({ boardName, data }: InfiniteScrollingPos
           />
         ))
       )}
-
       {loading && <LoadingPost />}
       {!hasMore && posts.length > 0 && <CaughtUp />}
       <div ref={ref} className="h-10" />

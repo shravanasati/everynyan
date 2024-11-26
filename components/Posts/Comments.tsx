@@ -41,7 +41,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 }) => {
   const [replyText, setReplyText] = useState("");
   const isReplying = replyingTo === comment.id;
-  const [subCommentVisible, setSubCommentVisible] = useState(false);
+  const [subCommentVisible, setSubCommentVisible] = useState(true);
   const [disableReplyInput, setDisableReplyInput] = useState(false);
   const [replyCooldown, setReplyCooldown] = useState(0);
   const handleSubmitReply = async () => {

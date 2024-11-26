@@ -1,4 +1,5 @@
 import BoardHeader from "@/components/BoardHeader";
+import { Dock } from "@/components/Dock";
 import BlobGradient from "@/components/Gradients/BlobGradient";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
@@ -7,13 +8,15 @@ import { getAuthUser } from "@/lib/user";
 
 export default async function Home() {
   const user = await getAuthUser();
+
   if (user) {
     // todo get preferences from local storage
     const resp = await getPostsFeed();
     const data = JSON.stringify(resp);
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background relative">
         <BoardHeader />
+        <Dock />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
             <InfiniteScrollingPosts boardName={null} data={data} />

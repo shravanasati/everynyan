@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import Comments from "../Comments";
 import { convertTimestamp } from "@/lib/utils";
 
-// todo DO NOT call firebase functions in use client components
 
 async function PostView({
   postID,
@@ -15,11 +14,10 @@ async function PostView({
   postID: string;
   isAdmin: boolean;
 }) {
-  const post = await getPostByID(postID);
+  const [post, comments] = await Promise.all([getPostByID(postID), getPostComments(postID)]);
   if (!post || (post.moderation_status == "rejected" && !isAdmin)) {
     return notFound();
   }
-  const comments = await getPostComments(postID);
   const formattedComments = comments.map((comment) => ({
     ...comment,
     timestamp: convertTimestamp(comment.timestamp),

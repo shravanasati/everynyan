@@ -77,10 +77,14 @@ export async function downvoteComment(postID: string, commentID: string, undo: b
 
 export async function updateCommentModerationStatus(postID: string, commentID: string, newStatus: "approved" | "rejected") {
   try {
-    const docRef = db.collection("posts").doc(postID).collection("comments").doc(commentID)
-    await docRef.update({
-      "moderation_status": newStatus
-    })
+    const batch = db.batch()
+    const postRef = db.collection("posts").doc(postID)
+    const commentRef = postRef.collection("comments").doc(commentID)
+    batch.update(commentRef, { "moderation_status": newStatus })
+    if (newStatus === "rejected") {
+      batch.update(postRef, { "comment_count": FieldValue.increment(-1) })
+    }
+    await batch.commit()
     return true
   } catch (e) {
     console.error("error in update comment moderation status", e)
