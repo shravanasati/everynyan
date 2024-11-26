@@ -9,7 +9,7 @@ export const metadata = {
 
 export default async function Login() {
   if (await getAuthUser()) {
-    redirect("/board");
+    redirect("/");
   }
 
   return <LoginPage />;
