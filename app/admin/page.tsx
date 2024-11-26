@@ -1,6 +1,7 @@
 import { AdminReports } from "@/components/AdminReports"
 import { RawSecurityLog, SecurityLogType, SecurityLogs } from "@/components/SecurityLogs"
 import { Unauthorized } from "@/components/Unauthorized"
+import { getOTPCount } from "@/lib/firebase/firestore"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
@@ -17,8 +18,8 @@ export default async function AdminPage() {
     return <Unauthorized />
   }
 
-  const [securityLogs, unresolvedReports] = await Promise.all(
-    [getSecurityLogs(), getUnresolvedReports()]
+  const [securityLogs, unresolvedReports, otpCount] = await Promise.all(
+    [getSecurityLogs(), getUnresolvedReports(), getOTPCount()]
   )
 
   // sort logs by timestamp
@@ -41,10 +42,10 @@ export default async function AdminPage() {
   return (
     <div className="container mx-2 py-8">
       <h1 className="text-3xl font-bold mb-6 ml-2">Admin Page</h1>
-      {/* <div className="m-2 bg-secondary w-fit p-2">
-        <p className="text-xl font-semibold">Active Sessions: {tokenCount}</p>
+      <div className="m-2 bg-secondary w-fit p-2 rounded-xl">
+        {/* <p className="text-xl font-semibold">Active Sessions: {tokenCount}</p> */}
         <p className="text-xl font-semibold">Emails attempted sign in: {otpCount}</p>
-      </div> */}
+      </div>
       <div className="m-2">
         <AdminReports reports={formattedReports} />
       </div>
