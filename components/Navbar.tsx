@@ -84,7 +84,7 @@ export function Navbar({ user }: { user: User | null }) {
               {loggedIn ? (
                 <Button
                   onClick={handleLogout}
-                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full px-4 py-6 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogOut className="h-6 w-6" />
                   <span>Log Out</span>
@@ -93,7 +93,7 @@ export function Navbar({ user }: { user: User | null }) {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full px-4 py-6 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogIn className="h-6 w-6" />
                   <span>Log In</span>
