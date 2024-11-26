@@ -7,7 +7,7 @@ export default function AnimatedLoader() {
           <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary border-r-primary animate-spin"></div>
         </div>
         <div className="text-foreground text-2xl font-semibold">
-          Sata Andagi
+          Loading....
         </div>
       </div>
     </div>

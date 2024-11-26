@@ -7,14 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SvgLogo from "@/components/SvgLogo";
 import { User } from "@/lib/user";
 import { logout } from "@/lib/actions/logout";
-import {
-  Home,
-  Compass,
-  PenTool,
-  LogIn,
-  LogOut,
-  BadgePlus,
-} from "lucide-react";
+import { Newspaper, Compass, PenTool, LogIn, LogOut, Menu } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar({ user }: { user: User | null }) {
@@ -24,7 +17,7 @@ export function Navbar({ user }: { user: User | null }) {
   const [open, setOpen] = useState(false);
 
   const sheetLinks = [
-    { href: "/", text: "Home", icon: Home },
+    { href: "/", text: "Feed", icon: Newspaper },
     { href: "/board", text: "Explore", icon: Compass },
     { href: "/create", text: "Post", icon: PenTool },
   ];
@@ -64,7 +57,7 @@ export function Navbar({ user }: { user: User | null }) {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="text-primary">
-              <BadgePlus className="h-6 w-6" />
+              <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
@@ -91,7 +84,7 @@ export function Navbar({ user }: { user: User | null }) {
               {loggedIn ? (
                 <Button
                   onClick={handleLogout}
-                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full px-4 py-6 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogOut className="h-6 w-6" />
                   <span>Log Out</span>
@@ -100,7 +93,7 @@ export function Navbar({ user }: { user: User | null }) {
                 <Link
                   href="/login"
                   onClick={() => setOpen(false)}
-                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full p-4 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
+                  className="flex items-center justify-start space-x-4 text-xl font-bold w-full px-4 py-6 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                 >
                   <LogIn className="h-6 w-6" />
                   <span>Log In</span>

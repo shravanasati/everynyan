@@ -9,7 +9,7 @@ export const metadata = {
 
 export default async function VerifyOTP() {
   if (await getAuthUser()) {
-    redirect("/board");
+    redirect("/");
   }
 
   return <OTPPage />

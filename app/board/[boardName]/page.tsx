@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import BoardHeader from "@/components/BoardHeader";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import { Metadata } from "next";
+import { Dock } from "@/components/Dock";
 
 interface BoardProps {
   params: {
@@ -86,6 +87,8 @@ export default async function BoardDetailPage({ params }: BoardProps) {
   return (
     <div className="min-h-screen bg-background">
       <BoardHeader />
+      <Dock />
+
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
           {/* {postItems.map((post, index) => (
