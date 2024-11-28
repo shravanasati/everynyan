@@ -17,6 +17,7 @@ const querySchema = z.strictObject({
 })
 
 // todo refresh cookies
+// todo cache posts
 
 export async function GET(request: NextRequest) {
   try {
