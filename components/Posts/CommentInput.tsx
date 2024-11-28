@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import GifInput from "./GifInput";
 
 interface CommentInputProps {
   onSubmit: (comment: string) => void;
@@ -42,11 +43,11 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
         rows={3}
         className="w-full p-2 border rounded-md focus:outline-none focus:border-2 resize-none"
       />
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <GifInput />
         <Button
           onClick={handleSubmit}
           disabled={!comment.trim() || disableInput}
-          className="w-full sm:w-auto"
         >
           {disableInput ? `Wait ${cooldown}s...` : "Post Comment"}
         </Button>
