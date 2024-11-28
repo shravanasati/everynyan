@@ -12,9 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const EditorComp = dynamic(() => import("@/components/MdEditor"), {
-  ssr: false,
+  ssr: true,
 });
 
 const boards = boardList.map((board) => board.title);
@@ -47,6 +49,7 @@ export function PostCreator() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
   const router = useRouter()
 
   const handleSubmit = async () => {
@@ -67,6 +70,8 @@ export function PostCreator() {
         setError(Object.values(response.errors!)[0][0]);
         return;
       }
+
+      toast({ title: "Post created", description: "Your post has been created successfully" })
 
       // redirect to the newly created post
       router.push(`/post/${response.slug}`);
@@ -150,7 +155,7 @@ export function PostCreator() {
             disabled={loading}
             onClick={handleSubmit}
           >
-            {loading ? "Publishing..." : "Publish Post"}
+            {loading ? <span className="flex items-center"><Loader2 className="size-4 animate-spin mr-1" />Publishing...</span> : "Publish Post"}
           </Button>
         </CardContent>
       </Card>

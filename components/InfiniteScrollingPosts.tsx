@@ -32,6 +32,10 @@ const sortByFields = [
   },
 ];
 
+const compareObjects = (obj1: unknown, obj2: unknown) => {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
+
 export function InfiniteScrollingPosts({
   boardName,
   data,
@@ -41,7 +45,14 @@ export function InfiniteScrollingPosts({
   const [lastDocID, setLastDocID] = useState<string | null>(dataObj.lastDocID);
   const [hasMore, setHasMore] = useState(dataObj.hasMore);
   const [loading, setLoading] = useState(false);
-  const [sortBy, setSortBy] = useState<string>("timestamp");
+  const [sortBy, setSortBy] = useState<string>(dataObj.orderByField);
+  let urlParams = {
+    board: dataObj.boardName,
+    lastDocID: dataObj.lastDocID,
+    orderByField: dataObj.orderByField,
+    limitTo: dataObj.limit
+  };
+
 
   const { toast } = useToast();
   const { ref, inView } = useInView();
@@ -49,12 +60,12 @@ export function InfiniteScrollingPosts({
   const fetchMore = async (reset = false) => {
     if (loading || (!hasMore && !reset)) return;
 
-    console.log("Fetching more posts...", {
-      reset,
-      boardName,
-      lastDocID,
-      sortBy,
-    });
+    // console.log("Fetching more posts...", {
+    //   reset,
+    //   boardName,
+    //   lastDocID,
+    //   sortBy,
+    // });
 
     setLoading(true);
     try {
@@ -89,6 +100,7 @@ export function InfiniteScrollingPosts({
 
       setLastDocID(result.lastDocID);
       setHasMore(result.hasMore);
+      urlParams = { board: result.boardName, lastDocID: result.lastDocID, orderByField: result.orderByField, limitTo: result.limit };
     } catch (error) {
       console.error("Error fetching posts:", error);
       setHasMore(false);
@@ -105,6 +117,7 @@ export function InfiniteScrollingPosts({
   // Infinite scroll
   useEffect(() => {
     if (inView && !loading) {
+      console.log("In view, fetching more posts...");
       fetchMore();
     }
   }, [inView, loading]); // Added loading to dependency array
@@ -112,9 +125,21 @@ export function InfiniteScrollingPosts({
   // New useEffect to handle sort changes
   useEffect(() => {
     // Reset and fetch when sort changes
+    if (sortBy === undefined) return;
+    const newParams = {
+      board: boardName,
+      lastDocID: lastDocID,
+      orderByField: sortBy,
+      limitTo: 10,
+    }
+    if (compareObjects(newParams, urlParams)) {
+      console.log("sort changed, but no need to fetch more")
+      return
+    };
     setPosts([]);
     setLastDocID(null);
     setHasMore(true);
+    console.log("sort changed, fetching more")
     fetchMore(true);
   }, [sortBy]); // Trigger fetch when sortBy changes
 

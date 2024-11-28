@@ -15,6 +15,7 @@ import { useState, useCallback, useMemo } from "react";
 import { Comment as CommentType } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
+import { useToast } from "@/hooks/use-toast";
 import GifInput from "./GifInput";
 
 type ReturnedComment = CommentType & { timestamp: string };
@@ -70,9 +71,8 @@ const SingleComment: React.FC<SingleCommentProps> = ({
     <div className="w-full">
       <Card className="relative w-full border-none" id={comment.id}>
         <div
-          className={`absolute top-0 -left-6 flex items-center justify-center ${
-            comment.parent_id != null ? "block" : "hidden"
-          }`}
+          className={`absolute top-0 -left-6 flex items-center justify-center ${comment.parent_id != null ? "block" : "hidden"
+            }`}
         >
           <Spline
             strokeDasharray="1 3"
@@ -188,6 +188,7 @@ export default function Comments({
 }) {
   const [comments, setComments] = useState<ReturnedComment[]>(initialComments);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const { toast } = useToast()
 
   // Convert flat comments array to nested structure
   const commentTree = useMemo(() => {
@@ -248,6 +249,8 @@ export default function Comments({
       });
 
       if (!resp.success) return;
+
+      toast({ title: "Reply submitted", description: "Your reply has been submitted successfully" })
       setComments((prevComments) => [...prevComments, resp.data!]);
       setReplyingTo(null);
     },
@@ -264,6 +267,7 @@ export default function Comments({
       });
 
       if (!resp.success) return;
+      toast({ title: "Comment submitted", description: "Your comment has been submitted successfully" })
       setComments((prevComments) => [...prevComments, resp.data!]);
     },
     [postID]

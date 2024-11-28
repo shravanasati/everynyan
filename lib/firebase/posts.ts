@@ -7,6 +7,9 @@ export interface PaginatedResult<T> {
   items: T[];
   lastDocID: string | null;
   hasMore: boolean;
+  boardName: string | null;
+  orderByField: string;
+  limit: number;
 }
 
 // todo refactor this to reduce code duplication
@@ -33,6 +36,9 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
     items,
     lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
     hasMore,
+    orderByField,
+    limit: limitTo,
+    boardName: board,
   };
 
   return result
@@ -58,6 +64,9 @@ export async function getPostsFeed(orderByField: string = "timestamp", lastDocID
     items,
     lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
     hasMore,
+    orderByField,
+    limit: limitTo,
+    boardName: null,
   };
 
   return result
