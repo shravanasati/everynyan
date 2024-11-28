@@ -10,12 +10,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-// function GifButton() {
-//   return (
-
-//   );
-// }
-
 function GifInput() {
   return (
     <Sheet>
@@ -41,9 +35,7 @@ function GifInput() {
         <SheetHeader className="mt-6 mb-2">
           <Input placeholder="Seach for GIFs from Tenor" />
         </SheetHeader>
-        <ScrollArea className="h-full w-full rounded-md p-4">
-            {/* !! here we will load gifs from the tenor api and we will display 10 to 20 gifs at max */}
-        </ScrollArea>
+        <ScrollArea className="h-full w-full"></ScrollArea>
       </SheetContent>
     </Sheet>
   );
