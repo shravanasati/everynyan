@@ -16,6 +16,7 @@ import { Comment as CommentType } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
+import GifInput from "./GifInput";
 
 type ReturnedComment = CommentType & { timestamp: string };
 
@@ -142,16 +143,17 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             onChange={(e) => setReplyText(e.target.value)}
             placeholder="Write your reply..."
           />
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={onCancelReply}>
-              Cancel
-            </Button>
+          <div className="flex justify-start space-x-2">
             <Button
               disabled={!replyText.trim() || disableReplyInput}
               onClick={handleSubmitReply}
             >
               {" "}
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
+            </Button>
+            <GifInput />
+            <Button variant="outline" onClick={onCancelReply}>
+              Cancel
             </Button>
           </div>
         </div>

@@ -1,11 +1,16 @@
 import crypto from 'crypto';
 const SECRET_KEY_ENV = process.env.SECRET_KEY
+const SALT_ENV = process.env.SALT
 
 if (!SECRET_KEY_ENV) {
 	throw new Error('SECRET_KEY is not defined in the environment variables');
 }
 
-const SECRET_KEY = crypto.scryptSync(SECRET_KEY_ENV, 'asafawfa', 32)
+if (!SALT_ENV) {
+	throw new Error('SALT is not defined in the environment variables');
+}
+
+const SECRET_KEY = crypto.scryptSync(SECRET_KEY_ENV, SALT_ENV, 32)
 
 
 export function encrypt(text: string) {
