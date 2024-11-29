@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { db } from "@/lib/firebase/app";
+import { hash } from "../crypt";
 
 export type OTPEntry = {
   otp: string;
@@ -9,7 +10,7 @@ export type OTPEntry = {
 export async function saveOTP(email: string, otp: string) {
   const otpRef = db.collection("otp").doc(email)
   await otpRef.set({
-    otp,
+    otp: hash(otp),
     timestamp: Timestamp.now(),
   });
 

@@ -5,7 +5,7 @@ import { getOTP, storeToken } from "@/lib/firebase/firestore"
 import {addSecurityLog} from "@/lib/firebase/security_log"
 // import {deleteOTP} from "@/lib/firebase/firestore"
 import { uniEmailRegex } from "@/lib/utils"
-import { encrypt, newToken } from "@/lib//crypt"
+import { encrypt, hash, newToken } from "@/lib/crypt"
 import { cookies } from "next/headers"
 
 if (!process.env.MODERATOR_EMAILS) {
@@ -34,7 +34,7 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
   if (expirationTime < Date.now()) {
     return { success: false, error: "OTP expired. Please request a new one." }
   }
-  if (otpEntry.otp !== result.data.otp) {
+  if (otpEntry.otp !== hash(result.data.otp)) {
     return { success: false, error: "Invalid OTP" }
   }
 
