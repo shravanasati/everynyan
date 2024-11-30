@@ -13,19 +13,12 @@ import Image from "next/image";
 import { Gifs } from "@/lib/models";
 import { fetchGifs } from "@/lib/actions/fetchGifs";
 import { Loader2 } from "lucide-react";
+import { placeHolderGifs } from "@/public/placeholderGifs";
 
 function GifInput() {
-  // Default GIFs (can be replaced with trending/random GIFs)
-  const defaultGifs: Gifs[] = Array.from({ length: 20 }, () => ({
-    src: "https://media1.tenor.com/m/-tF8v7bEPfEAAAAd/hello-darwisy-hello-everynyan.gif",
-    alt: "Placeholder GIF",
-    height: 500,
-    width: 500,
-  }));
-
   // states
   const [fetchingGif, setFetchingGif] = useState<boolean>(false); // to set loader
-  const [fetchedGifs, setFetchedGifs] = useState<Gifs[]>(defaultGifs); //to set fetched gifs
+  const [fetchedGifs, setFetchedGifs] = useState<Gifs[]>(placeHolderGifs); //to set fetched gifs
   const [query, setQuery] = useState<string>(""); //to handle search query
 
   // query handling with debouncing
