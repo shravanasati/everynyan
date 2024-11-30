@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -9,11 +9,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { Gifs } from "@/lib/models";
 
 function GifInput() {
-  const gifs = Array(9).fill(
-    "https://media1.tenor.com/m/gRcOi64o3oAAAAAd/crunchycat-luna.gif"
-  );
+  const defaultGifs: Gifs[] = Array.from({ length: 12 }, () => ({
+    src: "https://media1.tenor.com/m/QfDCziYEjg0AAAAd/funny-cat.gif",
+    alt: "hello",
+    height: 500,
+    width: 500,
+  }));
+
+  const [fetchedGifs, setfetchedGifs] = useState<Gifs[]>(defaultGifs);
 
   return (
     <Sheet>
@@ -43,8 +49,8 @@ function GifInput() {
           <Input placeholder="Search for GIFs from Tenor" />
         </SheetHeader>
         <ScrollArea className="h-[calc(90vh-80px)] w-full py-3">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2 p-2">
-            {gifs.map((gif, index) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-2">
+            {fetchedGifs.map((gif, index) => (
               <div
                 key={index}
                 className="aspect-square relative overflow-hidden rounded-md"
