@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Sheet,
   SheetContent,
@@ -12,11 +12,10 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Gifs } from "@/lib/models";
 import { fetchGifs } from "@/lib/actions/fetchGifs";
-
-// !! todo implement search of gif with debouncing to conform to the 1 req/s
+import { Loader2 } from "lucide-react";
 
 function GifInput() {
-  // an object with some default gifs, as of now it is same gif
+  // Default GIFs (can be replaced with trending/random GIFs)
   const defaultGifs: Gifs[] = Array.from({ length: 20 }, () => ({
     src: "https://media1.tenor.com/m/-tF8v7bEPfEAAAAd/hello-darwisy-hello-everynyan.gif",
     alt: "Placeholder GIF",
@@ -24,35 +23,47 @@ function GifInput() {
     width: 500,
   }));
 
-  // function to handle query change with debouncing
-  const changeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  };
+  // states
+  const [fetchingGif, setFetchingGif] = useState<boolean>(false); // to set loader
+  const [fetchedGifs, setFetchedGifs] = useState<Gifs[]>(defaultGifs); //to set fetched gifs
+  const [query, setQuery] = useState<string>(""); //to handle search query
 
-  // state to store gifs
-  const [fetchedGifs, setFetchedGifs] = useState<Gifs[]>(defaultGifs);
-  // state for the searchquery
-  const [query, setQuery] = useState<string>("");
+  // query handling with debouncing
+  //eslint-disable-next-line
+  const changeQuery = useCallback(
+    debounce((value: string) => {
+      setQuery(value);
+    }, 1000),
+    []
+  );
 
-  // fetch gifs based on the search, as of now it is fetching on the mount
+  // fetch GIFs based on query
   useEffect(() => {
-    setTimeout(() => {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      if (!query) return;
+      setFetchingGif(true);
+      try {
         const response = await fetchGifs(query);
-        if (response && response.results) {
+        if (response?.results) {
           //eslint-disable-next-line
           const gifs = response.results.map((gif: any) => ({
-            src: gif.media_formats.gif.url,
+            src: gif.media_formats?.gif?.url || "",
             alt: gif.title || "GIF",
-            height: gif.media_formats.gif.dims[1],
-            width: gif.media_formats.gif.dims[0],
+            height: gif.media_formats?.gif?.dims?.[1] || 500,
+            width: gif.media_formats?.gif?.dims?.[0] || 500,
           }));
-          setFetchedGifs(gifs); // update the state to match the query
+          setFetchedGifs(gifs);
+        } else {
+          console.error("Invalid response format");
         }
-      };
+      } catch (error) {
+        console.error("Failed to fetch GIFs:", error);
+      } finally {
+        setFetchingGif(false);
+      }
+    };
 
-      fetchData();
-    }, 1000);
+    fetchData();
   }, [query]);
 
   return (
@@ -82,31 +93,50 @@ function GifInput() {
         <SheetHeader className="mt-6 mb-2">
           <Input
             placeholder="Search for GIFs from Tenor"
-            value={query}
-            onChange={(e) => changeQuery(e)}
+            onChange={(e) => changeQuery(e.target.value)}
           />
         </SheetHeader>
         <ScrollArea className="h-[calc(90vh-80px)] w-full py-3">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-2">
-            {fetchedGifs.map((gif, index) => (
-              <div
-                key={index}
-                className="aspect-square relative overflow-hidden rounded-md"
-              >
-                <Image
-                  alt={gif.alt}
-                  src={gif.src}
-                  layout="fill"
-                  objectFit="cover"
-                  unoptimized
-                />
+          <div className="h-full w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-2">
+            {fetchingGif ? (
+              <div className="flex items-center justify-center w-screen h-[calc(90vh-80px)] overflow-hidden">
+                <div className="flex items-center space-x-4">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-lg font-medium text-primary">
+                    Fetching GIFs
+                  </p>
+                </div>
               </div>
-            ))}
+            ) : (
+              fetchedGifs.map((gif, index) => (
+                <div
+                  key={index}
+                  className="aspect-square relative overflow-hidden rounded-md"
+                >
+                  <Image
+                    alt={gif.alt}
+                    src={gif.src}
+                    layout="fill"
+                    objectFit="cover"
+                    unoptimized
+                  />
+                </div>
+              ))
+            )}
           </div>
         </ScrollArea>
       </SheetContent>
     </Sheet>
   );
+}
+
+// a function to debounce (thanks claude)
+function debounce(func: (value: string) => void, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return (value: string) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(value), wait);
+  };
 }
 
 export default GifInput;
