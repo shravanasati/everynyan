@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,16 +11,49 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Gifs } from "@/lib/models";
+import { fetchGifs } from "@/lib/actions/fetchGifs";
+
+// !! todo implement search of gif with debouncing to conform to the 1 req/s
 
 function GifInput() {
-  const defaultGifs: Gifs[] = Array.from({ length: 12 }, () => ({
-    src: "https://media1.tenor.com/m/QfDCziYEjg0AAAAd/funny-cat.gif",
-    alt: "hello",
+  // an object with some default gifs, as of now it is same gif
+  const defaultGifs: Gifs[] = Array.from({ length: 20 }, () => ({
+    src: "https://media1.tenor.com/m/-tF8v7bEPfEAAAAd/hello-darwisy-hello-everynyan.gif",
+    alt: "Placeholder GIF",
     height: 500,
     width: 500,
   }));
 
-  const [fetchedGifs, setfetchedGifs] = useState<Gifs[]>(defaultGifs);
+  // function to handle query change with debouncing
+  const changeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  // state to store gifs
+  const [fetchedGifs, setFetchedGifs] = useState<Gifs[]>(defaultGifs);
+  // state for the searchquery
+  const [query, setQuery] = useState<string>("");
+
+  // fetch gifs based on the search, as of now it is fetching on the mount
+  useEffect(() => {
+    setTimeout(() => {
+      const fetchData = async () => {
+        const response = await fetchGifs(query);
+        if (response && response.results) {
+          //eslint-disable-next-line
+          const gifs = response.results.map((gif: any) => ({
+            src: gif.media_formats.gif.url,
+            alt: gif.title || "GIF",
+            height: gif.media_formats.gif.dims[1],
+            width: gif.media_formats.gif.dims[0],
+          }));
+          setFetchedGifs(gifs); // update the state to match the query
+        }
+      };
+
+      fetchData();
+    }, 1000);
+  }, [query]);
 
   return (
     <Sheet>
@@ -46,7 +80,11 @@ function GifInput() {
         side="bottom"
       >
         <SheetHeader className="mt-6 mb-2">
-          <Input placeholder="Search for GIFs from Tenor" />
+          <Input
+            placeholder="Search for GIFs from Tenor"
+            value={query}
+            onChange={(e) => changeQuery(e)}
+          />
         </SheetHeader>
         <ScrollArea className="h-[calc(90vh-80px)] w-full py-3">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-2">
@@ -56,8 +94,8 @@ function GifInput() {
                 className="aspect-square relative overflow-hidden rounded-md"
               >
                 <Image
-                  alt={`GIF ${index + 1} from Tenor`}
-                  src={gif}
+                  alt={gif.alt}
+                  src={gif.src}
                   layout="fill"
                   objectFit="cover"
                   unoptimized
