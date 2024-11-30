@@ -3,7 +3,7 @@ import { db } from "./app";
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { generateCommentID } from "../utils";
 
-export async function addComment(postID: string, commentBody: string, level: number, parentID: string | null) {
+export async function addComment(userID: string, postID: string, commentBody: string, level: number, parentID: string | null) {
   try {
     const batch = db.batch()
     const commentID = generateCommentID()
@@ -14,7 +14,8 @@ export async function addComment(postID: string, commentBody: string, level: num
       upvotes: 0,
       downvotes: 0,
       parent_id: parentID,
-      moderation_status: "pending"
+      moderation_status: "pending",
+      author: userID
     }
 
     const postRef = db.collection("posts").doc(postID)
@@ -90,4 +91,24 @@ export async function updateCommentModerationStatus(postID: string, commentID: s
     console.error("error in update comment moderation status", e)
     return false
   }
+}
+
+export async function getParentComments(postID: string, parentID: string | null) {
+  const commentsRef = db.collection("posts").
+    doc(postID).
+    collection("comments")
+
+  let currentCommentID = parentID
+  const authors: DBComment[] = []
+  while (currentCommentID) {
+    const commentSnap = await commentsRef.doc(currentCommentID).get()
+    const comment = commentSnap.data() as DBComment
+    if (comment.author) {
+      // only include comments that have an author
+      authors.push(comment)
+    }
+    currentCommentID = comment.parent_id
+  }
+
+  return authors
 }

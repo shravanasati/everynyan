@@ -32,10 +32,11 @@ export async function deleteOTP(email: string) {
   await otpRef.delete();
 }
 
-export async function storeToken(token: string, isAdmin: boolean) {
+export async function storeToken(userID: string, token: string, isAdmin: boolean) {
   const tokenRef = db.collection("tokens").doc(token);
   await tokenRef.set({
-    token,
+    userID: userID,
+    token: token,
     role: isAdmin ? "admin" : "user",
     timestamp: Timestamp.now(),
   });

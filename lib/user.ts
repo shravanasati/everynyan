@@ -2,12 +2,15 @@
 
 import { cookies } from "next/headers"
 import { decrypt } from "./crypt"
-import { getToken } from "./firebase/firestore"
+import { deleteToken, getToken } from "./firebase/firestore"
 import { cache } from "react"
+import { Timestamp } from "firebase-admin/firestore"
+import { TOKEN_EXPIRY_DURATION } from "./utils"
 
 type Role = "admin" | "user"
 
 export type User = {
+	userID: string;
 	token: string | undefined;
 	role: Role | undefined;
 }
@@ -31,7 +34,15 @@ export const getAuthUser = cache(async () => {
 			return null
 		}
 
-		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role) {
+		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role || dbToken.userID !== tokenObj.userID) {
+      deleteToken(tokenObj.token).catch(console.error)
+			return null
+		}
+
+		const now = Timestamp.now()
+		const expiryTime = dbToken.timestamp.seconds + TOKEN_EXPIRY_DURATION
+		if (now.seconds > expiryTime) {
+      deleteToken(tokenObj.token).catch(console.error)
 			return null
 		}
 

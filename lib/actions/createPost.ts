@@ -14,7 +14,8 @@ const createPostSchema = z.strictObject({
 })
 
 export async function createPost(values: z.infer<typeof createPostSchema>) {
-  if (!await getAuthUser()) {
+  const user = await getAuthUser()
+  if (!user) {
     return { success: false, errors: { server: "You must be logged in to create a post" } }
   }
 
@@ -23,12 +24,10 @@ export async function createPost(values: z.infer<typeof createPostSchema>) {
     return { success: false, errors: result.error.flatten().fieldErrors }
   }
 
-
   try {
     const data = result.data
-    const postID = await savePost(data.title, data.body, data.board)
+    const postID = await savePost(user.userID, data.title, data.body, data.board)
     return { success: true, slug: getPostSlug(postID, data.title) }
-
   } catch (error) {
     console.error(error)
     return { success: false, errors: { server: "An error occurred. Please try again later." } }
