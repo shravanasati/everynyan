@@ -2,11 +2,13 @@ import { getParentComments } from "./firebase/comments";
 import { saveNotifications } from "./firebase/notifications";
 import { getPostByID } from "./firebase/posts";
 import { Comment as CommentType } from "./models";
+import { getPostSlug } from "./utils";
 
 type NotificationRequest = {
   user: string,
   title: string,
   description: string,
+  link: string,
 }
 
 async function sendNotificationRequest(notifs: NotificationRequest[]) {
@@ -49,6 +51,7 @@ async function getNotifications(postID: string, newComment: CommentType): Promis
       user: post.author,
       title: `New comment on your post '${trimString(post.title, 20)}'`,
       description: trimString(newComment.body, 40),
+      link: `/post/${getPostSlug(post.id, post.title)}#${newComment.id}`,
     })
   }
 
@@ -67,6 +70,7 @@ async function getNotifications(postID: string, newComment: CommentType): Promis
         user: parentComment.author!, // we know it's not null because we checked it in the getParentComments function
         title: title,
         description: description,
+        link: `/post/${getPostSlug(post.id, post.title)}#${newComment.id}`,
       })
     })
   }
@@ -87,6 +91,7 @@ export async function createUserNotification(postID: string, newComment: Comment
     user: notification.user,
     title: notification.title,
     description: notification.description,
+    link: notification.link,
     status: "unread",
   }))
 

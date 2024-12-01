@@ -6,6 +6,7 @@ export type NotificationType = {
   title: string,
   description: string,
   status: "unread" | "read",
+  link: string,
 }
 
 type DBNotificationType = NotificationType & {
@@ -42,4 +43,16 @@ export async function getNotificationsByUser(userID:string) {
     notifications.push(notification.data() as DBNotificationType);
   });
   return notifications;
+}
+
+export async function markAllNotificationsRead(userID:string) {
+  const notificationsRef = db.collection("notifications")
+  const userNotifs = notificationsRef.where("user", "==", userID);
+  const userNotifsSnap = await userNotifs.get();
+  const batch = db.batch();
+  userNotifsSnap.forEach((doc) => {
+    batch.update(doc.ref, { status: "read" });
+  });
+
+  await batch.commit();
 }
