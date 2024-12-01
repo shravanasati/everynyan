@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase-admin/firestore";
 import { db } from "./app";
 
-type NotificationType = {
+export type NotificationType = {
   user: string,
   title: string,
   description: string,
@@ -23,6 +23,15 @@ export async function saveNotifications(notifications: NotificationType[]) {
     });
   });
   await batch.commit();
+}
+
+export async function getUnreadNotificationCountByUser(userID:string) {
+  const unreadCount = await db.collection("notifications").
+    where("user", "==", userID).
+    where("status", "==", "unread").
+    count().get()
+
+  return unreadCount.data().count
 }
 
 export async function getNotificationsByUser(userID:string) {
