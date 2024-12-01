@@ -11,6 +11,7 @@ export type Post = {
 	body: string;
 	comment_count: number;
 	moderation_status: ModerationStatus;
+	author?: string;
 };
 
 export type Comment = {
@@ -21,6 +22,7 @@ export type Comment = {
 	parent_id: string | null;
 	level: number;
 	moderation_status: ModerationStatus;
+	author?: string;
 };
 
 export type DBComment = Comment & {

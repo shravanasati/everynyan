@@ -1,10 +1,22 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useToast } from './use-toast';
+// import { Button } from "@/components/ui/button"
+// import { ExternalLink } from 'lucide-react';
+// import Link from 'next/link';
 
 export type NotificationType = {
   title: string;
   description: string;
+  link: string,
 };
+
+// function ViewNotification({ link }: { link: string }) {
+//   return (
+//     <Link href={link} target="_blank" >
+//       <Button variant="outline" size="sm" className="gap-1" > View < ExternalLink className="size-5" /> </Button>
+//     </Link>
+//   )
+// }
 
 export function useWebSocket(url: string) {
   const [isConnected, setIsConnected] = useState(false);
@@ -31,7 +43,11 @@ export function useWebSocket(url: string) {
       try {
         const data: NotificationType = JSON.parse(event.data)
         console.log("Receieved notification:", data)
-        toast({ title: data.title, description: data.description })
+        toast({
+          title: data.title,
+          description: data.description,
+          // action: <ViewNotification link={data.link} />,
+        })
       }
       catch (e) {
         console.error("Error parsing JSON data", e)
