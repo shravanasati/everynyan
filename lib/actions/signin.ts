@@ -61,8 +61,9 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
   cookies().set("session", encrypt(JSON.stringify(tokenObj)), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "lax",
     maxAge: TOKEN_EXPIRY_DURATION, // 2 weeks
+    domain: process.env.NODE_ENV === "production" ? "everynyan.tech" : undefined,
   })
 
   // await deleteOTP(result.data.email)

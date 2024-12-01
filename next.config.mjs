@@ -6,10 +6,12 @@ const withPWA = nextPwa({
   disable: process.env.NODE_ENV === "development", // Disable SW in dev mode by default
 });
 
-const notificationsServerAddress = process.env.NEXT_PUBLIC_NOTIFICATIONS_SERVER_ADDRESS || ""; 
+let notificationsServerAddress = process.env.NEXT_PUBLIC_NOTIFICATIONS_SERVER_ADDRESS || ""; 
 if (!notificationsServerAddress) {
   console.warn("NOTIFICATIONS_SERVER_ADDRESS environment variable is not set. Notifications will not work.");
 }
+
+notificationsServerAddress = "https://" + notificationsServerAddress.split("/").at(-1)
 
 const nextConfig = {
   reactStrictMode: true, // Other Next.js settings
