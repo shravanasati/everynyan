@@ -82,17 +82,32 @@ async function getNotifications(postID: string, newComment: CommentType): Promis
 }
 
 export async function createUserNotification(postID: string, newComment: CommentType) {
-  const notifications = await getNotifications(postID, newComment)
-  if (notifications.length === 0) {
-    return
-  }
-  const dbNotifications: (NotificationRequest & { status: "read" | "unread" })[] = notifications.map((notification) => ({
-    user: notification.user,
-    title: notification.title,
-    description: notification.description,
-    link: notification.link,
-    status: "unread",
-  }))
+  try {
+    const notifications = await getNotifications(postID, newComment)
+    if (notifications.length === 0) {
+      return
+    }
 
-  await Promise.all([sendNotificationRequest(notifications), saveNotifications(dbNotifications)])
+    const dbNotifications: (NotificationRequest & { status: "read" | "unread" })[] = 
+      notifications.map((notification) => ({
+        user: notification.user,
+        title: notification.title,
+        description: notification.description,
+        link: notification.link,
+        status: "unread",
+      }))
+
+    const results = await Promise.allSettled([
+      sendNotificationRequest(notifications), 
+      saveNotifications(dbNotifications)
+    ])
+
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        console.error(`Operation ${index === 0 ? 'sendNotificationRequest' : 'saveNotifications'} failed:`, result.reason)
+      }
+    })
+  } catch (error) {
+    console.error('Error in createUserNotification:', error)
+  }
 }
