@@ -6,8 +6,7 @@ import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@next/third-parties/google"
-import Script from "next/script";
-import { setupNotificationWebsocket } from "@/lib/notification";
+import { InAppNotifications } from "@/components/InAppNotifications";
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -49,10 +48,8 @@ export default async function RootLayout({
         {children}
         <Toaster />
         <Footer />
+        <InAppNotifications />
       </body>
-      <Script id="notifications-websocket" > 
-        {"setupNotificationWebsocket=" + setupNotificationWebsocket.toString() + ";setupNotificationWebsocket();"}
-      </Script>
       {
         process.env.NODE_ENV === "production" &&
         <GoogleAnalytics gaId="G-3XCDLX2W7Z" />
