@@ -22,6 +22,7 @@ export function useWebSocket(url: string) {
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const { toast } = useToast()
+  const heartbeat = useRef<NodeJS.Timeout>()
 
   const connect = useCallback(() => {
     wsRef.current = new WebSocket(url);
@@ -32,15 +33,29 @@ export function useWebSocket(url: string) {
       window.addEventListener("beforeunload", () => {
         wsRef.current?.close();
       })
+
+      heartbeat.current = setInterval(() => {
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+          wsRef.current.send("__ping__")
+        }
+      }, 20000)
     };
 
     wsRef.current.onclose = (event) => {
       console.log("Disconnected from the notifications server:", event.reason)
       setIsConnected(false);
+      if (heartbeat.current) {
+        clearInterval(heartbeat.current)
+      }
+      setTimeout(connect, 2000) // reconnect after 2s
     };
 
     wsRef.current.onmessage = (event) => {
       try {
+        if (event.data == "__pong__") {
+          console.log("heartbeat received")
+          return
+        }
         const data: NotificationType = JSON.parse(event.data)
         console.log("Receieved notification:", data)
         toast({
