@@ -14,8 +14,7 @@ type NotificationRequest = {
 async function sendNotificationRequest(notifs: NotificationRequest[]) {
   const payload = JSON.stringify(notifs)
 
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-  const url = `${protocol}://${process.env.NEXT_PUBLIC_NOTIFICATIONS_SERVER_ADDRESS}/send`
+  const url = `${process.env.NOTIFICATIONS_PUSH_ADDRESS}/send`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
