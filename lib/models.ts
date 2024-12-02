@@ -28,3 +28,10 @@ export type Comment = {
 export type DBComment = Comment & {
 	timestamp: Timestamp;
 };
+
+export type Gifs = {
+	src: string,
+	alt: string,
+	height: number,
+	width: number
+}
