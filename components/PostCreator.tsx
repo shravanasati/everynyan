@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import { boardList } from "@/lib/boards";
 import { createPost } from "@/lib/actions/createPost";
@@ -51,6 +51,7 @@ export function PostCreator() {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast()
   const router = useRouter()
+  const titleRef = useRef<HTMLInputElement | null>(null)
 
   const handleSubmit = async () => {
     try {
@@ -72,6 +73,9 @@ export function PostCreator() {
       }
 
       toast({ title: "Post created", description: "Your post has been created successfully" })
+      if (titleRef.current) {
+        titleRef.current.value = ""
+      }
 
       // redirect to the newly created post
       router.push(`/post/${response.slug}`);
@@ -129,6 +133,7 @@ export function PostCreator() {
                 setFormState((prev) => ({ ...prev, title: e.target.value }))
               }
               className="w-full"
+              ref={titleRef}
             />
           </div>
           <div className="space-y-2">
