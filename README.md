@@ -14,26 +14,28 @@ git clone https://github.com/shravanasati/everynyan.git
 2. Create a `.env.local` file in the project root.
 
 ```
-SECRET_KEY=
-RESEND_API_KEY=
-
-FIREBASE_STORAGE_BUCKET=
-FIREBASE_PROJECT_ID=
-FIREBASE_PRIVATE_KEY_ID=
-FIREBASE_PRIVATE_KEY=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_CLIENT_ID=
-FIREBASE_AUTH_URI=
-FIREBASE_TOKEN_URI=
-FIREBASE_AUTH_PROVIDER_X509_CERT_URL=
-FIREBASE_CLIENT_X509_CERT_URL=
-FIREBASE_UNIVERSE_DOMAIN=
-
-MODERATOR_EMAILS=
-DISCORD_WEBHOOK_URL=
-
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=
-TURNSTILE_SECRET_KEY=
+SECRET_KEY
+RESEND_API_KEY
+DISCORD_WEBHOOK_URL
+FIREBASE_STORAGE_BUCKET
+FIREBASE_PROJECT_ID
+FIREBASE_PRIVATE_KEY_ID
+FIREBASE_PRIVATE_KEY
+FIREBASE_CLIENT_EMAIL
+FIREBASE_CLIENT_ID
+FIREBASE_AUTH_URI
+FIREBASE_TOKEN_URI
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL
+FIREBASE_CLIENT_X509_CERT_URL
+FIREBASE_UNIVERSE_DOMAIN
+TENOR_API_KEY
+MODERATOR_EMAILS
+SALT
+NEXT_PUBLIC_TURNSTILE_SITE_KEY
+TURNSTILE_SECRET_KEY
+NEXT_PUBLIC_BASE_URL
+NEXT_PUBLIC_NOTIFICATIONS_SERVER_ADDRESS
+NOTIFICATIONS_API_KEY
 ```
 
 The secret key is used to encrypt the cookies on user's browser. You can create one using the following command.
@@ -41,10 +43,14 @@ The secret key is used to encrypt the cookies on user's browser. You can create 
 ```sh
 python -c "import secrets;print(secrets.token_hex(32))"
 ```
-
 Moderator emails is a comma-separated list of emails of users who have moderation privileges.
 
 Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
+
+Create a discord server and create a channel and obtain webhook url from Channel Setting > Integrations
+
+Sign in at [Tenor](https://tenor.com) to obtain a Tenor API Key
+  
 
 You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore. Then go to the Project Settings > Service Accounts > Generate a private key.
 
