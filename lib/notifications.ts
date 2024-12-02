@@ -19,6 +19,7 @@ async function sendNotificationRequest(notifs: NotificationRequest[]) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      "Authorization": "Bearer " + process.env.NOTIFICATIONS_API_KEY,
     },
     body: payload,
   })
