@@ -4,7 +4,7 @@ import { z } from "zod"
 import { getOTP, storeToken } from "@/lib/firebase/firestore"
 import {addSecurityLog} from "@/lib/firebase/security_log"
 // import {deleteOTP} from "@/lib/firebase/firestore"
-import { uniEmailRegex } from "@/lib/utils"
+import { uniEmailRegex, TOKEN_EXPIRY_DURATION } from "@/lib/utils"
 import { encrypt, hash, newToken } from "@/lib/crypt"
 import { cookies } from "next/headers"
 
@@ -38,15 +38,17 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
     return { success: false, error: "Invalid OTP" }
   }
 
+  const userID = hash(result.data.email)
   const token = newToken()
   const isAdmin = moderatorEmails.includes(result.data.email)
   const tokenObj = {
+    "userID": userID,
     "token": token,
     "role": isAdmin ? "admin" : "user",
   }
 
   // store token in firebase
-  await storeToken(token, isAdmin)
+  await storeToken(userID, token, isAdmin)
 
   if (isAdmin) {
     await addSecurityLog({
@@ -59,8 +61,9 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
   cookies().set("session", encrypt(JSON.stringify(tokenObj)), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24 * 7 * 2, // 2 weeks
+    sameSite: "lax",
+    maxAge: TOKEN_EXPIRY_DURATION, // 2 weeks
+    domain: process.env.NODE_ENV === "production" ? "everynyan.tech" : undefined,
   })
 
   // await deleteOTP(result.data.email)

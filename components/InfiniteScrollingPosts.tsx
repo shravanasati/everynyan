@@ -117,7 +117,6 @@ export function InfiniteScrollingPosts({
   // Infinite scroll
   useEffect(() => {
     if (inView && !loading) {
-      console.log("In view, fetching more posts...");
       fetchMore();
     }
   }, [inView, loading]); // Added loading to dependency array
@@ -133,13 +132,11 @@ export function InfiniteScrollingPosts({
       limitTo: 10,
     }
     if (compareObjects(newParams, urlParams)) {
-      console.log("sort changed, but no need to fetch more")
       return
     };
     setPosts([]);
     setLastDocID(null);
     setHasMore(true);
-    console.log("sort changed, fetching more")
     fetchMore(true);
   }, [sortBy]); // Trigger fetch when sortBy changes
 

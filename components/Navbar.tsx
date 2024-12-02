@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import SvgLogo from "@/components/SvgLogo";
 import { User } from "@/lib/user";
 import { logout } from "@/lib/actions/logout";
-import { Newspaper, Compass, PenTool, LogIn, LogOut, Menu } from "lucide-react";
+import { Newspaper, Compass, PenTool, LogIn, LogOut, Menu, Bell } from "lucide-react";
 import { useState } from "react";
 
 export function Navbar({ user }: { user: User | null }) {
@@ -20,6 +20,7 @@ export function Navbar({ user }: { user: User | null }) {
     { href: "/", text: "Feed", icon: Newspaper },
     { href: "/board", text: "Explore", icon: Compass },
     { href: "/create", text: "Post", icon: PenTool },
+    { href: "/notifications", text: "Notifications", icon: Bell },
   ];
 
   const handleLogout = async () => {

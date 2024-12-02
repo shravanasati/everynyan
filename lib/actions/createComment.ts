@@ -5,6 +5,7 @@ import { getAuthUser } from "@/lib/user"
 import { addComment } from "@/lib/firebase/comments"
 import { convertTimestamp } from "../utils"
 import { Comment } from "../models"
+import { createUserNotification } from "../notifications"
 
 const createCommentSchema = z.strictObject({
   postID: z.string().min(6, "Invalid post ID").max(6, "Invalid post ID"),
@@ -14,7 +15,8 @@ const createCommentSchema = z.strictObject({
 })
 
 export async function createComment(values: z.infer<typeof createCommentSchema>) {
-  if (!await getAuthUser()) {
+  const user = await getAuthUser()
+  if (!user) {
     return {
       success: false, errors: {
         server: "You must be logged in to post a comment"
@@ -34,12 +36,14 @@ export async function createComment(values: z.infer<typeof createCommentSchema>)
   const data = result.data
 
   try {
-    const newComment = await addComment(data.postID, data.body, data.level, data.parentID)
+    const newComment = await addComment(user.userID, data.postID, data.body, data.level, data.parentID)
     if (!newComment) {
       return { success: false, errors: { server: "An error occurred. Please try again later." } }
     }
     const returnedComment = newComment as unknown as Comment & { timestamp: string }
     returnedComment.timestamp = convertTimestamp(newComment.timestamp)
+
+    createUserNotification(data.postID, newComment).catch(console.error)
     return { success: true, data: returnedComment }
   } catch (e) {
     console.error(e)
