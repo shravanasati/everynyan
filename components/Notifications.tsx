@@ -16,7 +16,7 @@ export function Notifications({ notifs }: NotificationsProps) {
     <>
       <Dock />
       <div className="h-screen flex flex-col bg-background p-4 sm:p-6 md:p-8">
-        <div className="bg-primary text-primary-foreground px-6 py-4 flex justify-center rounded-t-lg">
+        <div className="bg-primary/90 text-primary-foreground px-6 py-4 flex justify-center rounded-t-lg">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold">
             Notifications
           </h2>
@@ -39,10 +39,10 @@ export function Notifications({ notifs }: NotificationsProps) {
                     <Link href={notif.link} className="block px-6 py-4">
                       <div className="flex items-center space-x-4">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-primary truncate">
+                          <p className="text-sm font-medium text-primary line-clamp-1">
                             {notif.title}
                           </p>
-                          <p className="text-sm text-primary/80 truncate">
+                          <p className="text-sm text-primary/80 line-clamp-2">
                             {notif.description}
                           </p>
                           <p className="text-xs text-primary/60 mt-1">
