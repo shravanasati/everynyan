@@ -41,7 +41,7 @@ export function Navbar({ user }: { user: User | null }) {
       <div className="flex items-center space-x-4">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-primary">
+            <Button variant="ghost" size="icon" className="text-primaryi hover:bg-primary/40">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>

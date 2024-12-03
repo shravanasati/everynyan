@@ -1,6 +1,6 @@
 function LoadingPost() {
   return (
-    <div className="w-full min-h-[12rem] my-2 rounded-sm shadow-md bg-card">
+    <div className="w-full min-h-[12rem] my-2 rounded-sm shadow-md bg-primary/5">
       <div className="p-3 sm:p-4 border-border">
         <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-start sm:space-y-0 sm:space-x-4">
           <div className="h-6 w-3/4 sm:w-2/3 bg-muted animate-pulse rounded"></div>

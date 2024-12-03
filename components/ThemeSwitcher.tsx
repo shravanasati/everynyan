@@ -38,29 +38,32 @@ export default function ThemeSwitcher() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
+        <div
           className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-primary/15 hover:border-primary transition-colors duration-200 hover:text-primary text-primary/80"
           aria-label="Open theme switcher"
         >
           <Palette className="size-5 hover:text-primary" />
-        </button>
+        </div>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="bg-[#000000] backdrop-blur-sm">
         <DialogHeader>
           <DialogTitle>Select a Theme</DialogTitle>
         </DialogHeader>
         <Select value={theme} onValueChange={setTheme}>
           <SelectTrigger className="w-48">
-            <SelectValue>{formatThemeName(theme)}</SelectValue>
+            <SelectValue >
+              {formatThemeName(theme)}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {themes.map((themeOption) => (
-              <SelectItem key={themeOption} value={themeOption}>
+              <SelectItem key={themeOption} value={themeOption} className="focus:bg-primary/50">
                 {formatThemeName(themeOption)}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
+
       </DialogContent>
     </Dialog>
   );
