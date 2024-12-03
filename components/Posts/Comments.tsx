@@ -69,10 +69,14 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 
   return (
     <div className="w-full">
-      <Card className="relative w-full border-none" id={comment.id}>
+      <Card
+        className="relative w-full border-none bg-primary/[0.0225]"
+        id={comment.id}
+      >
         <div
-          className={`absolute top-0 -left-6 flex items-center justify-center ${comment.parent_id != null ? "block" : "hidden"
-            }`}
+          className={`absolute top-0 -left-6 flex items-center justify-center ${
+            comment.parent_id != null ? "block" : "hidden"
+          }`}
         >
           <Spline
             strokeDasharray="1 3"
@@ -115,7 +119,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-muted-foreground hover:text-primary w-max flex items-center justify-center"
+                className="text-muted-foreground hover:text-primary w-max flex items-center justify-center hover:bg-primary/10"
                 onClick={() => onReply(comment.id)}
               >
                 <MessageCircle size={18} className="mr-1" />
@@ -136,13 +140,15 @@ const SingleComment: React.FC<SingleCommentProps> = ({
 
       {isReplying && (
         <div className="mt-2 space-y-2 mb-4">
-          <textarea
-            className="w-full bg-secondary p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            rows={3}
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Write your reply..."
-          />
+          <div className="p-1">
+            <textarea
+              className="w-full bg-primary/[0.07] p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              rows={3}
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write your reply..."
+            />
+          </div>
           <div className="flex justify-start space-x-2">
             <Button
               disabled={!replyText.trim() || disableReplyInput}
@@ -152,7 +158,11 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
             </Button>
             <GifInput />
-            <Button variant="outline" onClick={onCancelReply}>
+            <Button
+              variant="outline"
+              onClick={onCancelReply}
+              className="hover:bg-primary/5"
+            >
               Cancel
             </Button>
           </div>
@@ -188,7 +198,7 @@ export default function Comments({
 }) {
   const [comments, setComments] = useState<ReturnedComment[]>(initialComments);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   // Convert flat comments array to nested structure
   const commentTree = useMemo(() => {
@@ -250,7 +260,10 @@ export default function Comments({
 
       if (!resp.success) return;
 
-      toast({ title: "Reply submitted", description: "Your reply has been submitted successfully" })
+      toast({
+        title: "Reply submitted",
+        description: "Your reply has been submitted successfully",
+      });
       setComments((prevComments) => [...prevComments, resp.data!]);
       setReplyingTo(null);
     },
@@ -267,7 +280,10 @@ export default function Comments({
       });
 
       if (!resp.success) return;
-      toast({ title: "Comment submitted", description: "Your comment has been submitted successfully" })
+      toast({
+        title: "Comment submitted",
+        description: "Your comment has been submitted successfully",
+      });
       setComments((prevComments) => [...prevComments, resp.data!]);
     },
     [postID]

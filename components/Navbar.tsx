@@ -34,30 +34,14 @@ export function Navbar({ user }: { user: User | null }) {
       {/* logo */}
       <Link className="flex items-center space-x-2" href="/">
         <SvgLogo />
-        <span className="text-2xl font-bold">EveryNyan</span>
+        <span className="text-2xl font-bold hover:text-primary/90">EveryNyan</span>
       </Link>
-
-      {/* <div className="hidden md:flex items-center justify-center space-x-8">
-        {sheetLinks.map((link) => (
-          <Link
-            key={link.text}
-            href={link.href}
-            className={`text-lg font-semibold px-4 py-2 transition-colors duration-200 rounded-md ${
-              pathname === link.href
-                ? "text-primary hover:text-primary"
-                : "text-foreground hover:text-primary/90"
-            }`}
-          >
-            {link.text}
-          </Link>
-        ))}
-      </div> */}
 
       {/* Buttons and sheet opener */}
       <div className="flex items-center space-x-4">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-primary">
+            <Button variant="ghost" size="icon" className="text-primaryi hover:bg-primary/40">
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>

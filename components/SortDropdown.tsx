@@ -19,7 +19,7 @@ export function SortDropdown({ options, value, onValueChange }: SortDropdownProp
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+          <SelectItem key={option.value} value={option.value} className="focus:bg-primary/50">
             {option.title}
           </SelectItem>
         ))}

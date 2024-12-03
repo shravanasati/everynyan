@@ -5,8 +5,9 @@ import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
-import { GoogleAnalytics } from "@next/third-parties/google"
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { InAppNotifications } from "@/components/InAppNotifications";
+import { ThemeProvider } from "@/lib/ThemeContext";
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -43,17 +44,18 @@ export default async function RootLayout({
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="font-obv antialiased">
-        <Navbar user={user} />
-        {children}
-        <Toaster />
-        <Footer />
-        <InAppNotifications />
-      </body>
-      {
-        process.env.NODE_ENV === "production" &&
+      <ThemeProvider>
+        <body className="font-obv antialiased">
+          <Navbar user={user} />
+          {children}
+          <Toaster />
+          <Footer />
+          <InAppNotifications />
+        </body>
+      </ThemeProvider>
+      {process.env.NODE_ENV === "production" && (
         <GoogleAnalytics gaId="G-3XCDLX2W7Z" />
-      }
+      )}
     </html>
   );
 }

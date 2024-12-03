@@ -2,6 +2,7 @@ import { getAuthUser } from "@/lib/user";
 import PostView from "@/components/Posts/PostView/PostView";
 import { Unauthorized } from "@/components/Unauthorized";
 import { notFound } from "next/navigation";
+import { Dock } from "@/components/Dock";
 
 interface PostPageProps {
   params: {
@@ -16,13 +17,18 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!user) {
     return <Unauthorized />;
   }
-  const isAdmin = user.role === "admin"
+  const isAdmin = user.role === "admin";
 
-  const slug = params.postSlug
+  const slug = params.postSlug;
   if (slug.length < 6) {
-    return notFound()
+    return notFound();
   }
 
-  const postID = slug.substring(slug.length - 6)
-  return <PostView isAdmin={isAdmin} postID = {postID} />;
+  const postID = slug.substring(slug.length - 6);
+  return (
+    <>
+      <PostView isAdmin={isAdmin} postID={postID} />
+      <Dock />
+    </>
+  );
 }

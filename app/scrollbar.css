@@ -1,12 +1,13 @@
+@import url("./globals.css");
 
 .everynyan-scroll {
   --sb-track-color: #090909c4;
-  --sb-thumb-color: #cba50b;
+  --sb-thumb-color: var(--primary);
   --sb-size: 1px;
 }
 
 .everynyan-scroll::-webkit-scrollbar {
-  width: var(--sb-size)
+  width: var(--sb-size);
 }
 
 .everynyan-scroll::-webkit-scrollbar-track {
@@ -17,12 +18,10 @@
 .everynyan-scroll::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
   border-radius: 3px;
-  
 }
 
 @supports not selector(::-webkit-scrollbar) {
   .everynyan-scroll {
-    scrollbar-color: var(--sb-thumb-color)
-                     var(--sb-track-color);
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }

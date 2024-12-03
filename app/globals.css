@@ -40,6 +40,69 @@
   --radius: 0.5rem;
 }
 
+.theme-solar {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 40.95 80.43% 63.92%;
+  --primary-foreground: 40 45.45% 6.47%;
+  --border: 41.38 44.62% 12.75%;
+  --radius: 0.5rem;
+}
+
+.theme-azure {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 223.77 100% 76.08%;
+  --primary-foreground: 220 31.58% 7.45%;
+  --border: 223.77 100% 76.08% / 0.55;
+  --radius: 0.5rem;
+}
+
+.theme-cosmo {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 277.14 89.09% 67.65%;
+  --primary-foreground: 276 42.86% 6.86%;
+  --border: 277.14 89.09% 67.65%/0.55;
+  --radius: 0.5rem;
+}
+
+.theme-flare {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 29.5 100% 64.51%;
+  --primary-foreground: 30 56.25% 6.27%;
+  --border: 29.5 100% 64.51%/0.55;
+  --radius: 0.5rem;
+}
+
+.theme-scarlet {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 0 100% 62.75%;
+  --primary-foreground: 0 100% 96.27%;
+  --border: 0 100% 62.75%/0.55;
+  --radius: 0.5rem;
+}
+
+.theme-aqua {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 173.43 77.4% 65.29%;
+  --primary-foreground: 175.38 39.39% 6.47%;
+  --border: 173.43 77.4% 65.29%/0.55;
+  --radius: 0.5rem;
+}
+
+.theme-blush {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: 324.55 91.67% 81.18%;
+  --primary-foreground: 326.67 21.95% 8.04%;
+  --border: 324.55 91.67% 81.18%/0.55;
+  --radius: 0.5rem;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

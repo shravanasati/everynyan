@@ -6,7 +6,7 @@ import type { Board } from "@/lib/boards";
 
 function BoardCard({ title, description, href, imageSrc, imageAlt }: Board) {
   return (
-    <Card className="w-80 h-72 md:w-96 md:h-72 rounded-lg md:rounded-xl overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 group flex flex-col">
+    <Card className="w-80 h-72 md:w-96 md:h-72 rounded-lg md:rounded-xl overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 group flex flex-col bg-primary/5 border-none">
       <div className="relative h-36 overflow-hidden">
         <Image
           src={imageSrc}
@@ -28,7 +28,7 @@ function BoardCard({ title, description, href, imageSrc, imageAlt }: Board) {
           </p>
           <Link
             href={`/board/${href}`}
-            className="rounded-full p-2 transition-colors hover:bg-secondary flex-shrink-0"
+            className="rounded-full p-2 transition-colors hover:bg-primary/10 flex-shrink-0"
           >
             <ArrowRight className="h-5 w-5 text-primary" />
           </Link>

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import { boardList } from "@/lib/boards";
 import { createPost } from "@/lib/actions/createPost";
@@ -49,8 +49,9 @@ export function PostCreator() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
-  const router = useRouter()
+  const { toast } = useToast();
+  const router = useRouter();
+  const titleRef = useRef<HTMLInputElement | null>(null);
 
   const handleSubmit = async () => {
     try {
@@ -71,7 +72,13 @@ export function PostCreator() {
         return;
       }
 
-      toast({ title: "Post created", description: "Your post has been created successfully" })
+      toast({
+        title: "Post created",
+        description: "Your post has been created successfully",
+      });
+      if (titleRef.current) {
+        titleRef.current.value = "";
+      }
 
       // redirect to the newly created post
       router.push(`/post/${response.slug}`);
@@ -85,7 +92,7 @@ export function PostCreator() {
 
   return (
     <div className="min-h-[92vh] flex items-center justify-center md:p-0 px-4">
-      <Card className="w-full max-w-4xl mx-auto my-8">
+      <Card className="w-full max-w-4xl mx-auto my-8 bg-primary/[0.04]">
         <CardHeader>
           <CardTitle className="text-center text-3xl">Create a Post</CardTitle>
         </CardHeader>
@@ -128,7 +135,8 @@ export function PostCreator() {
               onChange={(e) =>
                 setFormState((prev) => ({ ...prev, title: e.target.value }))
               }
-              className="w-full"
+              className="w-full focus-visible:border-primary/25 focus-visible:ring-0 border-primary/20"
+              ref={titleRef}
             />
           </div>
           <div className="space-y-2">
@@ -155,7 +163,14 @@ export function PostCreator() {
             disabled={loading}
             onClick={handleSubmit}
           >
-            {loading ? <span className="flex items-center"><Loader2 className="size-4 animate-spin mr-1" />Publishing...</span> : "Publish Post"}
+            {loading ? (
+              <span className="flex items-center">
+                <Loader2 className="size-4 animate-spin mr-1" />
+                Publishing...
+              </span>
+            ) : (
+              "Publish Post"
+            )}
           </Button>
         </CardContent>
       </Card>
