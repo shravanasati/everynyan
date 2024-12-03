@@ -1,8 +1,14 @@
 "use client";
-import React, { createContext, useState, useEffect, ReactNode } from "react";
 
-// Define Theme Types
-type Theme =
+import {
+  createContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useContext,
+} from "react";
+
+export type Theme =
   | "theme-solar"
   | "theme-azure"
   | "theme-cosmo"
@@ -16,29 +22,23 @@ interface ThemeContextType {
   setTheme: (theme: Theme) => void;
 }
 
-// Create Context
-export const ThemeContext = createContext<ThemeContextType | undefined>(
-  undefined
-);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>("theme-solar");
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.className = savedTheme;
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as Theme) || "theme-solar";
     }
-  }, []);
+    return "theme-solar";
+  });
 
   useEffect(() => {
-    localStorage.setItem("theme", theme);
-    document.documentElement.className = theme;
+    try {
+      localStorage.setItem("theme", theme);
+      document.documentElement.className = theme;
+    } catch (error) {
+      console.error("Failed to set theme:", error);
+    }
   }, [theme]);
 
   return (
@@ -46,4 +46,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       {children}
     </ThemeContext.Provider>
   );
+};
+
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
 };
