@@ -54,7 +54,7 @@
   --foreground: #ededed;
   --primary: 223.77 100% 76.08%;
   --primary-foreground: 220 31.58% 7.45%;
-  --border: 225 100% 95.29%;
+  --border: 223.77 100% 76.08% / 0.55;
   --radius: 0.5rem;
 }
 
@@ -63,7 +63,7 @@
   --foreground: #ededed;
   --primary: 277.14 89.09% 67.65%;
   --primary-foreground: 276 42.86% 6.86%;
-  --border: 277.24 87.88% 93.53%;
+  --border: 277.14 89.09% 67.65%/0.55;
   --radius: 0.5rem;
 }
 
@@ -72,7 +72,7 @@
   --foreground: #ededed;
   --primary: 29.5 100% 64.51%;
   --primary-foreground: 30 56.25% 6.27%;
-  --border: 30 100% 92.94%;
+  --border: 29.5 100% 64.51%/0.55;
   --radius: 0.5rem;
 }
 
@@ -81,7 +81,7 @@
   --foreground: #ededed;
   --primary: 0 100% 62.75%;
   --primary-foreground: 0 100% 96.27%;
-  --border: 0 100% 92.55%;
+  --border: 0 100% 62.75%/0.55;
   --radius: 0.5rem;
 }
 
@@ -90,7 +90,7 @@
   --foreground: #ededed;
   --primary: 173.43 77.4% 65.29%;
   --primary-foreground: 175.38 39.39% 6.47%;
-  --border: 173.33 77.14% 93.14%;
+  --border: 173.43 77.4% 65.29%/0.55;
   --radius: 0.5rem;
 }
 
@@ -99,7 +99,7 @@
   --foreground: #ededed;
   --primary: 324.55 91.67% 81.18%;
   --primary-foreground: 326.67 21.95% 8.04%;
-  --border: 324.71 89.47% 96.27%;
+  --border: 324.55 91.67% 81.18%/0.55;
   --radius: 0.5rem;
 }
 
