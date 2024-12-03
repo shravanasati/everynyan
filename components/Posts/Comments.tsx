@@ -81,7 +81,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
           <Spline
             strokeDasharray="1 3"
             strokeDashoffset={0.8}
-            className="-rotate-90 w-8 text-[#2F2612]"
+            className="-rotate-90 w-8 text-border"
             strokeLinecap="square"
           />
         </div>
