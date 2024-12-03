@@ -46,8 +46,8 @@ export async function Dock() {
   const user = await getAuthUser();
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex gap-6 border border-primary/10 rounded-full px-4 py-3 backdrop-blur-md">
+    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 md:scale-100 scale-90"> 
+      <div className="flex gap-6 border border-primary/10 rounded-full px-4 py-3 md:backdrop-blur-md backdrop-blur-lg">
         {dockIcons.map((dockIcon, index) => (
           <div key={index} className="relative">
             <DockIcon
