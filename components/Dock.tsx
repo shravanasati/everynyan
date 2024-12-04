@@ -36,7 +36,7 @@ export async function UnreadNotificationCount({ userID }: { userID: string }) {
   if (count === 0) return null;
 
   return (
-    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+    <span className="absolute -top-1 -right-1 bg-primary/90 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
       {count > 9 ? "9+" : count}
     </span>
   );
@@ -46,7 +46,7 @@ export async function Dock() {
   const user = await getAuthUser();
 
   return (
-    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 md:scale-100 scale-90"> 
+    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 md:scale-100 scale-90">
       <div className="flex gap-6 border border-primary/10 rounded-full px-4 py-3 md:backdrop-blur-md backdrop-blur-lg">
         {dockIcons.map((dockIcon, index) => (
           <div key={index} className="relative">

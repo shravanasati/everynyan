@@ -154,7 +154,6 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               disabled={!replyText.trim() || disableReplyInput}
               onClick={handleSubmitReply}
             >
-              {" "}
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
             </Button>
             <GifInput />
@@ -258,7 +257,15 @@ export default function Comments({
         level: parentComment.level + 1,
       });
 
-      if (!resp.success) return;
+      if (!resp.success) {
+        toast({
+          title: "Reply couldn't be submitted",
+          description:
+            "There was an error submitting the reply, please ensure that it does not exceed 500 characters",
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({
         title: "Reply submitted",
@@ -279,7 +286,15 @@ export default function Comments({
         level: 0,
       });
 
-      if (!resp.success) return;
+      if (!resp.success) {
+        toast({
+          title: "Comment could not be posted",
+          description:
+            "Your comment could not be posted, please ensure that it does not exceed 500 characters",
+          variant: "destructive",
+        });
+        return;
+      }
       toast({
         title: "Comment submitted",
         description: "Your comment has been submitted successfully",
