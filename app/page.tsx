@@ -5,13 +5,14 @@ import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
 import { getPostsFeed } from "@/lib/firebase/posts";
 import { getAuthUser } from "@/lib/user";
+import { use } from "react";
 
-export default async function Home() {
-  const user = await getAuthUser();
+export default function Home() {
+  const user = use(getAuthUser());
 
   if (user) {
     // todo get preferences from local storage
-    const resp = await getPostsFeed();
+    const resp = use(getPostsFeed());
     const data = JSON.stringify(resp);
     return (
       <div className="min-h-screen bg-background relative">

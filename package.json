@@ -27,6 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
+    "firebase": "^11.0.2",
     "firebase-admin": "^13.0.0",
     "framer-motion": "^11.11.10",
     "input-otp": "^1.2.4",
