@@ -151,7 +151,9 @@ const SingleComment: React.FC<SingleCommentProps> = ({
           </div>
           <div className="flex justify-start space-x-2">
             <Button
-              disabled={!replyText.trim() || disableReplyInput}
+              disabled={
+                !replyText.trim() || disableReplyInput || replyText.length > 500
+              }
               onClick={handleSubmitReply}
             >
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}

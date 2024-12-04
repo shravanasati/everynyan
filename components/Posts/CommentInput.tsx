@@ -47,7 +47,7 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
         <GifInput />
         <Button
           onClick={handleSubmit}
-          disabled={!comment.trim() || disableInput}
+          disabled={!comment.trim() || disableInput || comment.length > 500}
         >
           {disableInput ? `Wait ${cooldown}s...` : "Post Comment"}
         </Button>
