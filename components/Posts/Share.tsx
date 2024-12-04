@@ -66,16 +66,16 @@ export default function Share({ postLink: postSlug }: { postLink: string }) {
             <Button type="button" variant="default" onClick={handleClick}>
               <CopyIcon className="size-4" />
             </Button>
-            <Button type="button" variant="outline" >
-              <Link href={`https://x.com/intent/post?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+            <Link href={`https://x.com/intent/post?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+              <Button type="button" variant="outline" >
                 <TwitterLogoIcon className="size-4" />
-              </Link>
-            </Button>
-            <Button type="button" variant="outline" >
-              <Link href={`https://api.whatsapp.com/send/?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+              </Button>
+            </Link>
+            <Link href={`https://api.whatsapp.com/send/?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
+              <Button type="button" variant="outline" >
                 <WhatsAppLogoIcon className="size-4 fill-white" />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
             {/* <Button
               type="button"
               variant="outline"
