@@ -6,7 +6,7 @@ import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import { InAppNotifications } from "@/components/InAppNotifications";
+import { RealtimeNotifications } from "@/components/RealtimeNotifications";
 import { ThemeProvider } from "@/lib/ThemeContext";
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ export default async function RootLayout({
           {children}
           <Toaster />
           <Footer />
-          <InAppNotifications />
+          <RealtimeNotifications />
         </body>
       </ThemeProvider>
       {process.env.NODE_ENV === "production" && (
