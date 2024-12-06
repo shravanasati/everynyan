@@ -12,6 +12,8 @@ export interface PaginatedResult<T> {
   limit: number;
 }
 
+export type ReturnedPost = Omit<Post, "author">
+
 // todo refactor this to reduce code duplication
 
 // get all posts from a board whose moderation status is not rejected
@@ -31,8 +33,9 @@ export async function getPostsByBoard(board: string, orderByField: string = "tim
   const docs = postsSnap.docs;
   const hasMore = docs.length > limitTo; // Check if more data exists
   const items = docs.slice(0, limitTo).map((doc) => doc.data() as Post); // Exclude the extra document
+  items.forEach((item) => delete item.author)
 
-  const result: PaginatedResult<Post> = {
+  const result: PaginatedResult<ReturnedPost> = {
     items,
     lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
     hasMore,
@@ -59,8 +62,9 @@ export async function getPostsFeed(orderByField: string = "timestamp", lastDocID
   const docs = postsSnap.docs;
   const hasMore = docs.length > limitTo; // Check if more data exists
   const items = docs.slice(0, limitTo).map((doc) => doc.data() as Post); // Exclude the extra document
+  items.forEach((item) => delete item.author)
 
-  const result: PaginatedResult<Post> = {
+  const result: PaginatedResult<ReturnedPost> = {
     items,
     lastDocID: hasMore ? (docs[docs.length - 2].data() as Post).id : null,
     hasMore,

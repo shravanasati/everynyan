@@ -18,6 +18,11 @@ async function PostView({
   if (!post || (post.moderation_status == "rejected" && !isAdmin)) {
     return notFound();
   }
+
+  // ensure author hashes are not leaked to the frontend
+  delete post.author
+  comments.forEach((c) => delete c.author)
+
   const formattedComments = comments.map((comment) => ({
     ...comment,
     timestamp: convertTimestamp(comment.timestamp),

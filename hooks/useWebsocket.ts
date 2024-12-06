@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useToast } from './use-toast';
-// import { Button } from "@/components/ui/button"
-// import { ExternalLink } from 'lucide-react';
-// import Link from 'next/link';
 
 export type NotificationType = {
   title: string;
@@ -10,15 +7,7 @@ export type NotificationType = {
   link: string,
 };
 
-// function ViewNotification({ link }: { link: string }) {
-//   return (
-//     <Link href={link} target="_blank" >
-//       <Button variant="outline" size="sm" className="gap-1" > View < ExternalLink className="size-5" /> </Button>
-//     </Link>
-//   )
-// }
-
-export function useWebSocket(url: string) {
+export function useWebSocket(url: string, actionComponent: ({ link }: { link: string }) => JSX.Element) {
   const [isConnected, setIsConnected] = useState(false);
   const wsRef = useRef<WebSocket | null>(null);
   const { toast } = useToast()
@@ -61,7 +50,7 @@ export function useWebSocket(url: string) {
         toast({
           title: data.title,
           description: data.description,
-          // action: <ViewNotification link={data.link} />,
+          action: actionComponent({ link: data.link }),
         })
       }
       catch (e) {
