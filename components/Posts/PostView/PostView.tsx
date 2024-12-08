@@ -1,8 +1,8 @@
 import "@/app/scrollbar.css";
 import PerPost from "@/components/Posts/PostView/PerPost";
 import { Suspense } from "react";
-import Loading from "@/app/loading";
 import CommentsWrapper from "../CommentsWrapper";
+import { LoadingComments } from "@/components/LoadingComments";
 
 async function PostView({
   postID,
@@ -15,7 +15,7 @@ async function PostView({
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto space-y-6 everynyan-scroll">
           <PerPost postID={postID}/>
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<LoadingComments />}>
             <CommentsWrapper postID={postID} />
           </Suspense>
         </div>

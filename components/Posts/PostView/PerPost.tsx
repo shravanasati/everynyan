@@ -14,7 +14,7 @@ import getPost from "@/lib/actions/getPost";
 import { Post as PostType } from "@/lib/models";
 import NotFound from "@/app/not-found";
 import { Unauthorized } from "@/components/Unauthorized";
-import Loading from "@/app/loading";
+import { LoadingPost } from "@/components/LoadingPost";
 
 interface PostData {
   id: string;
@@ -86,7 +86,7 @@ export default function PerPost({
   }
 
   if (!postData) {
-    return <Loading />;
+    return <LoadingPost />;
   }
 
   return (

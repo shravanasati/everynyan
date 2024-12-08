@@ -42,7 +42,7 @@ export async function createComment(values: z.infer<typeof createCommentSchema>)
     }
     const returnedComment = newComment as unknown as Comment & { timestamp: string }
     returnedComment.timestamp = convertTimestamp(newComment.timestamp)
-    await createUserNotification(data.postID, newComment)
+    createUserNotification(data.postID, newComment)
 
     return { success: true, data: returnedComment }
   } catch (e) {
