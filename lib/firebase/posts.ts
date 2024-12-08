@@ -86,7 +86,7 @@ export async function getPostByID(postID: string) {
   return postSnap.data() as DBPost;
 }
 
-export async function savePost(userID: string, title: string, body: string, board: string) {
+export async function savePost(userToken: string, title: string, body: string, board: string) {
   const postID = generatePostID();
   const postRef = db.collection("posts").doc(postID)
 
@@ -100,7 +100,7 @@ export async function savePost(userID: string, title: string, body: string, boar
     body: body,
     moderation_status: "pending",
     timestamp: Timestamp.now(),
-    author: userID,
+    author: userToken,
   })
 
   return postID;

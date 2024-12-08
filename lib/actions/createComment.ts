@@ -36,14 +36,14 @@ export async function createComment(values: z.infer<typeof createCommentSchema>)
   const data = result.data
 
   try {
-    const newComment = await addComment(user.userID, data.postID, data.body, data.level, data.parentID)
+    const newComment = await addComment(user.token!, data.postID, data.body, data.level, data.parentID)
     if (!newComment) {
       return { success: false, errors: { server: "An error occurred. Please try again later." } }
     }
     const returnedComment = newComment as unknown as Comment & { timestamp: string }
     returnedComment.timestamp = convertTimestamp(newComment.timestamp)
+    createUserNotification(data.postID, newComment)
 
-    createUserNotification(data.postID, newComment).catch(console.error)
     return { success: true, data: returnedComment }
   } catch (e) {
     console.error(e)

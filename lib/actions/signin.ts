@@ -38,17 +38,15 @@ export async function signin(values: z.infer<typeof OTPSchema>) {
     return { success: false, error: "Invalid OTP" }
   }
 
-  const userID = hash(result.data.email)
   const token = newToken()
   const isAdmin = moderatorEmails.includes(result.data.email)
   const tokenObj = {
-    "userID": userID,
     "token": token,
     "role": isAdmin ? "admin" : "user",
   }
 
   // store token in firebase
-  await storeToken(userID, token, isAdmin)
+  await storeToken(token, isAdmin)
 
   if (isAdmin) {
     await addSecurityLog({
