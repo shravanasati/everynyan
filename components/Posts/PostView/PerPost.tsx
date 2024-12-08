@@ -30,7 +30,7 @@ export default function PerPost({
 }: { postID: string }) {
   const [postData, setPostData] = useState<PostData | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
-  const [isForbidden, setIsForbidden ] = useState(false);
+  const [isForbidden, setIsForbidden] = useState(false);
   const [error, setError] = useState("");
   const [postSlug, setPostSlug] = useState("");
 
@@ -96,11 +96,11 @@ export default function PerPost({
           <CardTitle className="text-xl sm:text-2xl font-bold break-words md:max-w-fit max-w-80">
             {postData.title}
           </CardTitle>
-          <Link href={`/board/${postData.boardName}`}>
-            <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+          <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+            <Link href={`/board/${postData.boardName}`}>
               {postData.boardName}
-            </span>
-          </Link>
+            </Link>
+          </span>
         </div>
         <ReportContent postID={postData.id} className="absolute top-6 right-5" />
       </CardHeader>
