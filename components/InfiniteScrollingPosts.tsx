@@ -36,6 +36,12 @@ const compareObjects = (obj1: unknown, obj2: unknown) => {
   return JSON.stringify(obj1) === JSON.stringify(obj2);
 }
 
+const cachePosts = (posts: PostType[]) => {
+  for (const post of posts) {
+    sessionStorage.setItem(post.id, JSON.stringify(post));
+  }
+}
+
 export function InfiniteScrollingPosts({
   boardName,
   data,
@@ -52,6 +58,10 @@ export function InfiniteScrollingPosts({
     orderByField: dataObj.orderByField,
     limitTo: dataObj.limit
   };
+
+  useEffect(() => {
+    cachePosts(posts);
+  }, [posts]);
 
 
   const { toast } = useToast();

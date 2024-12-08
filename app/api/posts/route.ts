@@ -47,7 +47,11 @@ export async function GET(request: NextRequest) {
     } else {
       posts = await getPostsFeed(orderByField, lastDocID, limitTo)
     }
-    return NextResponse.json(posts)
+    return NextResponse.json(posts, {
+      headers: {
+        "Cache-Control": `max-age=${60*5}, stale-while-revalidate=${60}`,
+      }
+    })
   }
 
   catch (error) {

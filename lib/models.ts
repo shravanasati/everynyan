@@ -14,6 +14,10 @@ export type Post = {
 	author?: string;
 };
 
+export type DBPost = Post & {
+	timestamp: Timestamp;
+};
+
 export type Comment = {
 	id: string;
 	body: string;

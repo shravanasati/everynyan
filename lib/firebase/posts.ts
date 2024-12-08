@@ -1,6 +1,6 @@
 import { Timestamp, FieldValue } from "firebase-admin/firestore"
 import { db } from "@/lib/firebase/app";
-import { Post } from "@/lib/models";
+import { DBPost, Post } from "@/lib/models";
 import { generatePostID } from "@/lib/utils";
 
 export interface PaginatedResult<T> {
@@ -83,7 +83,7 @@ export async function getPostByID(postID: string) {
     return null;
   }
 
-  return postSnap.data() as Post;
+  return postSnap.data() as DBPost;
 }
 
 export async function savePost(userID: string, title: string, body: string, board: string) {

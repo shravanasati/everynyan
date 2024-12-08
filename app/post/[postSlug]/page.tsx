@@ -1,6 +1,6 @@
-import { getAuthUser } from "@/lib/user";
+// import { getAuthUser } from "@/lib/user";
 import PostView from "@/components/Posts/PostView/PostView";
-import { Unauthorized } from "@/components/Unauthorized";
+// import { Unauthorized } from "@/components/Unauthorized";
 import { notFound } from "next/navigation";
 import { Dock } from "@/components/Dock";
 
@@ -13,11 +13,10 @@ interface PostPageProps {
 // todo dynamically generate metadata
 
 export default async function PostPage({ params }: PostPageProps) {
-  const user = await getAuthUser();
-  if (!user) {
-    return <Unauthorized />;
-  }
-  const isAdmin = user.role === "admin";
+  // const user = await getAuthUser();
+  // if (!user) {
+  //   return <Unauthorized />;
+  // }
 
   const slug = params.postSlug;
   if (slug.length < 6) {
@@ -27,7 +26,7 @@ export default async function PostPage({ params }: PostPageProps) {
   const postID = slug.substring(slug.length - 6);
   return (
     <>
-      <PostView isAdmin={isAdmin} postID={postID} />
+      <PostView  postID={postID} />
       <Dock />
     </>
   );
