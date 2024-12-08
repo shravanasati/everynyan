@@ -10,7 +10,6 @@ import { TOKEN_EXPIRY_DURATION } from "./utils"
 type Role = "admin" | "user"
 
 export type User = {
-	userID: string;
 	token: string | undefined;
 	role: Role | undefined;
 }
@@ -34,15 +33,15 @@ export const getAuthUser = cache(async () => {
 			return null
 		}
 
-		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role || dbToken.userID !== tokenObj.userID) {
-      deleteToken(tokenObj.token).catch(console.error)
+		if (dbToken.token !== tokenObj.token || dbToken.role !== tokenObj.role) {
+			deleteToken(tokenObj.token).catch(console.error)
 			return null
 		}
 
 		const now = Timestamp.now()
 		const expiryTime = dbToken.timestamp.seconds + TOKEN_EXPIRY_DURATION
 		if (now.seconds > expiryTime) {
-      deleteToken(tokenObj.token).catch(console.error)
+			deleteToken(tokenObj.token).catch(console.error)
 			return null
 		}
 

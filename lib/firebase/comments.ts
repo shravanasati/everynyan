@@ -3,7 +3,7 @@ import { db } from "./app";
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { generateCommentID } from "../utils";
 
-export async function addComment(userID: string, postID: string, commentBody: string, level: number, parentID: string | null) {
+export async function addComment(userToken: string, postID: string, commentBody: string, level: number, parentID: string | null) {
   try {
     const batch = db.batch()
     const commentID = generateCommentID()
@@ -15,7 +15,7 @@ export async function addComment(userID: string, postID: string, commentBody: st
       downvotes: 0,
       parent_id: parentID,
       moderation_status: "pending",
-      author: userID
+      author: userToken
     }
 
     const postRef = db.collection("posts").doc(postID)

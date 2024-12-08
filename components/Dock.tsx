@@ -30,8 +30,8 @@ export function DockIcon({ href, tooltipTitle, icon: Icon }: DockIconProps) {
     </Link>
   );
 }
-export async function UnreadNotificationCount({ userID }: { userID: string }) {
-  const count = await getUnreadNotificationCountByUser(userID);
+export async function UnreadNotificationCount({ userToken }: { userToken: string }) {
+  const count = await getUnreadNotificationCountByUser(userToken);
 
   if (count === 0) return null;
 
@@ -57,7 +57,7 @@ export async function Dock() {
             />
             {dockIcon.href === "/notifications" && (
               <Suspense fallback={<div className="size-5" />}>
-                <UnreadNotificationCount userID={user!.userID} />
+                <UnreadNotificationCount userToken={user!.token!} />
               </Suspense>
             )}
           </div>

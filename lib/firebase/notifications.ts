@@ -26,17 +26,17 @@ export async function saveNotifications(notifications: NotificationType[]) {
   await batch.commit();
 }
 
-export async function getUnreadNotificationCountByUser(userID:string) {
+export async function getUnreadNotificationCountByUser(userToken:string) {
   const unreadCount = await db.collection("notifications").
-    where("user", "==", userID).
+    where("user", "==", userToken).
     where("status", "==", "unread").
     count().get()
 
   return unreadCount.data().count
 }
 
-export async function getNotificationsByUser(userID:string) {
-  const notificationsRef = db.collection("notifications").where("user", "==", userID);
+export async function getNotificationsByUser(userToken:string) {
+  const notificationsRef = db.collection("notifications").where("user", "==", userToken);
   const notificationsSnap = await notificationsRef.get();
   const notifications: DBNotificationType[] = [];
   notificationsSnap.forEach((notification) => {
@@ -45,9 +45,9 @@ export async function getNotificationsByUser(userID:string) {
   return notifications;
 }
 
-export async function markAllNotificationsRead(userID:string) {
+export async function markAllNotificationsRead(userToken:string) {
   const notificationsRef = db.collection("notifications")
-  const userNotifs = notificationsRef.where("user", "==", userID);
+  const userNotifs = notificationsRef.where("user", "==", userToken);
   const userNotifsSnap = await userNotifs.get();
   const batch = db.batch();
   userNotifsSnap.forEach((doc) => {

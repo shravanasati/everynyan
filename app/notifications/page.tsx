@@ -14,14 +14,14 @@ export default async function NotificationsPage() {
     return <Unauthorized />;
   }
 
-  const notifications = await getNotificationsByUser(user.userID);
+  const notifications = await getNotificationsByUser(user.token!);
   notifications.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis());
   const dateFormattedNotifs = notifications.map((notif) => ({
     ...notif,
     timestamp: getAgoDuration(notif.timestamp.toDate()),
   }));
 
-  markAllNotificationsRead(user.userID);
+  markAllNotificationsRead(user.token!);
 
   return (
     <>
