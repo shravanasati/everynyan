@@ -124,7 +124,7 @@ export function BroadcastNotificationForm() {
               name="link"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Link (Optional)</FormLabel>
+                  <FormLabel>Link</FormLabel>
                   <FormControl>
                     <Input placeholder="https://example.com" {...field} />
                   </FormControl>
