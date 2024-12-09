@@ -14,7 +14,7 @@ type NotificationRequest = {
 async function sendNotificationRequest(notifs: NotificationRequest[]) {
   const payload = JSON.stringify(notifs)
 
-  const url = `${process.env.NOTIFICATIONS_PUSH_ADDRESS}/send`
+  const url = `${process.env.NEXT_PUBLIC_NOTIFICATIONS_PUSH_ADDRESS}/send`
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -89,7 +89,7 @@ export async function createUserNotification(postID: string, newComment: Comment
       return
     }
 
-    const dbNotifications: (NotificationRequest & { status: "read" | "unread" })[] = 
+    const dbNotifications: (NotificationRequest & { status: "read" | "unread" })[] =
       notifications.map((notification) => ({
         user: notification.user,
         title: notification.title,
@@ -99,7 +99,7 @@ export async function createUserNotification(postID: string, newComment: Comment
       }))
 
     const results = await Promise.allSettled([
-      sendNotificationRequest(notifications), 
+      sendNotificationRequest(notifications),
       saveNotifications(dbNotifications)
     ])
 
@@ -110,5 +110,26 @@ export async function createUserNotification(postID: string, newComment: Comment
     })
   } catch (error) {
     console.error('Error in createUserNotification:', error)
+  }
+}
+
+export async function getConnectionCount() {
+  try {
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_NOTIFICATIONS_PUSH_ADDRESS}/connections`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${process.env.NOTIFICATIONS_API_KEY}`
+      }
+    })
+  
+    const text = await resp.text()
+  
+    if (resp.status !== 200) {
+      return 'failed to get connection count: ' + text
+    }
+  
+    return text
+  } catch (e) {
+    return (e as Error).message
   }
 }
