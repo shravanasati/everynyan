@@ -5,6 +5,7 @@ import { Unauthorized } from "@/components/Unauthorized"
 import { getOTPCount } from "@/lib/firebase/firestore"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
+import { getConnectionCount } from "@/lib/notifications"
 import { getAuthUser } from "@/lib/user"
 import { convertTimestamp, formatDate } from "@/lib/utils"
 
@@ -19,8 +20,8 @@ export default async function AdminPage() {
     return <Unauthorized />
   }
 
-  const [securityLogs, unresolvedReports, otpCount] = await Promise.all(
-    [getSecurityLogs(), getUnresolvedReports(), getOTPCount()]
+  const [securityLogs, unresolvedReports, otpCount, connectionCount] = await Promise.all(
+    [getSecurityLogs(), getUnresolvedReports(), getOTPCount(), getConnectionCount()]
   )
 
   // sort logs by timestamp
@@ -48,6 +49,7 @@ export default async function AdminPage() {
       <div className="m-2 bg-primary/10 w-fit p-2 rounded-xl">
         {/* <p className="text-xl font-semibold">Active Sessions: {tokenCount}</p> */}
         <p className="text-xl font-semibold">Emails attempted sign in: {otpCount}</p>
+        <p className="text-xl font-semibold">Live connections count: {connectionCount}</p>
       </div>
 
       <div className="m-2">
