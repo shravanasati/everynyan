@@ -39,7 +39,6 @@ export default function PerPost({
       const storedPostData = sessionStorage.getItem(postID);
       if (storedPostData) {
         const parsedData: PostType = JSON.parse(storedPostData);
-        console.log("found in session storage");
         setPostData({
           id: parsedData.id,
           title: parsedData.title,
@@ -50,7 +49,6 @@ export default function PerPost({
         });
         setPostSlug(getPostSlug(parsedData.id, parsedData.title));
       } else {
-        console.log("fetching from server");
         const fetchedData = await getPost(postID);
         if (fetchedData.status === 200) {
           setPostData({

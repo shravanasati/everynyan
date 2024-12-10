@@ -1,9 +1,11 @@
 import { AdminReports } from "@/components/AdminReports"
+import { BroadcastNotificationForm } from "@/components/BroadcastNotifications"
 import { RawSecurityLog, SecurityLogType, SecurityLogs } from "@/components/SecurityLogs"
 import { Unauthorized } from "@/components/Unauthorized"
 import { getOTPCount } from "@/lib/firebase/firestore"
 import { getUnresolvedReports } from "@/lib/firebase/reports"
 import { getSecurityLogs } from "@/lib/firebase/security_log"
+import { getConnectionCount } from "@/lib/notifications"
 import { getAuthUser } from "@/lib/user"
 import { convertTimestamp, formatDate } from "@/lib/utils"
 
@@ -18,8 +20,8 @@ export default async function AdminPage() {
     return <Unauthorized />
   }
 
-  const [securityLogs, unresolvedReports, otpCount] = await Promise.all(
-    [getSecurityLogs(), getUnresolvedReports(), getOTPCount()]
+  const [securityLogs, unresolvedReports, otpCount, connectionCount] = await Promise.all(
+    [getSecurityLogs(), getUnresolvedReports(), getOTPCount(), getConnectionCount()]
   )
 
   // sort logs by timestamp
@@ -41,17 +43,28 @@ export default async function AdminPage() {
 
   return (
     <div className="container mx-2 py-8">
+
       <h1 className="text-3xl font-bold mb-6 ml-2">Admin Page</h1>
-      <div className="m-2 bg-secondary w-fit p-2 rounded-xl">
+
+      <div className="m-2 bg-primary/10 w-fit p-2 rounded-xl">
         {/* <p className="text-xl font-semibold">Active Sessions: {tokenCount}</p> */}
         <p className="text-xl font-semibold">Emails attempted sign in: {otpCount}</p>
+        <p className="text-xl font-semibold">Live connections count: {connectionCount}</p>
       </div>
+
       <div className="m-2">
         <AdminReports reports={formattedReports} />
       </div>
+
       <div className="m-2">
+        <h1 className="text-2xl font-bold my-6">Send Broadcast Notification</h1>
+        <BroadcastNotificationForm />
+      </div>
+
+      <div className="mx-2 my-4">
         <SecurityLogs logs={formattedLogs as SecurityLogType[]} />
       </div>
+
     </div>
   )
 }
