@@ -12,8 +12,6 @@ if (!notificationsServerAddress) {
   );
 }
 
-console.log(notificationsServerAddress)
-
 const nextConfig = {
   reactStrictMode: true,
   images: {
