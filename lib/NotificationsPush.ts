@@ -80,7 +80,7 @@ export async function registerAndSubscribe(onSubscribe: (subs: PushSubscription 
 }
 
 export function sendSubscriptionToServer(subscription: PushSubscription) {
-  const url = `${process.env.NEXT_PUBLIC_NOTIFICATIONS_PUSH_ADDRESS}/push-subscription`
+  const url = `/api/subscription`
   const subscriptionObject = {
     endpoint: subscription.endpoint,
     keys: {
