@@ -32,19 +32,16 @@ async function requestNotificationPermission() {
 }
 
 function urlBase64ToUint8Array(base64String: string) {
-  base64String = base64String.trim()
   if (base64String === "") {
     throw new Error("NEXT_PUBLIC_VAPID_PUBLIC_KEY not set")
   }
+
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
   const base64 = (base64String + padding)
     .replace(/\\-/g, '+')
     .replace(/_/g, '/')
 
-  console.log("atob starting")
-  console.log(base64)
   const rawData = Buffer.from(base64, 'base64').toString('binary')
-  console.log("atob ended")
   const outputArray = new Uint8Array(rawData.length)
 
   for (let i = 0; i < rawData.length; ++i) {
@@ -87,10 +84,12 @@ export function sendSubscriptionToServer(subscription: PushSubscription) {
   const subscriptionObject = {
     endpoint: subscription.endpoint,
     keys: {
-      p256dh: subscription.getKey('p256dh'),
-      auth: subscription.getKey('auth'),
+      p256dh: subscription.toJSON().keys?.p256dh,
+      auth: subscription.toJSON().keys?.auth,
     },
   };
+
+  console.log("sending this subscription object to server: ", subscriptionObject)
 
   fetch(url, {
     method: "POST",
@@ -99,7 +98,7 @@ export function sendSubscriptionToServer(subscription: PushSubscription) {
   }).
     then(resp => {
       if (resp.status != 200) {
-        throw new Error("unable to send push subscription")
+        throw new Error("unable to send push subscription " + resp.text().then(t => t))
       }
     }).
     catch(e => {
