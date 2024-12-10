@@ -1,26 +1,29 @@
 const SERVICE_WORKER_FILE_PATH = "./sw.js";
 
 export function isNotificationSupported(): boolean {
-	let unsupported = false;
-	if (
-		!("serviceWorker" in navigator) ||
-		!("PushManager" in window) ||
-		!("showNotification" in ServiceWorkerRegistration.prototype)
-	) {
-		unsupported = true;
-	}
-	return !unsupported;
+  let unsupported = false;
+  if (
+    !("serviceWorker" in navigator) ||
+    !("PushManager" in window) ||
+    !("showNotification" in ServiceWorkerRegistration.prototype)
+  ) {
+    unsupported = true;
+  }
+  return !unsupported;
 }
 
 export function isPermissionGranted(): boolean {
-	return Notification.permission === "granted";
+  return Notification.permission === "granted";
 }
 
 export function isPermissionDenied(): boolean {
-	return Notification.permission === "denied";
+  return Notification.permission === "denied";
 }
 
 async function requestNotificationPermission() {
+  if (isPermissionGranted()) {
+    return true;
+  }
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
     return true;
@@ -29,6 +32,7 @@ async function requestNotificationPermission() {
 }
 
 function urlBase64ToUint8Array(base64String: string) {
+  base64String = base64String.trim()
   if (base64String === "") {
     throw new Error("NEXT_PUBLIC_VAPID_PUBLIC_KEY not set")
   }
@@ -37,7 +41,10 @@ function urlBase64ToUint8Array(base64String: string) {
     .replace(/\\-/g, '+')
     .replace(/_/g, '/')
 
-  const rawData = window.atob(base64)
+  console.log("atob starting")
+  console.log(base64)
+  const rawData = Buffer.from(base64, 'base64').toString('binary')
+  console.log("atob ended")
   const outputArray = new Uint8Array(rawData.length)
 
   for (let i = 0; i < rawData.length; ++i) {
@@ -47,32 +54,32 @@ function urlBase64ToUint8Array(base64String: string) {
 }
 
 export async function registerAndSubscribe(onSubscribe: (subs: PushSubscription | null) => void,
-	onError: (e: Error) => void): Promise<void> {
-	try {
-		await navigator.serviceWorker.register(SERVICE_WORKER_FILE_PATH);
-		//subscribe to notification
-		navigator.serviceWorker.ready
-			.then((registration: ServiceWorkerRegistration) => {
+  onError: (e: Error) => void): Promise<void> {
+  try {
+    await navigator.serviceWorker.register(SERVICE_WORKER_FILE_PATH);
+    //subscribe to notification
+    navigator.serviceWorker.ready
+      .then((registration: ServiceWorkerRegistration) => {
         requestNotificationPermission().then(success => {
           if (!success) {
             throw new Error("Permission denied");
           }
         })
-				return registration.pushManager.subscribe({
-					userVisibleOnly: true,
+        return registration.pushManager.subscribe({
+          userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? ""),
-				});
-			})
-			.then((subscription: PushSubscription) => {
-				console.info("Created subscription Object: ", subscription.toJSON());
-				onSubscribe(subscription);
-			})
-			.catch((e) => {
-				onError(e);
-			});
-	} catch (e: unknown) {
-		onError(e as Error);
-	}
+        });
+      })
+      .then((subscription: PushSubscription) => {
+        console.info("Created subscription Object: ", subscription.toJSON());
+        onSubscribe(subscription);
+      })
+      .catch((e) => {
+        onError(e);
+      });
+  } catch (e: unknown) {
+    onError(e as Error);
+  }
 }
 
 export function sendSubscriptionToServer(subscription: PushSubscription) {
@@ -90,13 +97,13 @@ export function sendSubscriptionToServer(subscription: PushSubscription) {
     body: JSON.stringify(subscriptionObject),
     credentials: "include"
   }).
-  then(resp => {
-    if (resp.status != 200) {
-      throw new Error("unable to send push subscription")
-    }
-  }).
-  catch(e => {
-    throw new Error(e)
-  })
+    then(resp => {
+      if (resp.status != 200) {
+        throw new Error("unable to send push subscription")
+      }
+    }).
+    catch(e => {
+      throw new Error(e)
+    })
 
 }

@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { RealtimeNotifications } from "@/components/RealtimeNotifications";
 import { ThemeProvider } from "@/lib/ThemeContext";
+import { NotificationProvider } from "@/hooks/useNotification";
+import { AskNotificationPerm } from "@/components/AskNotificationPerm";
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -50,9 +52,15 @@ export default async function RootLayout({
           {children}
           <Toaster />
           <Footer />
+
           <RealtimeNotifications />
+          <NotificationProvider>
+            <AskNotificationPerm />
+          </NotificationProvider>
+
         </body>
       </ThemeProvider>
+
       {process.env.NODE_ENV === "production" && (
         <GoogleAnalytics gaId="G-3XCDLX2W7Z" />
       )}
