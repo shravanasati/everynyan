@@ -11,9 +11,19 @@ import { ThemeProvider } from "@/lib/ThemeContext";
 import { NotificationProvider } from "@/hooks/useNotification";
 import { AskNotificationPerm } from "@/components/AskNotificationPerm";
 
+const APP_DEFAULT_TITLE = "EveryNyan's PWA";
+
+
 export const metadata: Metadata = {
   title: "EveryNyan",
   description: "It's for everyone cuz it's EveryNyan",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE,
+    // startUpImage: [],
+  },
 };
 
 export default async function RootLayout({
