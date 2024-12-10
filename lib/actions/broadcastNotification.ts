@@ -1,6 +1,7 @@
 "use server"
 
 import { z } from "zod"
+import { getAuthUser } from "@/lib/user"
 
 
 const formSchema = z.strictObject({
@@ -25,6 +26,11 @@ export async function broadcastNotification(values: z.infer<typeof formSchema>) 
     const result = formSchema.safeParse(values)
     if (!result.success) {
       return { success: false, error: result.error.errors[0].message }
+    }
+
+    const user = await getAuthUser()
+    if (!user || user.role !== "admin") {
+      return { success: false, error: "Unauthorized" }
     }
 
     const url = `${process.env.NEXT_PUBLIC_NOTIFICATIONS_PUSH_ADDRESS}/broadcast`
