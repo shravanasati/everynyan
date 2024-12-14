@@ -1,7 +1,11 @@
 import { boardList } from "@/lib/boards"
+import { updateTokenLifetime } from "@/lib/firebase/firestore"
 import { getPostsByBoard, getPostsFeed, PaginatedResult } from "@/lib/firebase/posts"
 import { Post } from "@/lib/models"
 import { getAuthUser } from "@/lib/user"
+import { TOKEN_EXPIRY_DURATION } from "@/lib/utils"
+import { Timestamp } from "firebase-admin/firestore"
+import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -44,6 +48,21 @@ export async function GET(request: NextRequest) {
     } else {
       posts = await getPostsFeed(orderByField, lastDocID, limitTo)
     }
+
+    const session = cookies().get("session")
+    if (session) {
+      const now = Timestamp.now()
+      updateTokenLifetime(user.token!, now)
+
+      cookies().set("session", session.value, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: TOKEN_EXPIRY_DURATION, // 2 weeks
+        domain: process.env.NODE_ENV === "production" ? "everynyan.tech" : undefined,
+      })
+    }
+
 
     return NextResponse.json(posts, {
       headers: {
