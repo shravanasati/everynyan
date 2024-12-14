@@ -16,9 +16,6 @@ const querySchema = z.strictObject({
   limitTo: z.number().min(1).max(10),
 })
 
-// todo refresh cookies
-// todo cache posts
-
 export async function GET(request: NextRequest) {
   try {
     const user = await getAuthUser()
@@ -41,17 +38,19 @@ export async function GET(request: NextRequest) {
     }
 
     const { board, orderByField, lastDocID, limitTo } = result.data
-    let posts: PaginatedResult<Post> 
+    let posts: PaginatedResult<Post>
     if (board) {
       posts = await getPostsByBoard(board, orderByField, lastDocID, limitTo)
     } else {
       posts = await getPostsFeed(orderByField, lastDocID, limitTo)
     }
+
     return NextResponse.json(posts, {
       headers: {
-        "Cache-Control": `max-age=${60*5}, stale-while-revalidate=${60}`,
+        "Cache-Control": `max-age=${60 * 5}, stale-while-revalidate=${60}`,
       }
     })
+
   }
 
   catch (error) {

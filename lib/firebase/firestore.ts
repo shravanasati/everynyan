@@ -57,6 +57,13 @@ export async function getToken(token: string) {
   return null;
 }
 
+export async function updateTokenLifetime(token:string, newTimestamp: Timestamp) {
+  const tokenRef = db.collection("tokens").doc(token);
+  await tokenRef.update({
+    timestamp: newTimestamp,
+  });
+}
+
 export async function getTokenCount() {
   const tokenRef = db.collection("tokens");
   const tokenSnap = await tokenRef.count().get();
