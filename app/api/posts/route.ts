@@ -51,6 +51,7 @@ export async function GET(request: NextRequest) {
 
     const session = cookies().get("session")
     if (session) {
+      // refresh user token
       const now = Timestamp.now()
       updateTokenLifetime(user.token!, now)
 

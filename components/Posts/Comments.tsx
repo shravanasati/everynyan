@@ -368,11 +368,13 @@ export default function Comments({
   return (
     <div className="space-y-4 mb-4" id="comments">
       <CommentInput onSubmit={submitTopLevelComment} />
-      <SortDropdown 
-        value={commentSort} 
-        options={commentSortOptions} 
-        onValueChange={(value: string) => setCommentSort(value as CommentSortByType)} 
-      />
+      {commentTree.length > 0 && (
+        <SortDropdown
+          value={commentSort}
+          options={commentSortOptions}
+          onValueChange={(value: string) => setCommentSort(value as CommentSortByType)}
+        />
+      )}
       {commentTree.map((comment) => (
         <SingleComment
           key={comment.id}
