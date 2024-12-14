@@ -17,6 +17,7 @@ import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
 import GifInput from "./GifInput";
+import { SortDropdown } from "../SortDropdown";
 
 type ReturnedComment = CommentType & { timestamp: string };
 
@@ -74,9 +75,8 @@ const SingleComment: React.FC<SingleCommentProps> = ({
         id={comment.id}
       >
         <div
-          className={`absolute top-0 -left-6 flex items-center justify-center ${
-            comment.parent_id != null ? "block" : "hidden"
-          }`}
+          className={`absolute top-0 -left-6 flex items-center justify-center ${comment.parent_id != null ? "block" : "hidden"
+            }`}
         >
           <Spline
             strokeDasharray="1 3"
@@ -190,6 +190,31 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   );
 };
 
+type CommentSortByType = "upvotes" | "downvotes" | "oldest" | "comment_count" | "newest";
+
+const commentSortOptions: { title: string, value: CommentSortByType }[] = [
+  {
+    title: "Popular",
+    value: "upvotes",
+  },
+  {
+    title: "Newest",
+    value: "newest",
+  },
+  {
+    title: "Oldest",
+    value: "oldest",
+  },
+  {
+    title: "Engaging",
+    value: "comment_count",
+  },
+  {
+    title: "Controversial",
+    value: "downvotes",
+  },
+]
+
 export default function Comments({
   postID,
   initialComments,
@@ -200,6 +225,7 @@ export default function Comments({
   const [comments, setComments] = useState<ReturnedComment[]>(initialComments);
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const { toast } = useToast();
+  const [commentSort, setCommentSort] = useState<CommentSortByType>("upvotes");
 
   // Convert flat comments array to nested structure
   const commentTree = useMemo(() => {
@@ -225,11 +251,44 @@ export default function Comments({
     });
 
     // Sort root comments and their replies by timestamp
-    const sortByTimestamp = (a: CommentNodeType, b: CommentNodeType) =>
+    const sortByTimestampOldest = (a: CommentNodeType, b: CommentNodeType) =>
       parseISO(a.timestamp).getTime() - parseISO(b.timestamp).getTime();
 
+    const sortByTimestampNewest = (a: CommentNodeType, b: CommentNodeType) =>
+      parseISO(b.timestamp).getTime() - parseISO(a.timestamp).getTime();
+
+    const sortByUpvotes = (a: CommentNodeType, b: CommentNodeType) =>
+      b.upvotes - a.upvotes;
+
+    const sortByDownvotes = (a: CommentNodeType, b: CommentNodeType) =>
+      b.downvotes - a.downvotes;
+
+    const sortByCommentCount = (a: CommentNodeType, b: CommentNodeType) =>
+      b.replies.length - a.replies.length;
+
+
     const sortCommentsRecursively = (comments: CommentNodeType[]) => {
-      comments.sort(sortByTimestamp);
+      switch (commentSort) {
+        case "upvotes":
+          comments.sort(sortByUpvotes);
+          break;
+        case "downvotes":
+          comments.sort(sortByDownvotes);
+          break;
+        case "oldest":
+          comments.sort(sortByTimestampOldest);
+          break;
+        case "newest":
+          comments.sort(sortByTimestampNewest);
+          break;
+        case "comment_count":
+          comments.sort(sortByCommentCount);
+          break;
+        default:
+          comments.sort(sortByUpvotes);
+          break;
+      }
+
       comments.forEach((comment) => {
         if (comment.replies.length > 0) {
           sortCommentsRecursively(comment.replies);
@@ -239,7 +298,7 @@ export default function Comments({
 
     sortCommentsRecursively(rootComments);
     return rootComments;
-  }, [comments]);
+  }, [comments, commentSort]);
 
   const handleReply = useCallback((commentId: string) => {
     setReplyingTo(commentId);
@@ -309,6 +368,11 @@ export default function Comments({
   return (
     <div className="space-y-4 mb-4" id="comments">
       <CommentInput onSubmit={submitTopLevelComment} />
+      <SortDropdown 
+        value={commentSort} 
+        options={commentSortOptions} 
+        onValueChange={(value: string) => setCommentSort(value as CommentSortByType)} 
+      />
       {commentTree.map((comment) => (
         <SingleComment
           key={comment.id}

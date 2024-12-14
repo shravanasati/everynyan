@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers"
 import { decrypt } from "./crypt"
-import { deleteToken, getToken, updateTokenLifetime } from "./firebase/firestore"
+import { deleteToken, getToken } from "./firebase/firestore"
 import { cache } from "react"
 import { Timestamp } from "firebase-admin/firestore"
 import { TOKEN_EXPIRY_DURATION } from "./utils"
@@ -45,9 +45,6 @@ export const getAuthUser = cache(async () => {
 			return null
 		}
 
-		// if everything is fine, refresh the token lifetime
-		refreshUser()
-
 		return tokenObj
 	}
 	catch (error) {
@@ -55,32 +52,3 @@ export const getAuthUser = cache(async () => {
 		return null
 	}
 })
-
-function refreshUser() {
-	try {
-		const session = cookies().get("session")
-		if (!session) {
-			return null
-		}
-
-		const user = JSON.parse(decrypt(session.value))
-		if (!user.token) {
-			return null
-		}
-
-		const now = Timestamp.now()
-		updateTokenLifetime(user.token, now)
-
-		cookies().set("session", session.value, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "lax",
-			maxAge: TOKEN_EXPIRY_DURATION, // 2 weeks
-			domain: process.env.NODE_ENV === "production" ? "everynyan.tech" : undefined,
-		})
-
-	} catch (error) {
-		console.error("error in refreshUser", error)
-	}
-
-}
