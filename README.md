@@ -73,6 +73,13 @@ pnpm i
 pnpm dev
 ```
 
+### Related Repositories
+
+| Name  | Description |
+|---|---|
+| [everynyan-notification-service](https://github.com/shravanasati/everynyan-notification-service)  | Notification service responsible for delivery of realtime in-app and push notifications.  |
+| [everynyan-moderation-service](https://github.com/shravanasati/everynyan-moderation-service)  | Automatic content moderation service for everynyan.  |
+
 
 ### Contribution
 
