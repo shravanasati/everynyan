@@ -12,8 +12,19 @@ self.addEventListener('push',  (event) => {
   if (!event.data) {
     return
   }
-  const data = JSON.parse(event.data.json())
+  if (!(self.Notification && self.Notification.permission === 'granted')) {
+    return
+  }
+
+  const data = event.data.json() ?? {}
   const { body, icon, image, badge, url, title } = data;
+  title = data.title || "Something Has Happened"
+  body = data.body || "Here's something you might want to check out."
+  image = data.image || "/logo.png"
+  badge = data.badge || "/logo.png"
+  icon = data.icon || "/android-192x192.png"
+  url = data.url || "/"
+  
   const notificationOptions = {
     body,
     icon,
