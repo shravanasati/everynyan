@@ -16,14 +16,15 @@ self.addEventListener('push',  (event) => {
     return
   }
 
-  const data = event.data.json() ?? {}
+  const data = event.data.json() ?? {
+    title: "Something Has Happened",
+    body: "Here's something you might want to check out.",
+    image: "/logo.png",
+    badge: "/logo.png",
+    icon: "/android-192x192.png",
+    url: "/",
+  }
   const { body, icon, image, badge, url, title } = data;
-  title = data.title || "Something Has Happened"
-  body = data.body || "Here's something you might want to check out."
-  image = data.image || "/logo.png"
-  badge = data.badge || "/logo.png"
-  icon = data.icon || "/android-192x192.png"
-  url = data.url || "/"
   
   const notificationOptions = {
     body,

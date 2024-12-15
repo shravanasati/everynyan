@@ -2,7 +2,7 @@ import nextPwa from "@ducanh2912/next-pwa";
 
 const withPWA = nextPwa({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  // disable: process.env.NODE_ENV === "development",
 });
 
 let notificationsServerAddress = process.env.NEXT_PUBLIC_NOTIFICATIONS_PUSH_ADDRESS || ""; 
