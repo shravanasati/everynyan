@@ -58,7 +58,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <ThemeProvider>
-        <body className={`${lexend.className} antialiased`}>
+        <body className={`${lexend.className} antialiased min-h-screen w-screen`}>
           <Navbar user={user} />
           {children}
           <Toaster />

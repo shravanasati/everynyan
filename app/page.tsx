@@ -1,6 +1,6 @@
 import BoardHeader from "@/components/BoardHeader";
 import { Dock } from "@/components/Dock";
-import BlobGradient from "@/components/Gradients/BlobGradient";
+import BlobGradient from "@/components/Gradients/GradientBackground";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
 import { getPostsFeed } from "@/lib/firebase/posts";
@@ -27,7 +27,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="overflow-x-hidden flex-col justify-center items-center min-h-screen">
+    <div className="overflow-x-hidden flex-col justify-center items-center w-full min-h-full">
       <BlobGradient className="absolute inset-0 -z-50 h-[970px] md:h-[900px] -bottom-50" />
       <Section1 />
     </div>
