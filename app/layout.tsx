@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./fonts.css";
+import { Lexend } from 'next/font/google'
 import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import Footer from "@/components/Footer";
@@ -12,6 +12,7 @@ import { NotificationProvider } from "@/hooks/useNotification";
 import { AskNotificationPerm } from "@/components/AskNotificationPerm";
 
 const APP_DEFAULT_TITLE = "EveryNyan's PWA";
+const lexend = Lexend({ subsets: ['latin'] })
 
 
 export const metadata: Metadata = {
@@ -57,7 +58,7 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <ThemeProvider>
-        <body className="font-obv antialiased">
+        <body className={`${lexend.className} antialiased`}>
           <Navbar user={user} />
           {children}
           <Toaster />
