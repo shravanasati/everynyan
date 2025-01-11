@@ -32,7 +32,7 @@ export default function GradientBackground({
       <motion.div
         className="absolute inset-0"
         animate={{
-          scale: [1.50, 0.90, 1.50],
+          scale: [1, 0.80, 1],
         }}
         transition={{
           duration: 2,
