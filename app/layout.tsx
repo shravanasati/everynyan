@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./fonts.css";
+import { Gabarito } from 'next/font/google'
 import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
-import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { RealtimeNotifications } from "@/components/RealtimeNotifications";
@@ -12,6 +11,7 @@ import { NotificationProvider } from "@/hooks/useNotification";
 import { AskNotificationPerm } from "@/components/AskNotificationPerm";
 
 const APP_DEFAULT_TITLE = "EveryNyan's PWA";
+const gabarito = Gabarito({ subsets: ['latin'] })
 
 
 export const metadata: Metadata = {
@@ -57,12 +57,10 @@ export default async function RootLayout({
         <meta name="theme-color" content="#ffffff" />
       </head>
       <ThemeProvider>
-        <body className="font-obv antialiased">
+        <body className={`${gabarito.className} antialiased min-h-screen w-screen`}>
           <Navbar user={user} />
           {children}
           <Toaster />
-          <Footer />
-
           <RealtimeNotifications />
           <NotificationProvider>
             <AskNotificationPerm />
