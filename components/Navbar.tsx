@@ -7,7 +7,15 @@ import { useRouter, usePathname } from "next/navigation";
 import SvgLogo from "@/components/SvgLogo";
 import { User } from "@/lib/user";
 import { logout } from "@/lib/actions/logout";
-import { Newspaper, Compass, PenTool, LogIn, LogOut, Menu, Bell } from "lucide-react";
+import {
+  Newspaper,
+  Compass,
+  PenTool,
+  LogIn,
+  LogOut,
+  Menu,
+  Bell,
+} from "lucide-react";
 import { useState } from "react";
 
 export function Navbar({ user }: { user: User | null }) {
@@ -25,6 +33,12 @@ export function Navbar({ user }: { user: User | null }) {
 
   const handleLogout = async () => {
     await logout();
+    try {
+      localStorage.setItem("theme", "theme-solar");
+      document.documentElement.className = "theme-solar";
+    } catch (error) {
+      console.error("Failed to set theme:", error);
+    }
     router.push("/");
     setOpen(false);
   };
@@ -34,14 +48,20 @@ export function Navbar({ user }: { user: User | null }) {
       {/* logo */}
       <Link className="flex items-center space-x-2" href="/">
         <SvgLogo />
-        <span className="text-2xl font-bold hover:text-primary/90">EveryNyan</span>
+        <span className="text-2xl font-bold hover:text-primary/90">
+          EveryNyan
+        </span>
       </Link>
 
       {/* Buttons and sheet opener */}
       <div className="flex items-center space-x-4">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-primaryi hover:bg-primary/40">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-primaryi hover:bg-primary/40"
+            >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Open menu</span>
             </Button>

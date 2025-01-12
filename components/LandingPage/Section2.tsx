@@ -68,7 +68,7 @@ function Section2() {
   };
 
   return (
-    <section className="min-h-screen w-full py-16 px-4 flex flex-col items-center justify-center border-t-2">
+    <section className="min-h-screen w-full py-16 px-4 flex flex-col items-center justify-center">
       <div className="max-w-6xl w-full mx-auto">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-center mb-12 text-primary"

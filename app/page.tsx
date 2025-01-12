@@ -4,6 +4,7 @@ import BlobGradient from "@/components/Gradients/GradientBackground";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
 import Section2 from "@/components/LandingPage/Section2";
+import Section3 from "@/components/LandingPage/Section3";
 import { getPostsFeed } from "@/lib/firebase/posts";
 import { getAuthUser } from "@/lib/user";
 import { AnimatePresence } from "framer-motion";
@@ -29,11 +30,12 @@ export default async function Home() {
   }
 
   return (
-    <div className="overflow-x-hidden flex-col justify-center items-center w-full min-h-full">
+    <div className="overflow-x-hidden flex-col justify-center items-center w-full min-h-full scroll-smooth scroll-snap-y-mandatory">
       <AnimatePresence mode="wait">
         <BlobGradient className="absolute inset-0 -z-50 h-[970px] md:h-[900px] -bottom-50" />
         <Section1 />
         <Section2 />
+        <Section3 />
       </AnimatePresence>
     </div>
   );
