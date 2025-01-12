@@ -6,6 +6,7 @@ import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
 import Section2 from "@/components/LandingPage/Section2";
 import Section3 from "@/components/LandingPage/Section3";
+import Section4 from "@/components/LandingPage/Section4";
 import { getPostsFeed } from "@/lib/firebase/posts";
 import { getAuthUser } from "@/lib/user";
 import { AnimatePresence } from "framer-motion";
@@ -37,6 +38,7 @@ export default async function Home() {
         <Section1 />
         <Section2 />
         <Section3 />
+        <Section4 />
         <Footer />
       </AnimatePresence>
     </div>

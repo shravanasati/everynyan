@@ -68,7 +68,7 @@ function Section2() {
   };
 
   return (
-    <section className="min-h-screen w-full py-16 px-4 flex flex-col items-center justify-center">
+    <section className="min-h-screen w-full py-16 px-4 flex flex-col items-center justify-between">
       <div className="max-w-6xl w-full mx-auto">
         <motion.h2
           className="text-4xl md:text-5xl font-bold text-center mb-12 text-primary"
@@ -77,7 +77,7 @@ function Section2() {
           viewport={{ once: true, margin: "-100px" }}
           variants={titleVariants}
         >
-          Why EveryNyan?
+          EveryNyan is...
         </motion.h2>
         <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center"

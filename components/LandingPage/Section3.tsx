@@ -5,7 +5,6 @@ import { useRef } from "react";
 import {
   motion,
   useScroll,
-  useSpring,
   useTransform,
   useInView,
   type MotionValue,
@@ -42,6 +41,21 @@ const ParallaxImages = [
 function useParallax(value: MotionValue<number>, distance: number) {
   return useTransform(value, [0, 1], [-distance, distance]);
 }
+
+const titleVariants = {
+  hidden: {
+    opacity: 0,
+    y: -20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
 
 function ParallaxImage({
   src,
@@ -90,15 +104,17 @@ function ParallaxImage({
 }
 
 export default function Section3() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen">
+      <motion.h2
+        className="text-4xl md:text-5xl font-bold text-center  mt-4 -mb-12 md:mb-0 text-secondary"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={titleVariants}
+      >
+        On EveryNyan You can
+      </motion.h2>
       {ParallaxImages.map((image, index) => (
         <ParallaxImage
           key={index}
@@ -107,10 +123,6 @@ export default function Section3() {
           description={image.description}
         />
       ))}
-      <motion.div
-        className="fixed left-0 right-0 h-2 bg-primary bottom-[50px] rounded-full"
-        style={{ scaleX }}
-      />
     </div>
   );
 }
