@@ -1,5 +1,6 @@
 import BoardHeader from "@/components/BoardHeader";
 import { Dock } from "@/components/Dock";
+import Footer from "@/components/Footer";
 import BlobGradient from "@/components/Gradients/GradientBackground";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import Section1 from "@/components/LandingPage/Section1";
@@ -36,6 +37,7 @@ export default async function Home() {
         <Section1 />
         <Section2 />
         <Section3 />
+        <Footer />
       </AnimatePresence>
     </div>
   );

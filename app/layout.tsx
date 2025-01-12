@@ -3,7 +3,6 @@ import "./globals.css";
 import { Gabarito } from 'next/font/google'
 import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
-import Footer from "@/components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { RealtimeNotifications } from "@/components/RealtimeNotifications";
@@ -62,8 +61,6 @@ export default async function RootLayout({
           <Navbar user={user} />
           {children}
           <Toaster />
-          <Footer />
-
           <RealtimeNotifications />
           <NotificationProvider>
             <AskNotificationPerm />
