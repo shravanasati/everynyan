@@ -1,44 +1,75 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
+"use client";
+
 import Link from "next/link";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
+import ShinyButton from "@/components/ui/shiny-button";
+import { motion } from "framer-motion";
 
 export default function Section1() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden -z-50">
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-1 h-full">
-        <div className="flex flex-col justify-center md:items-start items-center p-4 md:p-9 h-screen">
-          <h1 className="text-5xl md:text-7xl font-black motion-preset-blur-right motion-duration-2000 mb-6 md:text-left text-center tracking-wider">
-            Hello<span className="text-primary"> EveryNyan!</span>
-          </h1>
-          <p className="w-full md:w-4/5 font-bold text-white/65 text-sm md:text-2xl md:text-left text-center motion-preset-fade motion-duration-2000 leading-relaxed md:tracking-wide tracking-widest">
-            EveryNyan is your go-to spot to rant, gossip, confess, and spill the
-            tea! <br className="hidden md:inline" />
-            <span className="font-bold text-white/90 block mt-2">
-              That too completely anonymously :)
-            </span>
-          </p>
-          <Link href="/login" className="mt-4">
-            <Button
-              variant="outline"
-              size="lg"
-              className="px-8 py-6 text-2xl font-extrabold hover:motion-preset-confetti hover:motion-duration-1000 animate-subtlePulse hover:flex border-primary/20 border-2 rounded-3xl"
-            >
-              Let&apos;s Go!
-            </Button>
-          </Link>
-        </div>
-
-        <div className="hidden md:flex items-center justify-center p-10">
-          <Image
-            src="/hero.png"
-            alt="chiyo chichi floating lolz"
-            height={600}
-            width={424}
-            className="animate-float max-w-full h-auto"
-            priority={true}
+    <motion.div
+      className="h-screen w-full flex flex-col justify-center items-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7 }}
+    >
+      <motion.div
+        className="scale-[0.8] mb-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        <ShinyButton className="rounded-full cursor-default">
+          <p className="text-white">✨Stay updated with notifications</p>
+        </ShinyButton>
+      </motion.div>
+      <HeroTitle />
+      <HeroDescription />
+      <motion.div
+        className="relative justify-center mt-4 scale-95"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9 }}
+      >
+        <Link href="/login">
+          <InteractiveHoverButton
+            text="&nbsp; Let's Go"
+            className="border-primary/90"
           />
-        </div>
+        </Link>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function HeroTitle() {
+  return (
+    <motion.div
+      className="w-full flex justify-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.7 }}
+    >
+      <h1 className="text-5xl md:text-7xl font-extrabold md:tracking-widest bg-gradient-to-b from-yellow-500 to-orange-200 bg-clip-text text-transparent text-center px-4 ">
+        Hello EveryNyan!
+      </h1>
+    </motion.div>
+  );
+}
+
+function HeroDescription() {
+  return (
+    <motion.div
+      className="w-4/5 flex flex-col items-center mt-4 md:mt-8 bg-gradient-to-t from-yellow-50 to-amber-100 bg-clip-text text-transparent md:text-lg text-center text-sm"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.7, duration: 0.7 }}
+    >
+      <div>Your anonymous haven for rants and gossip,</div>
+      <div>confessions and spilling the tea!</div>
+      <div className="mt-2">
+        Join us to share your thoughts and secrets without judgment.
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -120,6 +120,9 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  .perspective-500 {
+    perspective: 500px;
+  }
 }
 
 @layer base {
@@ -198,5 +201,11 @@ body::-webkit-scrollbar-thumb {
 @supports not selector(::-webkit-scrollbar) {
   body {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .perspective-500 {
+    perspective: none;
   }
 }
