@@ -169,7 +169,7 @@ export function PostCreator() {
             {(loading || isPending) ? (
               <span className="flex items-center">
                 <Loader2 className="size-4 animate-spin mr-1" />
-                Publishing...
+                {loading ? "Publishing..." : "Redirecting..."}
               </span>
             ) : (
               "Publish Post"
