@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useRef, useState, useTransition } from "react";
 import AnimatedLoader from "@/components/AnimatedLoader";
 import { boardList } from "@/lib/boards";
 import { createPost } from "@/lib/actions/createPost";
@@ -52,6 +52,7 @@ export function PostCreator() {
   const { toast } = useToast();
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement | null>(null);
+  const [isPending, startTransition] = useTransition()
 
   const handleSubmit = async () => {
     try {
@@ -81,7 +82,9 @@ export function PostCreator() {
       }
 
       // redirect to the newly created post
-      router.push(`/post/${response.slug}`);
+      startTransition(() =>
+        router.push(`/post/${response.slug}`)
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to create post. Please try again.");
@@ -160,13 +163,13 @@ export function PostCreator() {
           <Button
             className="w-full sm:w-auto"
             size="lg"
-            disabled={loading}
+            disabled={loading || isPending}
             onClick={handleSubmit}
           >
-            {loading ? (
+            {(loading || isPending) ? (
               <span className="flex items-center">
                 <Loader2 className="size-4 animate-spin mr-1" />
-                Publishing...
+                {loading ? "Publishing..." : "Redirecting..."}
               </span>
             ) : (
               "Publish Post"

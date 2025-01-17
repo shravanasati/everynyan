@@ -98,11 +98,11 @@ export function sendSubscriptionToServer(subscription: PushSubscription) {
   }).
     then(resp => {
       if (resp.status != 200) {
-        throw new Error("unable to send push subscription " + resp.text().then(t => t))
+        resp.text().then(t => {console.error("unable to send push subscription " + t)})
       }
     }).
     catch(e => {
-      throw new Error(e)
+      console.error(e)
     })
 
 }

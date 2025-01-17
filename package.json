@@ -35,7 +35,7 @@
     "isomorphic-dompurify": "^2.16.0",
     "lucide-react": "^0.439.0",
     "motion": "^11.16.0",
-    "next": "14.2.10",
+    "next": "14.2.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
