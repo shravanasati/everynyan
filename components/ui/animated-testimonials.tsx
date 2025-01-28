@@ -19,7 +19,7 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
-
+  // eslint-disable-next-line
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
   };

@@ -9,6 +9,7 @@ export async function fetchGifs(query: string) {
     }
 
     try {
+        console.log(query)
         const giphyQueryUrl = ``;
 
         const response = await fetch(giphyQueryUrl, {
