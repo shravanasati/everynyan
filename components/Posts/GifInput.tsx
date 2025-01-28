@@ -86,7 +86,7 @@ function GifInput() {
         >
           <SheetHeader className="mt-6 mb-2">
             <Input
-              placeholder="Search for GIFs from Tenor"
+              placeholder="Search GIFs from GIPHY"
               onChange={(e) => changeQuery(e.target.value)}
             />
           </SheetHeader>

@@ -28,7 +28,7 @@ FIREBASE_TOKEN_URI
 FIREBASE_AUTH_PROVIDER_X509_CERT_URL
 FIREBASE_CLIENT_X509_CERT_URL
 FIREBASE_UNIVERSE_DOMAIN
-TENOR_API_KEY
+GIPHY_API_KEY
 MODERATOR_EMAILS
 SALT
 NEXT_PUBLIC_TURNSTILE_SITE_KEY
@@ -49,7 +49,7 @@ Sign up and create an account on [Resend](https://resend.com), verify your domai
 
 Create a discord server and create a channel and obtain webhook url from Channel Setting > Integrations
 
-Sign in at [Tenor](https://tenor.com) to obtain a Tenor API Key
+Sign in at [GIPHY](https://giphy.com) to obtain a an API Key
   
 
 You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore. Then go to the Project Settings > Service Accounts > Generate a private key.

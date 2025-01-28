@@ -1,20 +1,20 @@
 "use server";
 
-const TENOR_API_KEY = process.env.TENOR_API_KEY;
+const GIPHY_API_KEY = process.env.GIPHY_API_KEY;
 
 export async function fetchGifs(query: string) {
-    if (!TENOR_API_KEY) {
-        console.error("TENOR_API_KEY is not defined.");
+    if (!GIPHY_API_KEY) {
+        console.error("GIPHY_API_KEY is not defined.");
         return null;
     }
 
     try {
-        const tenorQueryUrl = `https://tenor.googleapis.com/v2/search?q=${encodeURIComponent(query)}&key=${TENOR_API_KEY}&limit=20`;
+        const giphyQueryUrl = ``;
 
-        const response = await fetch(tenorQueryUrl, {
+        const response = await fetch(giphyQueryUrl, {
             method: "GET",
             headers: {
-                "Content-type": "application/json"
+                "Content-type": "application/json",
             }
         });
 
