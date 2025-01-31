@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "EveryNyan",
-    description: "Your one-stop destination for all things about college life, anonymously.",
+    description: "Your anonymous haven for rants and gossip, confessions and spilling the tea! Join us to share your thoughts and secrets without judgment.",
     images: [
       {
         url: "/mail-logo.png",
@@ -69,6 +69,7 @@ export default async function RootLayout({
         />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="image" property="og:image" content="/mail_logo.png" />
       </head>
       <ThemeProvider>
         <body className={`${gabarito.className} antialiased min-h-screen w-screen`}>
