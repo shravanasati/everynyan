@@ -24,6 +24,20 @@ export const metadata: Metadata = {
     title: APP_DEFAULT_TITLE,
     // startUpImage: [],
   },
+  openGraph: {
+    type: "website",
+    title: "EveryNyan",
+    description: "Your one-stop destination for all things about college life, anonymously.",
+    images: [
+      {
+        url: "/mail-logo.png",
+        width: 434,
+        height: 152,
+        alt: "EveryNyan",
+      },
+    ],
+    url: "https://everynyan.tech",
+  }
 };
 
 export default async function RootLayout({
