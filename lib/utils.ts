@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const TOKEN_EXPIRY_DURATION = 60 * 60 * 24 * 7 * 2 // 2 weeks
 
-export const uniEmailRegex = /^[a-z]+\.(cse|ict|cie)(d){0,1}(2[1-4])@(aii|adaniuni)\.ac\.in$/;
+export const uniEmailRegex = /^[a-z]+\.(cse|ict|cie|icie)(d){0,1}(2[1-4])@(aii|adaniuni)\.ac\.in$/;
 
 export function isValidEmail(email: string) {
   return uniEmailRegex.test(email);
