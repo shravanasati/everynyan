@@ -41,7 +41,12 @@ interface FormData {
   body: string;
 }
 
-export function PostCreator() {
+export function PostCreator({ role }: { role: string }) {
+  let boardsList = boardList.map((board) => board.title);
+
+  if (role === "user") {
+    boardsList = boardsList.filter((board) => board !== "Developer's Desk");
+  }
   const [formState, setFormState] = useState<FormData>({
     board: boards[0],
     title: "",
@@ -52,7 +57,7 @@ export function PostCreator() {
   const { toast } = useToast();
   const router = useRouter();
   const titleRef = useRef<HTMLInputElement | null>(null);
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async () => {
     try {
@@ -82,9 +87,7 @@ export function PostCreator() {
       }
 
       // redirect to the newly created post
-      startTransition(() =>
-        router.push(`/post/${response.slug}`)
-      );
+      startTransition(() => router.push(`/post/${response.slug}`));
     } catch (err) {
       console.error(err);
       setError("Failed to create post. Please try again.");
@@ -109,7 +112,7 @@ export function PostCreator() {
               }
               className="flex flex-row flex-wrap gap-4"
             >
-              {boards.map((boardName) => (
+              {boardsList.map((boardName) => (
                 <div key={boardName} className="flex items-center space-x-2">
                   <RadioGroupItem
                     value={boardName}
@@ -166,7 +169,7 @@ export function PostCreator() {
             disabled={loading || isPending}
             onClick={handleSubmit}
           >
-            {(loading || isPending) ? (
+            {loading || isPending ? (
               <span className="flex items-center">
                 <Loader2 className="size-4 animate-spin mr-1" />
                 {loading ? "Publishing..." : "Redirecting..."}
