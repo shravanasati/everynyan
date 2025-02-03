@@ -34,5 +34,19 @@ export const boardList: Board[] = [
 		href: "random",
 		imageSrc: "/boards/random.jpg",
 		imageAlt: "Miscellaneous topics board"
+	},
+	{
+		title: "Shayris",
+		description: "Express your feelings, share your poetry, and discuss your favorite shayaris with the community.",
+		href: "shayris",
+		imageSrc: "/boards/shayri.jpeg",
+		imageAlt: "Shayari board"
+	},
+	{
+		title: "Developer's Desk",
+		description: "Updates regarding the development of the app, feature requests, and bug reports and much more.",
+		imageSrc: "/boards/developer.jpeg",
+		href: "developers-desk",
+		imageAlt: "Developer's Desk",
 	}
 ];
