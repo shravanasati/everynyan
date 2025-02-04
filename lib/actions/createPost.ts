@@ -26,6 +26,10 @@ export async function createPost(values: z.infer<typeof createPostSchema>) {
 
   try {
     const data = result.data
+    if (data.board === "Development".toLowerCase() && user.role !== "admin") {
+      return { success: false, errors: { server: "You do not have permission to post in this board" } }
+
+    }
     const postID = await savePost(user.token!, data.title, data.body, data.board)
     return { success: true, slug: getPostSlug(postID, data.title) }
   } catch (error) {

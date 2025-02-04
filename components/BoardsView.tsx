@@ -45,7 +45,7 @@ interface BoardsViewProps {
 export function BoardsView({ boards }: BoardsViewProps) {
   return (
     <main className="min-h-[92vh] flex items-center justify-center py-8 md:py-4">
-      <div className="grid grid-cols-1 grid-rows-4 gap-3 md:grid-cols-2 md:grid-rows-2">
+      <div className="grid grid-cols-1 grid-rows-4 gap-3 md:grid-cols-3 md:grid-rows-2">
         {boards.map((board) => (
           <BoardCard key={board.href} {...board} />
         ))}

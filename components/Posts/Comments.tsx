@@ -366,7 +366,7 @@ export default function Comments({
   );
 
   return (
-    <div className="space-y-4 mb-4" id="comments">
+    <div className="space-y-4 mb-36 md:mb-10  min-h-[50vh]" id="comments">
       <CommentInput onSubmit={submitTopLevelComment} />
       {commentTree.length > 0 && (
         <SortDropdown

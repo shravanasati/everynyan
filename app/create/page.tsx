@@ -9,16 +9,15 @@ export const metadata = {
 };
 
 export default async function CreatePost() {
-  if (!(await getAuthUser())) {
+  const user = await getAuthUser();
+
+  if (!user) {
     return <Unauthorized />;
   }
 
   return (
     <>
-      <PostCreator /> <Dock />
+      <PostCreator role={user.role ?? "user"} /> <Dock />
     </>
   );
 }
-
-// export const ForwardRefEditor = forwardRef<MDXEditorMethods, MDXEditorProps>((props, ref) => <EditorComp {...props} editorRef={ref} />);
-// ForwardRefEditor.displayName = 'ForwardRefEditor'
