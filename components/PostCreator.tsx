@@ -45,7 +45,7 @@ export function PostCreator({ role }: { role: string }) {
   let boardsList = boardList.map((board) => board.title);
 
   if (role === "user") {
-    boardsList = boardsList.filter((board) => board !== "Developer's Desk");
+    boardsList = boardsList.filter((board) => board !== "Developement");
   }
   const [formState, setFormState] = useState<FormData>({
     board: boards[0],

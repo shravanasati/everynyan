@@ -43,10 +43,10 @@ export const boardList: Board[] = [
 		imageAlt: "Shayari board"
 	},
 	{
-		title: "Developer's Desk",
+		title: "Developement",
 		description: "Updates regarding the development of the app, feature requests, and bug reports and much more.",
 		imageSrc: "/boards/developer.jpeg",
-		href: "developers-desk",
-		imageAlt: "Developer's Desk",
+		href: "development",
+		imageAlt: "Developement",
 	}
 ];
