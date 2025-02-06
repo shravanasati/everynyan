@@ -8,6 +8,7 @@ import BoardHeader from "@/components/BoardHeader";
 import { InfiniteScrollingPosts } from "@/components/InfiniteScrollingPosts";
 import { Metadata } from "next";
 import { Dock } from "@/components/Dock";
+import { cookies } from "next/headers";
 
 interface BoardProps {
   params: {
@@ -81,7 +82,10 @@ export default async function BoardDetailPage({ params }: BoardProps) {
   if (!allowedBoardNames.includes(boardName)) {
     return notFound();
   }
-  const posts = await getPostsByBoard(boardName);
+
+  const orderByField = cookies().get("orderByField")?.value || "timestamp";
+
+  const posts = await getPostsByBoard(boardName, orderByField);
   const data = JSON.stringify(posts);
 
   return (

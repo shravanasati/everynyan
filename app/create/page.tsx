@@ -8,6 +8,8 @@ export const metadata = {
   description: "Create a post on everynyan",
 };
 
+// todo use query params to populate the form
+
 export default async function CreatePost() {
   const user = await getAuthUser();
 

@@ -94,7 +94,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your email to receive an OTP</CardDescription>
+          <CardDescription>Enter your <strong>university</strong> email to receive an OTP</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
