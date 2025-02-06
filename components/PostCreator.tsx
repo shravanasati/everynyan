@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -21,7 +21,7 @@ const EditorComp = dynamic(() => import("@/components/MdEditor"), {
 
 const boards = boardList.map((board) => board.title);
 
-const formSchema = z.object({
+const formSchema = z.strictObject({
   board: z.string().refine((val) => boards.includes(val), {
     message: "Invalid board",
   }),
@@ -43,14 +43,30 @@ interface FormData {
 
 export function PostCreator({ role }: { role: string }) {
   let boardsList = boardList.map((board) => board.title);
+  const searchParams = useSearchParams();
+  let boardParam = searchParams.get("board");
+  if (boardParam) {
+    boardParam = boardParam[0].toUpperCase() + boardParam.slice(1);
+  }
+  if (boardParam && !boards.includes(boardParam)) {
+    boardParam = null;
+  }
+  let titleParam = searchParams.get("title");
+  if (titleParam && titleParam.length > 100) {
+    titleParam = titleParam.slice(0, 100);
+  }
+  let bodyParam = searchParams.get("body");
+  if (bodyParam && bodyParam.length > 4000) {
+    bodyParam = bodyParam.slice(0, 4000);
+  }
 
   if (role === "user") {
     boardsList = boardsList.filter((board) => board !== "Development");
   }
   const [formState, setFormState] = useState<FormData>({
-    board: boards[0],
-    title: "",
-    body: "*hello* **world**. type away your post, in <u>markdown</u>.",
+    board: boardParam ?? boards[0],
+    title: titleParam ?? "",
+    body: bodyParam ?? "*hello* **world**. type away your post, in <u>markdown</u>.",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
