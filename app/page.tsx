@@ -10,13 +10,15 @@ import Section4 from "@/components/LandingPage/Section4";
 import { getPostsFeed } from "@/lib/firebase/posts";
 import { getAuthUser } from "@/lib/user";
 import { AnimatePresence } from "framer-motion";
+import { cookies } from "next/headers";
 
 export default async function Home() {
   const user = await getAuthUser();
 
   if (user) {
     // todo get preferences from local storage
-    const resp = await getPostsFeed();
+    const orderByField = cookies().get("orderByField")?.value || "timestamp";
+    const resp = await getPostsFeed(orderByField);
     const data = JSON.stringify(resp);
     return (
       <div className="min-h-screen bg-background relative">

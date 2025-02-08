@@ -64,6 +64,14 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    cookies().set("orderByField", orderByField, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60, // 1 hour
+      domain: process.env.NODE_ENV === "production" ? "everynyan.tech" : undefined,
+    })
+
 
     return NextResponse.json(posts, {
       headers: {

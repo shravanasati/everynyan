@@ -60,6 +60,12 @@ export function InfiniteScrollingPosts({
   };
 
   useEffect(() => {
+    if (sessionStorage.getItem("sortBy")) {
+      setSortBy(sessionStorage.getItem("sortBy")!);
+    }
+  }, []);
+
+  useEffect(() => {
     cachePosts(posts);
   }, [posts]);
 
@@ -144,6 +150,7 @@ export function InfiniteScrollingPosts({
     if (compareObjects(newParams, urlParams)) {
       return
     };
+    sessionStorage.setItem("sortBy", sortBy);
     setPosts([]);
     setLastDocID(null);
     setHasMore(true);

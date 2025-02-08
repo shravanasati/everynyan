@@ -15,6 +15,8 @@ import { Post as PostType } from "@/lib/models";
 import NotFound from "@/app/not-found";
 import { Unauthorized } from "@/components/Unauthorized";
 import { LoadingPost } from "@/components/LoadingPost";
+import { MoveLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface PostData {
   id: string;
@@ -33,6 +35,7 @@ export default function PerPost({
   const [isForbidden, setIsForbidden] = useState(false);
   const [error, setError] = useState("");
   const [postSlug, setPostSlug] = useState("");
+  const router = useRouter()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,10 +94,15 @@ export default function PerPost({
     <Card className="w-full flex flex-col border-0  bg-primary/[0.015] rounded-md">
       <CardHeader className="relative space-y-1 md:py-3 md:px-4 px-3 py-2">
         <div className="flex flex-col gap-2">
+        <div className="flex">
+          <MoveLeft className="size-6 text-primary m-1 mr-2 hover:bg-gray-500" onClick={() => {
+            router.back()
+          }} />
           <CardTitle className="text-xl sm:text-2xl font-bold break-words md:max-w-fit max-w-80">
             {postData.title}
           </CardTitle>
-          <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+        </div>
+          <span className="text-xs sm:text-sm text-muted-foreground hover:text-primary transition-colors duration-200 ml-8">
             <Link href={`/board/${postData.boardName}`}>
               {postData.boardName}
             </Link>

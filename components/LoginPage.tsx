@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -43,6 +43,8 @@ const formSchema = z.object({
 
 export function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextURL = searchParams.get("next") ?? "/";
   const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +79,7 @@ export function LoginPage() {
     const result = await sendOTP(newVals);
     if (result.success) {
       nextLocalStorage()?.setItem("email", values.email);
-      router.push("/verify-otp");
+      router.push(`/verify-otp?next=${nextURL}`);
     } else {
       const errors = result.errors as { email?: string; server?: string };
       const errorMessage =
@@ -94,7 +96,7 @@ export function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Login</CardTitle>
-          <CardDescription>Enter your email to receive an OTP</CardDescription>
+          <CardDescription>Enter your <strong>university</strong> email to receive an OTP</CardDescription>
         </CardHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

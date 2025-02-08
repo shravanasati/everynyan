@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -30,8 +30,17 @@ const formSchema = z.object({
   otp: z.string().length(6).regex(/^\d+$/, "OTP must contain only numbers"),
 });
 
+function sanitizeNextURL(nextURL: string): string {
+  if (nextURL.startsWith("/")) {
+    return decodeURIComponent(nextURL);
+  }
+  return "/";
+}
+
 export function OTPPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const nextURL = sanitizeNextURL(searchParams.get("next") ?? "/");
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -77,7 +86,7 @@ export function OTPPage() {
       const result = await signin(newValues);
       if (result.success) {
         localStorage.removeItem("email");
-        router.push("/");
+        router.push(nextURL);
       } else {
         const error =
           result.error || "An unexpected error occurred. Please try again.";
