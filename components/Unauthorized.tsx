@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { LoginWithNextURL } from "./LoginWithNextURL";
+
 
 export function Unauthorized() {
   return (
@@ -28,9 +30,7 @@ export function Unauthorized() {
           <Button asChild className="w-full sm:w-auto">
             <Link href="/">Go back home</Link>
           </Button>
-          <Button variant="outline" asChild className="w-full sm:w-auto">
-            <Link href="/login">Login</Link>
-          </Button>
+          <LoginWithNextURL />
         </div>
       </div>
     </div>
