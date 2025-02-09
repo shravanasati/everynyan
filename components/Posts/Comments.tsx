@@ -10,14 +10,17 @@ import {
   MinusCircleIcon,
   PlusCircleIcon,
   Spline,
+  X,
 } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
-import { Comment as CommentType } from "@/lib/models";
+import { Comment as CommentType, Gif } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
-import GifInput from "./GifInput";
+// import GifInput from "./GiphyPicker";
 import { SortDropdown } from "../SortDropdown";
+import { IGif } from "@giphy/js-types";
+import { GiphyPicker } from "./GiphyPicker";
 
 type ReturnedComment = CommentType & { timestamp: string };
 
@@ -30,7 +33,7 @@ interface SingleCommentProps {
   postID: string;
   onReply: (commentId: string) => void;
   replyingTo: string | null;
-  onSubmitReply: (body: string) => Promise<void>;
+  onSubmitReply: (body: string, gif: Gif | null) => Promise<void>;
   onCancelReply: () => void;
 }
 
@@ -47,13 +50,27 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   const [subCommentVisible, setSubCommentVisible] = useState(true);
   const [disableReplyInput, setDisableReplyInput] = useState(false);
   const [replyCooldown, setReplyCooldown] = useState(0);
+
+  const [showGiphyPicker, setShowGiphyPicker] = useState(false);
+  const [selectedGif, setSelectedGif] = useState<IGif | null>(null);
+  const handleGifSelect = (gif: IGif) => {
+    setSelectedGif(gif);
+    setShowGiphyPicker(false);
+  };
+
   const handleSubmitReply = async () => {
-    if (!replyText.trim()) return;
+    if (!replyText.trim() && !selectedGif) return;
 
     setDisableReplyInput(true);
     setReplyCooldown(5);
 
-    await onSubmitReply(replyText);
+    const gifData = selectedGif ? {
+      src: selectedGif?.images.original.webp || "",
+      alt: selectedGif?.alt_text || "",
+      height: selectedGif?.images.original.height || 0,
+      width: selectedGif?.images.original.width || 0,
+    } : null;
+    await onSubmitReply(replyText, gifData);
     setReplyText("");
 
     const countdownInterval = setInterval(() => {
@@ -90,6 +107,17 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             <p className="text-sm text-foreground whitespace-pre-wrap break-words">
               {comment.body}
             </p>
+            {comment.gif && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={comment.gif.src}
+                className='object-cover mt-2'
+                alt={comment.gif.alt}
+                width={comment.gif.width}
+                height={comment.gif.height}
+                loading="lazy"
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between mt-2 sm:space-y-0">
@@ -149,16 +177,37 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               placeholder="Write your reply..."
             />
           </div>
+          {selectedGif && (
+            <div className="relative size-32">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={selectedGif.images.original.webp || "/placeholder.svg"}
+                className='object-cover '
+                alt={selectedGif.alt_text}
+                width={selectedGif.images.original.width}
+                height={selectedGif.images.original.height}
+              />
+              <Button
+                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full size-6"
+                onClick={() => setSelectedGif(null)}
+              >
+                <X />
+              </Button>
+            </div>
+          )}
           <div className="flex justify-start space-x-2">
+            <Button onClick={() => setShowGiphyPicker(!showGiphyPicker)}>
+              {showGiphyPicker ? 'Hide GIFs' : 'Add GIF'}
+            </Button>
             <Button
               disabled={
-                !replyText.trim() || disableReplyInput || replyText.length > 500
+                (!replyText.trim() && !selectedGif) || disableReplyInput || replyText.length > 500
               }
               onClick={handleSubmitReply}
             >
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
             </Button>
-            <GifInput />
+            {/* <GifInput /> */}
             <Button
               variant="outline"
               onClick={onCancelReply}
@@ -167,6 +216,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               Cancel
             </Button>
           </div>
+          {showGiphyPicker && <GiphyPicker onGifSelect={handleGifSelect} />}
         </div>
       )}
 
@@ -305,7 +355,7 @@ export default function Comments({
   }, []);
 
   const handleSubmitReply = useCallback(
-    async (body: string) => {
+    async (body: string, gif: Gif | null) => {
       if (!replyingTo) return;
 
       const parentComment = comments.find((c) => c.id === replyingTo);
@@ -316,6 +366,7 @@ export default function Comments({
         postID,
         parentID: replyingTo,
         level: parentComment.level + 1,
+        gif
       });
 
       if (!resp.success) {
@@ -335,16 +386,17 @@ export default function Comments({
       setComments((prevComments) => [...prevComments, resp.data!]);
       setReplyingTo(null);
     },
-    [replyingTo, comments, postID]
+    [replyingTo, comments, postID, toast]
   );
 
   const submitTopLevelComment = useCallback(
-    async (commentBody: string) => {
+    async (commentBody: string, gif: Gif | null) => {
       const resp = await createComment({
         body: commentBody,
         postID,
         parentID: null,
         level: 0,
+        gif,
       });
 
       if (!resp.success) {
@@ -362,7 +414,7 @@ export default function Comments({
       });
       setComments((prevComments) => [...prevComments, resp.data!]);
     },
-    [postID]
+    [postID, toast]
   );
 
   return (

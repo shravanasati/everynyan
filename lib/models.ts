@@ -27,13 +27,14 @@ export type Comment = {
 	level: number;
 	moderation_status: ModerationStatus;
 	author?: string;
+	gif?: Gif;
 };
 
 export type DBComment = Comment & {
 	timestamp: Timestamp;
 };
 
-export type Gifs = {
+export type Gif = {
 	src: string,
 	alt: string,
 	height: number,
