@@ -16,7 +16,7 @@ import { Comment as CommentType } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
-import GifInput from "./GifInput";
+// import GifInput from "./GiphyPicker";
 import { SortDropdown } from "../SortDropdown";
 
 type ReturnedComment = CommentType & { timestamp: string };
@@ -158,7 +158,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             >
               {disableReplyInput ? `Wait ${replyCooldown}s...` : "Submit Reply"}
             </Button>
-            <GifInput />
+            {/* <GifInput /> */}
             <Button
               variant="outline"
               onClick={onCancelReply}
