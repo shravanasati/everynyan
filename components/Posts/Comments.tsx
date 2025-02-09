@@ -107,6 +107,17 @@ const SingleComment: React.FC<SingleCommentProps> = ({
             <p className="text-sm text-foreground whitespace-pre-wrap break-words">
               {comment.body}
             </p>
+            {comment.gif && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={comment.gif.src}
+                className='object-cover mt-2'
+                alt={comment.gif.alt}
+                width={comment.gif.width}
+                height={comment.gif.height}
+                loading="lazy"
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between mt-2 sm:space-y-0">
