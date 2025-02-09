@@ -10,6 +10,7 @@ import {
   MinusCircleIcon,
   PlusCircleIcon,
   Spline,
+  X,
 } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
 import { Comment as CommentType } from "@/lib/models";
@@ -18,6 +19,8 @@ import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
 // import GifInput from "./GiphyPicker";
 import { SortDropdown } from "../SortDropdown";
+import { IGif } from "@giphy/js-types";
+import { GiphyPicker } from "./GiphyPicker";
 
 type ReturnedComment = CommentType & { timestamp: string };
 
@@ -47,6 +50,14 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   const [subCommentVisible, setSubCommentVisible] = useState(true);
   const [disableReplyInput, setDisableReplyInput] = useState(false);
   const [replyCooldown, setReplyCooldown] = useState(0);
+
+  const [showGiphyPicker, setShowGiphyPicker] = useState(false);
+  const [selectedGif, setSelectedGif] = useState<IGif | null>(null);
+  const handleGifSelect = (gif: IGif) => {
+    setSelectedGif(gif);
+    setShowGiphyPicker(false);
+  };
+
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
 
@@ -149,10 +160,31 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               placeholder="Write your reply..."
             />
           </div>
+          {selectedGif && (
+            <div className="relative size-32">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={selectedGif.images.original.webp || "/placeholder.svg"}
+                className='object-cover '
+                alt={selectedGif.alt_text}
+                width={selectedGif.images.original.width}
+                height={selectedGif.images.original.height}
+              />
+              <Button
+                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full size-6"
+                onClick={() => setSelectedGif(null)}
+              >
+                <X />
+              </Button>
+            </div>
+          )}
           <div className="flex justify-start space-x-2">
+            <Button onClick={() => setShowGiphyPicker(!showGiphyPicker)}>
+              {showGiphyPicker ? 'Hide GIFs' : 'Add GIF'}
+            </Button>
             <Button
               disabled={
-                !replyText.trim() || disableReplyInput || replyText.length > 500
+                (!replyText.trim() && !selectedGif) || disableReplyInput || replyText.length > 500
               }
               onClick={handleSubmitReply}
             >
@@ -167,6 +199,7 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               Cancel
             </Button>
           </div>
+          {showGiphyPicker && <GiphyPicker onGifSelect={handleGifSelect} />}
         </div>
       )}
 
