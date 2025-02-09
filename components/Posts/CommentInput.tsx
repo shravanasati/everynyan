@@ -3,6 +3,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { GiphyPicker } from './GiphyPicker';
 import { IGif } from '@giphy/js-types';
+import { X } from 'lucide-react';
 
 interface CommentInputProps {
   onSubmit: (comment: string, gifUrl?: string) => void;
@@ -56,13 +57,15 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
           <img
             src={selectedGif.images.original.webp || "/placeholder.svg"}
             className='object-cover '
-            alt="Selected GIF"
+            alt={selectedGif.alt_text}
+            width={selectedGif.images.original.width}
+            height={selectedGif.images.original.height}
           />
           <Button
             className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full size-6"
             onClick={() => setSelectedGif(null)}
           >
-            X 
+            <X />
           </Button>
         </div>
       )}

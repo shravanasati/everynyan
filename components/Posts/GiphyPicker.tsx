@@ -1,5 +1,5 @@
-import  { useRef, useState, useEffect } from 'react';
-import { GiphyFetch } from '@giphy/js-fetch-api';
+import { useRef, useState, useEffect } from 'react';
+import { GiphyFetch, SearchOptions } from '@giphy/js-fetch-api';
 import { Grid } from '@giphy/react-components';
 import { IGif } from '@giphy/js-types';
 
@@ -18,8 +18,11 @@ export function GiphyPicker({ onGifSelect }: GiphyPickerProps) {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  const fetchGifs = (offset: number) =>
-    gf.search(debouncedTerm || 'trending', { offset, limit: 10, type: 'gifs', rating: 'pg-13', sort: "relevant" });
+  const fetchGifs = (offset: number) => {
+    const opts: SearchOptions = { offset, limit: 10, type: 'gifs', rating: 'pg-13', sort: "relevant" }
+    if (debouncedTerm) return gf.search(debouncedTerm, opts);
+    return gf.trending(opts);
+  }
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(900);
