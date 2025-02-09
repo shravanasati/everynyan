@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useState, useCallback, useMemo } from "react";
-import { Comment as CommentType } from "@/lib/models";
+import { Comment as CommentType, Gif } from "@/lib/models";
 import { createComment } from "@/lib/actions/createComment";
 import { CommentInput } from "./CommentInput";
 import { useToast } from "@/hooks/use-toast";
@@ -33,7 +33,7 @@ interface SingleCommentProps {
   postID: string;
   onReply: (commentId: string) => void;
   replyingTo: string | null;
-  onSubmitReply: (body: string) => Promise<void>;
+  onSubmitReply: (body: string, gif: Gif | null) => Promise<void>;
   onCancelReply: () => void;
 }
 
@@ -59,12 +59,18 @@ const SingleComment: React.FC<SingleCommentProps> = ({
   };
 
   const handleSubmitReply = async () => {
-    if (!replyText.trim()) return;
+    if (!replyText.trim() && !selectedGif) return;
 
     setDisableReplyInput(true);
     setReplyCooldown(5);
 
-    await onSubmitReply(replyText);
+    const gifData = selectedGif ? {
+      src: selectedGif?.images.original.webp || "",
+      alt: selectedGif?.alt_text || "",
+      height: selectedGif?.images.original.height || 0,
+      width: selectedGif?.images.original.width || 0,
+    } : null;
+    await onSubmitReply(replyText, gifData);
     setReplyText("");
 
     const countdownInterval = setInterval(() => {
@@ -338,7 +344,7 @@ export default function Comments({
   }, []);
 
   const handleSubmitReply = useCallback(
-    async (body: string) => {
+    async (body: string, gif: Gif | null) => {
       if (!replyingTo) return;
 
       const parentComment = comments.find((c) => c.id === replyingTo);
@@ -349,6 +355,7 @@ export default function Comments({
         postID,
         parentID: replyingTo,
         level: parentComment.level + 1,
+        gif
       });
 
       if (!resp.success) {
@@ -368,16 +375,17 @@ export default function Comments({
       setComments((prevComments) => [...prevComments, resp.data!]);
       setReplyingTo(null);
     },
-    [replyingTo, comments, postID]
+    [replyingTo, comments, postID, toast]
   );
 
   const submitTopLevelComment = useCallback(
-    async (commentBody: string) => {
+    async (commentBody: string, gif: Gif | null) => {
       const resp = await createComment({
         body: commentBody,
         postID,
         parentID: null,
         level: 0,
+        gif,
       });
 
       if (!resp.success) {
@@ -395,7 +403,7 @@ export default function Comments({
       });
       setComments((prevComments) => [...prevComments, resp.data!]);
     },
-    [postID]
+    [postID, toast]
   );
 
   return (

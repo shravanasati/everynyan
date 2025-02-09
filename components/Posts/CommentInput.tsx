@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { GiphyPicker } from './GiphyPicker';
 import { IGif } from '@giphy/js-types';
 import { X } from 'lucide-react';
+import { Gif } from '@/lib/models';
 
 interface CommentInputProps {
-  onSubmit: (comment: string, gifUrl?: string) => void;
+  onSubmit: (comment: string, gif: Gif | null) => void;
 }
 
 export function CommentInput({ onSubmit }: CommentInputProps) {
@@ -20,7 +21,13 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
     if (comment.trim() || selectedGif) {
       setDisableInput(true);
       setCooldown(5);
-      onSubmit(comment, selectedGif?.images.original.url);
+      const gifData = selectedGif ? {
+        src: selectedGif?.images.original.webp || "",
+        alt: selectedGif?.alt_text || "",
+        height: selectedGif?.images.original.height || 0,
+        width: selectedGif?.images.original.width || 0,
+      } : null;
+      onSubmit(comment, gifData);
       setComment("");
       setSelectedGif(null);
 

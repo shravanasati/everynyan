@@ -10,7 +10,13 @@ import { createUserNotification } from "../notifications"
 const createCommentSchema = z.strictObject({
   postID: z.string().min(6, "Invalid post ID").max(6, "Invalid post ID"),
   level: z.number().int().min(0, "Invalid comment level").max(10, "Jyada reply ho raha hai"),
-  body: z.string().min(1, "Comment cannot be empty").max(500, "Comment is too long. It must be within 500 characters"),
+  body: z.string().min(0, "Comment cannot be empty").max(500, "Comment is too long. It must be within 500 characters"),
+  gif: z.strictObject({
+    src: z.string(),
+    alt: z.string(),
+    height: z.number(),
+    width: z.number(),
+  }).nullable(),
   parentID: z.string().nullable(),
 })
 
@@ -34,9 +40,17 @@ export async function createComment(values: z.infer<typeof createCommentSchema>)
   }
 
   const data = result.data
+  if (!data.gif && data.body.trim() === "") {
+    return {
+      success: false,
+      errors: {
+        body: "Comment cannot be empty"
+      }
+    }
+  }
 
   try {
-    const newComment = await addComment(user.token!, data.postID, data.body, data.level, data.parentID)
+    const newComment = await addComment(user.token!, data.postID, data.body, data.level, data.parentID, data.gif!)
     if (!newComment) {
       return { success: false, errors: { server: "An error occurred. Please try again later." } }
     }

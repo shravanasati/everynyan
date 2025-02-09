@@ -1,9 +1,9 @@
-import type { Comment as CommentType, DBComment } from "@/lib/models";
+import type { Comment as CommentType, DBComment, Gif } from "@/lib/models";
 import { db } from "./app";
 import { Timestamp, FieldValue } from "firebase-admin/firestore";
 import { generateCommentID } from "../utils";
 
-export async function addComment(userToken: string, postID: string, commentBody: string, level: number, parentID: string | null) {
+export async function addComment(userToken: string, postID: string, commentBody: string, level: number, parentID: string | null, gif? : Gif) {
   try {
     const batch = db.batch()
     const commentID = generateCommentID()
@@ -15,7 +15,10 @@ export async function addComment(userToken: string, postID: string, commentBody:
       downvotes: 0,
       parent_id: parentID,
       moderation_status: "pending",
-      author: userToken
+      author: userToken,
+    }
+    if (gif) {
+      comment.gif = gif
     }
 
     const postRef = db.collection("posts").doc(postID)
