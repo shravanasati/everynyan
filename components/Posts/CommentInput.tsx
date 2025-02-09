@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { GiphyPicker } from './GiphyPicker';
-import Image from 'next/image';
 import { IGif } from '@giphy/js-types';
 
 interface CommentInputProps {
@@ -55,16 +54,16 @@ export function CommentInput({ onSubmit }: CommentInputProps) {
         <div className="relative size-32">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={selectedGif.images.original.url || "/placeholder.svg"}
+            src={selectedGif.images.original.webp || "/placeholder.svg"}
             className='object-cover '
             alt="Selected GIF"
           />
-          <button
-            className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full"
+          <Button
+            className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded-full size-6"
             onClick={() => setSelectedGif(null)}
           >
-            X
-          </button>
+            X 
+          </Button>
         </div>
       )}
       <div className="flex justify-end gap-2">
