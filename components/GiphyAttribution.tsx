@@ -14,7 +14,7 @@ export function GiphyAttribution() {
           alt="GIPHY"
           width={154}
           height={20}
-          className="dark:invert"
+          className="dark:invert rounded"
         />
       </a>
     </div>

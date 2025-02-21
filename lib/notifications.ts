@@ -33,6 +33,15 @@ function trimString(str: string, length: number) {
   return str.length > length ? str.substring(0, length) + '...' : str
 }
 
+function getCommentContent(comment: CommentType) {
+  if (comment.body) {
+    return comment.body
+  } else {
+    // if the comment is only a gif and doesnt have a body
+    return comment.gif!.alt
+  }
+}
+
 async function getNotifications(postID: string, newComment: CommentType): Promise<NotificationRequest[]> {
   if (!newComment.author) {
     return []
@@ -63,8 +72,8 @@ async function getNotifications(postID: string, newComment: CommentType): Promis
       if (notifiableUsers.has(parentComment.author!)) return;
 
       notifiableUsers.add(parentComment.author!)
-      const title = `New reply on your comment '${trimString(parentComment.body, 20)}'`
-      const description = trimString(newComment.body, 40)
+      const title = `New reply on your comment '${trimString(getCommentContent(parentComment), 20)}'`
+      const description = trimString(getCommentContent(newComment), 40)
 
       notifications.push({
         user: parentComment.author!, // we know it's not null because we checked it in the getParentComments function
@@ -121,13 +130,13 @@ export async function getConnectionCount() {
         'Authorization': `Bearer ${process.env.NOTIFICATIONS_API_KEY}`
       }
     })
-  
+
     const text = await resp.text()
-  
+
     if (resp.status !== 200) {
       return 'failed to get connection count: ' + text
     }
-  
+
     return text
   } catch (e) {
     return (e as Error).message
