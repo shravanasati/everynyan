@@ -35,5 +35,12 @@ export async function getUnresolvedReports() {
 
 export async function resolveReport(reportID: string) {
   const reportRef = db.collection("reports").doc(reportID);
-  await reportRef.update({ status: "resolved", resolvedAt: Timestamp.now() });
+  const postID = ((await reportRef.get()).data() as DBReport).postID;
+
+  const allPostReports = await db.collection("reports").where("postID", "==", postID).get();
+
+  const batch = db.batch();
+  allPostReports.docs.forEach(doc => batch.update(doc.ref, { status: "resolved", resolvedAt: Timestamp.now() }));
+
+  await batch.commit();
 }
