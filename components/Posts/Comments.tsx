@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { SortDropdown } from "../SortDropdown";
 import { IGif } from "@giphy/js-types";
 import { GiphyPicker } from "./GiphyPicker";
+import { GiphyAttribution } from "../GiphyAttribution";
 
 type ReturnedComment = CommentType & { timestamp: string };
 
@@ -108,15 +109,18 @@ const SingleComment: React.FC<SingleCommentProps> = ({
               {comment.body}
             </p>
             {comment.gif && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={comment.gif.src}
-                className='object-cover mt-2'
-                alt={comment.gif.alt}
-                width={comment.gif.width}
-                height={comment.gif.height}
-                loading="lazy"
-              />
+              <div className="flex flex-col gap-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={comment.gif.src}
+                  className='object-cover mt-2'
+                  alt={comment.gif.alt}
+                  width={comment.gif.width}
+                  height={comment.gif.height}
+                  loading="lazy"
+                />
+                <GiphyAttribution />
+              </div>
             )}
           </div>
 
