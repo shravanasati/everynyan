@@ -6,6 +6,7 @@ import { reportContent, Report as ReportType, resolveReport } from "@/lib/fireba
 import { addSecurityLog } from "@/lib/firebase/security_log"
 import { getAuthUser } from "@/lib/user"
 import { discordWebhookReport } from "@/lib/discord"
+import { revalidatePath } from "next/cache"
 
 async function _reportGeneric(postID: string, flag: string, type: "post" | "comment", commentID?: string) {
   try {
@@ -66,6 +67,7 @@ async function _moderateGeneric(reportID: string, action: "approve" | "reject", 
     })
   }
   await resolveReport(reportID)
+  revalidatePath(`/admin`)
   return { success: true, message: "moderation status updated successfully" }
 }
 
