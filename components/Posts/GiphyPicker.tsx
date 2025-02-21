@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { GiphyFetch, SearchOptions } from '@giphy/js-fetch-api';
 import { Grid } from '@giphy/react-components';
 import { IGif } from '@giphy/js-types';
+import { GiphyAttribution } from '../GiphyAttribution';
 
 const gf = new GiphyFetch(process.env.NEXT_PUBLIC_GIPHY_API_KEY!);
 
@@ -42,13 +43,18 @@ export function GiphyPicker({ onGifSelect }: GiphyPickerProps) {
 
   return (
     <div className="w-full" ref={containerRef}>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search GIFs..."
-        className="w-full p-2 mb-2 border rounded-md text-black bg-gray-100"
-      />
+      <div className="relative mb-2">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search GIFs..."
+          className="w-full p-2 pr-16 border rounded-md text-black bg-gray-100"
+        />
+        <div className="bg-gray-900 absolute right-2 top-1/2 transform -translate-y-1/2">
+          <GiphyAttribution />
+        </div>
+      </div>
       <div className="w-full">
         <Grid
           key={debouncedTerm}
