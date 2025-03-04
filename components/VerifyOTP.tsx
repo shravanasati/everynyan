@@ -31,16 +31,29 @@ const formSchema = z.object({
 });
 
 function sanitizeNextURL(nextURL: string): string {
-  if (nextURL.startsWith("/")) {
-    return decodeURIComponent(nextURL);
+  try {
+    if (nextURL.startsWith('/')) {
+      // The entire URL is already encoded as a single value, just decode it
+      return decodeURIComponent(nextURL);
+    }
+    return '/';
+  } catch {
+    return '/';
   }
-  return "/";
 }
 
 export function OTPPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const nextURL = sanitizeNextURL(searchParams.get("next") ?? "/");
+  const allParams = Object.fromEntries(searchParams.entries())
+  delete allParams.next
+  let nextURL = "/"
+  if (searchParams.get("next")) {
+    // merge all search params
+    nextURL = `${searchParams.get("next")}&${new URLSearchParams(allParams).toString()}`
+    nextURL = sanitizeNextURL(nextURL);
+  }
+  console.log(nextURL)
   const [email, setEmail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
