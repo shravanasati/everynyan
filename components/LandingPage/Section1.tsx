@@ -14,13 +14,13 @@ export default function Section1() {
       transition={{ duration: 0.7 }}
     >
       <motion.div
-        className="scale-[0.8] mb-4"
+        className="mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
         <ShinyButton className="rounded-full cursor-default">
-          <p className="text-white">✨Stay updated with notifications</p>
+          <p className="text-white">✨So far, So Good!</p>
         </ShinyButton>
       </motion.div>
       <HeroTitle />
