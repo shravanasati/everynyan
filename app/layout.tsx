@@ -9,6 +9,7 @@ import { RealtimeNotifications } from "@/components/RealtimeNotifications";
 import { ThemeProvider } from "@/lib/ThemeContext";
 import { NotificationProvider } from "@/hooks/useNotification";
 import { AskNotificationPerm } from "@/components/AskNotificationPerm";
+import Sunset from "@/components/Sunset";
 
 const APP_DEFAULT_TITLE = "EveryNyan's PWA";
 const gabarito = Gabarito({ subsets: ['latin'] })
@@ -73,6 +74,7 @@ export default async function RootLayout({
       </head>
       <ThemeProvider>
         <body className={`${gabarito.className} antialiased min-h-screen w-screen`}>
+          <Sunset />
           <Navbar user={user} />
           {children}
           <Toaster />
