@@ -34,10 +34,10 @@ function Sunset() {
           <div className="grid gap-4 py-4">
             <p className="text-sm text-muted-foreground">
               After careful consideration, we have decided to sunset the
-              EveryNyan developement on April 8th, 2025. We want to thank all
-              our users for their support over the time. We are grateful for the
+              EveryNyan development on April 8th, 2025. We want to thank all our
+              users for their support over the time. We are grateful for the
               community that has formed around our platform and building this
-              paltform has been an amazing experience for us. We are proud of
+              platform has been an amazing experience for us. We are proud of
               what we have accomplished together, and we will always cherish the
               memories we have created.
             </p>
