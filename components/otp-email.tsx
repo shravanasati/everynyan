@@ -4,7 +4,7 @@ interface OTPEmailProps {
 }
 
 export function OTPEmailTemplate({ name, otp }: OTPEmailProps) {
-  const logoURL = "https://everynyan.tech/mail_logo.png";
+  const logoURL = "https://everynyan.vercel.app/mail_logo.png";
   return (
     <div
       style={{

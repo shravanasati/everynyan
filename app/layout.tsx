@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Gabarito } from 'next/font/google'
+import { Gabarito } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { getAuthUser } from "@/lib/user";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,8 +12,7 @@ import { AskNotificationPerm } from "@/components/AskNotificationPerm";
 import Sunset from "@/components/Sunset";
 
 const APP_DEFAULT_TITLE = "EveryNyan's PWA";
-const gabarito = Gabarito({ subsets: ['latin'] })
-
+const gabarito = Gabarito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "EveryNyan",
@@ -28,7 +27,8 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "EveryNyan",
-    description: "Your anonymous haven for rants and gossip, confessions and spilling the tea! Join us to share your thoughts and secrets without judgment.",
+    description:
+      "Your anonymous haven for rants and gossip, confessions and spilling the tea! Join us to share your thoughts and secrets without judgment.",
     images: [
       {
         url: "/mail-logo.png",
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
         alt: "EveryNyan",
       },
     ],
-    url: "https://everynyan.tech",
-  }
+    url: "https://everynyan.vercel.app",
+  },
 };
 
 export default async function RootLayout({
@@ -73,7 +73,9 @@ export default async function RootLayout({
         <meta name="image" property="og:image" content="/mail_logo.png" />
       </head>
       <ThemeProvider>
-        <body className={`${gabarito.className} antialiased min-h-screen w-screen`}>
+        <body
+          className={`${gabarito.className} antialiased min-h-screen w-screen`}
+        >
           <Sunset />
           <Navbar user={user} />
           {children}
@@ -82,7 +84,6 @@ export default async function RootLayout({
           <NotificationProvider>
             <AskNotificationPerm />
           </NotificationProvider>
-
         </body>
       </ThemeProvider>
 

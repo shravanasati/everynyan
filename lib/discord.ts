@@ -6,7 +6,7 @@ interface discordWebhookReportProps {
 }
 export async function discordWebhookReport({ type, commentID, postID, selectedFlag }: discordWebhookReportProps) {
     const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
-    const baseUrl = "https://everynyan.tech/post/"
+    const baseUrl = "https://everynyan.vercel.app/post/"
 
     if (!DISCORD_WEBHOOK_URL) {
         console.error("DISCORD_WEBHOOK_URL is not defined.");

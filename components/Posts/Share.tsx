@@ -20,7 +20,10 @@ export default function Share({ postLink: postSlug }: { postLink: string }) {
   const [isCopied, setIsCopied] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const baseURL = (process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://everynyan.tech");
+  const baseURL =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://everynyan.vercel.app";
   const postURL = `${baseURL}/post/${postSlug}`;
 
   const handleClick = async () => {
@@ -66,13 +69,23 @@ export default function Share({ postLink: postSlug }: { postLink: string }) {
             <Button type="button" variant="default" onClick={handleClick}>
               <CopyIcon className="size-4" />
             </Button>
-            <Link href={`https://x.com/intent/post?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
-              <Button type="button" variant="outline" >
+            <Link
+              href={`https://x.com/intent/post?text=${encodeURIComponent(
+                `Take a look at this post on EveryNyan: ${postURL}`
+              )}`}
+              target="_blank"
+            >
+              <Button type="button" variant="outline">
                 <TwitterLogoIcon className="size-4" />
               </Button>
             </Link>
-            <Link href={`https://api.whatsapp.com/send/?text=${encodeURIComponent(`Take a look at this post on EveryNyan: ${postURL}`)}`} target="_blank">
-              <Button type="button" variant="outline" >
+            <Link
+              href={`https://api.whatsapp.com/send/?text=${encodeURIComponent(
+                `Take a look at this post on EveryNyan: ${postURL}`
+              )}`}
+              target="_blank"
+            >
+              <Button type="button" variant="outline">
                 <WhatsAppLogoIcon className="size-4 fill-white" />
               </Button>
             </Link>

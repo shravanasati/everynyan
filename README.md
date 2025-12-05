@@ -1,6 +1,6 @@
 # EveryNyan
 
-[EveryNyan](https://everynyan.tech) is a social media website which focuses heavily on anonymity and exclusivity.
+[EveryNyan](https://everynyan.vercel.app) is a social media website which focuses heavily on anonymity and exclusivity.
 
 ### Setting up the local development environment
 
@@ -11,6 +11,7 @@ EveryNyan is built using Next.js.
 ```
 git clone https://github.com/shravanasati/everynyan.git
 ```
+
 2. Create a `.env.local` file in the project root.
 
 ```
@@ -43,6 +44,7 @@ The secret key is used to encrypt the cookies on user's browser. You can create 
 ```sh
 python -c "import secrets;print(secrets.token_hex(32))"
 ```
+
 Moderator emails is a comma-separated list of emails of users who have moderation privileges.
 
 Sign up and create an account on [Resend](https://resend.com), verify your domain and obtain an API key.
@@ -50,7 +52,6 @@ Sign up and create an account on [Resend](https://resend.com), verify your domai
 Create a discord server and create a channel and obtain webhook url from Channel Setting > Integrations
 
 Sign in at [GIPHY](https://giphy.com) to obtain a an API Key
-  
 
 You also need to create a project on [Firebase](https://console.firebase.google.com), enable Firestore. Then go to the Project Settings > Service Accounts > Generate a private key.
 
@@ -59,7 +60,6 @@ Download the generated JSON file, and extract the keys and store them in the `.e
 `DISCORD_WEBHOOK_URL` is used to notify the admins when a new report is published. Get it from the channel settings > webhook URL.
 
 The last set of configuration you'd need is for the Cloudflare Turnstile captcha. Go to the [Cloudflare dashboard](https://dash.cloudflare.com), and create a new Turnstile widget in managed mode, add `localhost` in the list of allowed hostnames. Finally store the site key and secret key in the `.env.local` file.
-
 
 3. Install all the dependencies.
 
@@ -75,11 +75,10 @@ pnpm dev
 
 ### Related Repositories
 
-| Name  | Description |
-|---|---|
-| [everynyan-notification-service](https://github.com/shravanasati/everynyan-notification-service)  | Notification service responsible for delivery of realtime in-app and push notifications.  |
-| [everynyan-moderation-service](https://github.com/shravanasati/everynyan-moderation-service)  | Automatic content moderation service for everynyan.  |
-
+| Name                                                                                             | Description                                                                              |
+| ------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| [everynyan-notification-service](https://github.com/shravanasati/everynyan-notification-service) | Notification service responsible for delivery of realtime in-app and push notifications. |
+| [everynyan-moderation-service](https://github.com/shravanasati/everynyan-moderation-service)     | Automatic content moderation service for everynyan.                                      |
 
 ### Contribution
 
